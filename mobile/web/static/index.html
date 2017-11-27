@@ -1,0 +1,34 @@
+<html>
+<head>
+  <style>
+    #react-root {
+      position: relative;
+      height: 100%;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.1/fetch.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+  <script src="https://dd-bazaar.s3.amazonaws.com/lib/react-native-web-0.0.68.js"></script>
+  <script src="https://dd-bazaar.s3.amazonaws.com/lib/bazaar-0.40.0.js"></script>
+  <meta name="viewport" content="width=device-width">
+  <meta charset="utf-8">
+</head>
+<body>
+  <div id="react-root" style="max-width: 600px"></div>
+  <script>
+    window.localStorage.__proto__.prepopulateMap = function(key, hash) {
+    }
+    window.localStorage.__proto__.multiGet = function(keys) {
+      var values = keys.map(function(key) {
+        return [key, window.localStorage.getItem(key)]
+      })
+      return {
+        then: function(callback) {
+          callback(values)
+        }
+      }
+    }
+  </script>
+  <script src="build/bundle.js"></script>
+</body>
+</html>
