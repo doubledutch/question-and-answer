@@ -6,3 +6,308 @@
 .avatar {
   width: 40px;
 }
+
+.container {
+  display: flex;
+  /* flex-flow: row wrap; */
+  box-sizing: border-box;
+  /* width: 100%; */
+  height: 600px;
+  font-size: 14;
+  
+}
+
+.questionContainer {
+  display: flex;
+  flex-flow: row wrap;
+  width: 50%;
+  margin-Top: 32px;
+  margin-Left: 21px
+
+  
+  
+  
+}
+
+.questionBox {
+  box-sizing: border-box;
+  /* display: flex;
+  flex-flow: column wrap; */
+  width: 100%;
+  
+  
+  height: 100%;
+  border: 1px;
+  border-style: solid;
+  border-color:#DEDEDE;
+  
+  margin: 10px 50px 5px 0px;
+  /* margin: 0 auto; */
+  
+ 
+  background-color:#EFEFEF;
+  
+}
+
+.questionBox2 {
+  box-sizing: border-box;
+  /* display: flex;
+  flex-flow: column wrap; */
+  width: 100%;
+  
+  
+  height: 100%;
+  border: 1px;
+  border-style: solid;
+  border-color:#DEDEDE;
+  background-color:#EFEFEF;
+  
+  margin: 10px 50px 5px 0px;
+  /* margin: 0 auto; */
+  
+
+  /* background-color:#EFEFEF; */
+  /* background-color: red; */
+}
+
+.listBox {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+ 
+  margin: 0px;
+  padding: 0px;
+ 
+  /* background-color:white; */
+  list-style-type: none;
+  overflow:hidden; 
+  overflow-y:scroll;
+
+}
+
+
+.cellBox {
+  box-sizing: border-box;
+ border-bottom: 1px;
+ min-height: 86px;
+ flex-grow: 1;
+ /* width: 100%; */
+display: flex;
+flex-flow: nowrap;
+background-color: white;
+ 
+
+ border-bottom-style: solid;
+ border-bottom-color: #DEDEDE;
+  /* margin: 0 auto; */
+  /* font-size: 14px; */
+ 
+}
+
+.cellBoxTop {
+  height: 15px;
+ 
+  width: 100%;
+  
+  
+  
+ 
+
+  
+
+
+}
+.cellBoxLeft{
+  width: 100%;
+  display: flex;
+  margin-Top: 15px;
+  margin-Bottom: 15px;
+  flex-flow: column wrap;
+  padding-left: 20px;
+ 
+  
+
+  
+  
+
+
+}
+
+.cellBoxText{
+  padding-right: 20px;
+  padding-left: 20px;
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  
+  
+  
+  
+}
+
+.topText{
+  width: 100%;
+  display: flex;
+  flex-flow: nowrap;
+  
+
+
+}
+
+.modTextBox{
+  height: 100%;
+  display: flex;
+  flex-flow: column wrap;
+
+
+
+}
+.bigModText{
+  margin-top: 200px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  line-height: 24px;
+  color: #898989;
+  text-align: center;
+  font-family: 'Roboto', 'Open Sans', 'Helvetica Neue', sans-serif;
+ 
+
+}
+
+.smallModText{
+  font-size: 16px;
+  line-height: 19px;
+  font-weight: 300;
+  text-align: center;
+  color: #898989;
+  font-family: 'Roboto', 'Open Sans', 'Helvetica Neue', sans-serif;
+  
+
+}
+
+.questionText{
+  font-size: 16px;
+  color: #364347;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin-Top: 8px;
+  margin-Bottom: 5px;
+  
+}
+
+.nameText{
+  font-size: 14px;
+  color: #8A8A8A;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  
+}
+
+.cellBoxRight{
+  width: 80px;
+  margin-right: 15px;
+  display: flex;
+  flex-flow: nowrap;
+  
+  
+
+
+}
+
+.button{
+  height: 30px;
+  width: 30px;
+  margin-Top: 28px;
+  margin-Left: 5px;
+  margin-Right: 5px;
+  border-radius: 50%;
+  color: red;
+  
+}
+
+.modButton{
+  border: none;
+  background-color: #009DCD;
+  /* margin-right: -5px; */
+  color: white;
+  /* position: absolute; */
+  height: 30px;
+  width: 40px;
+}
+.modButton2{
+  background-color: #D8D8D8;
+  border: none;
+  /* margin-left: 35px; */
+  
+  color: white;
+  height: 30px;
+  
+  width: 40px;
+
+}
+
+.listButton{
+  border: none;
+  border-bottom: solid;
+  border-bottom-color: #009DCD;
+  border-radius: 0;
+  font-size: 14px;
+  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #393939;
+  margin-right: 5px;
+
+}
+
+.listButton2{
+  border: none;
+  border-radius: 0;
+  font-size: 14px;
+  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #393939;
+  border-bottom-color: #009DCD;
+  margin-right: 5px;
+
+}
+
+.introText {
+  font-size: 12px;
+  color: #898989;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: bold;
+  margin-right: 10px
+ 
+}
+.timeText {
+  font-size: 12px;
+  color: #898989;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: thin;
+  margin-right: 10px
+}
+.boxTitle{
+  font-size: 14px;
+  height: 20px;
+  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin-bottom: 5px;
+  color: #393939;
+  
+}
+
+.bigBoxTitle{
+  font-size: 24px;
+  height: 24px;
+  display: flex;
+  margin-bottom: 16px;
+
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans',; */
+  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #393939;
+  
+}
+
+.topBox{
+
+  margin-left: 21px;
+
+
+}
