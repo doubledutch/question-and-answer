@@ -11,7 +11,23 @@ fbc.initializeAppWithSimpleBackend()
 export default class HomeView extends Component {
   constructor() {
     super()
-    this.state = { question: '', vote: '', questions: [], sharedVotes: [], moderator: [], characterCount: 0, showRecent: false, newUpdate: false, modalVisible: false, anom: false, color: 'white', height: 20, newValue: '', marginTop: 18}
+    this.state = {
+      question: '',
+      vote: '',
+      questions: [],
+      sharedVotes: [],
+      moderator: [],
+      characterCount: 0,
+      showRecent: false,
+      newUpdate: false,
+      modalVisible: false,
+      anom: false,
+      color: 'white',
+      height: 20,
+      newValue: '',
+      marginTop: 18
+    }
+    
     this.signin = fbc.signin()
       .then(user => this.user = user)
       .catch(err => console.error(err))

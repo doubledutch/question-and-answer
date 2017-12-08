@@ -10,7 +10,26 @@ fbc.initializeAppWithSimpleBackend()
 export default class App extends Component {
   constructor() {
     super()
-    this.state = { question: '', vote: '', questions: [], sharedVotes: [], characterCount: 0, showRecent: false, newUpdate: false, modalVisible: false, anom: false, color: 'white', height: 20, newValue: '', marginTop: 18, moderator: [], showBlock: false, newQuestions: 0, Approved: 0, Blocked: 0}
+    this.state = {
+      question: '',
+      vote: '',
+      questions: [],
+      sharedVotes: [],
+      characterCount: 0,
+      showRecent: false,
+      newUpdate: false,
+      modalVisible: false,
+      anom: false,
+      color: 'white',
+      height: 20,
+      newValue: '',
+      marginTop: 18,
+      moderator: [],
+      showBlock: false,
+      newQuestions: 0,
+      Approved: 0,
+      Blocked: 0
+    }
     this.signin = fbc.signin()
       .then(user => this.user = user)
       .catch(err => console.error(err))
