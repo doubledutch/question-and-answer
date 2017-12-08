@@ -94,132 +94,108 @@ export default class HomeView extends Component {
     })
   }
 
-renderHeader = (questions) => {
-  if (this.state.showRecent === false) {
-    return (
-      <View style={s.buttonContainer}>
-        <View style={s.divider}/>
-        <TouchableOpacity style={s.button1} onPress={() => this.findOrder(questions)}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
-        <View style={s.dividerSm}/>
-        <TouchableOpacity style={s.button2} onPress={() => this.findOrderDate(questions)}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
-        <View style={s.divider}/>
-      </View>
-    )
-  }
-  if (this.state.showRecent === true) {
-    return (
-      <View style={s.buttonContainer}>
-        <View style={s.divider}/>
-        <TouchableOpacity style={s.button2} onPress={() => this.findOrder(questions)}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
-        <View style={s.dividerSm}/>
-        <TouchableOpacity style={s.button1} onPress={() => this.findOrderDate(questions)}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
-        <View style={s.divider}/>
-      </View>
-    )
-  }
-};
-
-showModal(){
-  this.setState({modalVisible: true})
-}
-
-hideModal(){
-  this.setState({modalVisible: false})
-}
-
-makeTrue(){
-  if (this.state.anom === false){
-    this.setState({anom: true, color: 'black'})
-  }
-  if (this.state.anom === true){
-    this.setState({anom: false, color: 'white'})
-  }
-}
-
-updateSize = (height) => {
-  this.setState({
-    height,
-  });
-}
-
-render() {
-  const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator} = this.state   
-    this.originalOrder(questions)
-    const newStyle = {
-      height,
-      flex: 1,
-      marginTop,
-      marginBottom: 20,
-      fontSize: 18,
-      color: '#9B9B9B',
-      textAlignVertical: 'top'
-    }
-   
-  return (
-    <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
-    <TitleBar title="Keynote" client={client} signin={this.signin} />
-    <Modal
-      animationType="none"
-      transparent={true}
-      visible={this.state.modalVisible}
-      onRequestClose={() => {alert("Modal has been closed.")}}>
-      <View style={s.modal}>
-        <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-          <TextInput style={[newStyle]} placeholder="Type your question here"
-            value={this.state.question}
-            onChangeText={question => this.setState({question, marginTop: 20})} 
-            maxLength={250}
-            autoFocus={true}
-            multiline={true}
-            placeholderTextColor="#9B9B9B"
-            onContentSizeChange={(e) => this.updateSize(e.nativeEvent.contentSize.height)}/>
-          <Text style={s.counter}>{250 - this.state.question.length} </Text>
-      </View>
-      <View style={s.bottomButtons}>
-        <View style={s.anomBox}>
-          <TouchableOpacity style={s.checkButton} onPress={() => this.makeTrue()}><Text style={{color:this.state.color, textAlign: 'center'}}>X</Text></TouchableOpacity>
-          <Text style={s.anomText}>Ask anonymously</Text>
+  renderHeader = (questions) => {
+    if (this.state.showRecent === false) {
+      return (
+        <View style={s.buttonContainer}>
+          <View style={s.divider}/>
+          <TouchableOpacity style={s.button1} onPress={() => this.findOrder(questions)}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
+          <View style={s.dividerSm}/>
+          <TouchableOpacity style={s.button2} onPress={() => this.findOrderDate(questions)}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
+          <View style={s.divider}/>
         </View>
-          <TouchableOpacity style={s.sendButton} onPress={this.createSharedTask}><Text style={s.sendButtonText}>Ask Question</Text></TouchableOpacity>
+      )
+    }
+    if (this.state.showRecent === true) {
+      return (
+        <View style={s.buttonContainer}>
+          <View style={s.divider}/>
+          <TouchableOpacity style={s.button2} onPress={() => this.findOrder(questions)}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
+          <View style={s.dividerSm}/>
+          <TouchableOpacity style={s.button1} onPress={() => this.findOrderDate(questions)}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
+          <View style={s.divider}/>
+        </View>
+      )
+    }
+  };
+
+  showModal(){
+    this.setState({modalVisible: true})
+  }
+
+  hideModal(){
+    this.setState({modalVisible: false})
+  }
+
+  makeTrue(){
+    if (this.state.anom === false){
+      this.setState({anom: true, color: 'black'})
+    }
+    if (this.state.anom === true){
+      this.setState({anom: false, color: 'white'})
+    }
+  }
+
+  updateSize = (height) => {
+    this.setState({
+      height,
+    });
+  }
+
+  render() {
+    const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator} = this.state   
+      this.originalOrder(questions)
+      const newStyle = {
+        height,
+        flex: 1,
+        marginTop,
+        marginBottom: 20,
+        fontSize: 18,
+        color: '#9B9B9B',
+        textAlignVertical: 'top'
+      }
+    
+    return (
+      <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
+      <TitleBar title="Keynote" client={client} signin={this.signin} />
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={this.state.modalVisible}
+        onRequestClose={() => {alert("Modal has been closed.")}}>
+        <View style={s.modal}>
+          <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+            <TextInput style={[newStyle]} placeholder="Type your question here"
+              value={this.state.question}
+              onChangeText={question => this.setState({question, marginTop: 20})} 
+              maxLength={250}
+              autoFocus={true}
+              multiline={true}
+              placeholderTextColor="#9B9B9B"
+              onContentSizeChange={(e) => this.updateSize(e.nativeEvent.contentSize.height)}/>
+            <Text style={s.counter}>{250 - this.state.question.length} </Text>
+        </View>
+        <View style={s.bottomButtons}>
+          <View style={s.anomBox}>
+            <TouchableOpacity style={s.checkButton} onPress={() => this.makeTrue()}><Text style={{color:this.state.color, textAlign: 'center'}}>X</Text></TouchableOpacity>
+            <Text style={s.anomText}>Ask anonymously</Text>
+          </View>
+            <TouchableOpacity style={s.sendButton} onPress={this.createSharedTask}><Text style={s.sendButtonText}>Ask Question</Text></TouchableOpacity>
+        </View>
+          <TouchableOpacity style={s.modalBottom} onPress={() => this.hideModal()}></TouchableOpacity> 
+      </Modal>
+      <View>
+        <TouchableOpacity style={s.compose} onPress={() => this.showModal()}>
+          <TouchableOpacity style={s.circleBox} onPress={() => this.showModal()}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+          <TouchableOpacity style={s.composeBox} onPress={() => this.showModal()}><Text style={s.composeText}>Type your question here</Text></TouchableOpacity>
+        </TouchableOpacity>
       </View>
-        <TouchableOpacity style={s.modalBottom} onPress={() => this.hideModal()}></TouchableOpacity> 
-    </Modal>
-    <View>
-      <TouchableOpacity style={s.compose} onPress={() => this.showModal()}>
-        <TouchableOpacity style={s.circleBox} onPress={() => this.showModal()}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-        <TouchableOpacity style={s.composeBox} onPress={() => this.showModal()}><Text style={s.composeText}>Type your question here</Text></TouchableOpacity>
-      </TouchableOpacity>
-    </View>
-    <FlatList
-      data={questions}
-      ListHeaderComponent={this.renderHeader(questions)}
-      renderItem={({item}) =>{          
-        if (moderator.length === 0) {
-          return (
-            <View style={s.listContainer}>
-              <View style={s.leftContainer}>
-                <TouchableOpacity onPress={() => this.newVote(item)}><Text style={s.checkmark}>👍 </Text></TouchableOpacity>
-                <Text style={s.subText}>{item.score}</Text>
-              </View>
-              <View style={s.rightContainer}>
-                <Text style={s.questionText}>{item.text}</Text>
-                {item.anom === false &&
-                <Text style={s.nameText}>
-                  -{item.creator.firstName} {item.creator.lastName}
-                </Text>
-              }
-              {item.anom === true &&
-                <Text style={s.nameText}>
-                  -Anonymous
-                </Text>
-              }
-              </View>
-            </View>
-            )
-          }
-        if (moderator.length > 0){
-          if (moderator[0].approve !== true ) {
-            return(
+      <FlatList
+        data={questions}
+        ListHeaderComponent={this.renderHeader(questions)}
+        renderItem={({item}) =>{          
+          if (moderator.length === 0) {
+            return (
               <View style={s.listContainer}>
                 <View style={s.leftContainer}>
                   <TouchableOpacity onPress={() => this.newVote(item)}><Text style={s.checkmark}>👍 </Text></TouchableOpacity>
@@ -232,7 +208,7 @@ render() {
                     -{item.creator.firstName} {item.creator.lastName}
                   </Text>
                 }
-                  {item.anom === true &&
+                {item.anom === true &&
                   <Text style={s.nameText}>
                     -Anonymous
                   </Text>
@@ -241,9 +217,8 @@ render() {
               </View>
               )
             }
-
-          if (moderator[0].approve === true ){
-            if (item.approve === true){
+          if (moderator.length > 0){
+            if (moderator[0].approve !== true ) {
               return(
                 <View style={s.listContainer}>
                   <View style={s.leftContainer}>
@@ -256,24 +231,49 @@ render() {
                     <Text style={s.nameText}>
                       -{item.creator.firstName} {item.creator.lastName}
                     </Text>
-                    }
+                  }
                     {item.anom === true &&
                     <Text style={s.nameText}>
                       -Anonymous
                     </Text>
-                    }
+                  }
                   </View>
                 </View>
                 )
+              }
+
+            if (moderator[0].approve === true ){
+              if (item.approve === true){
+                return(
+                  <View style={s.listContainer}>
+                    <View style={s.leftContainer}>
+                      <TouchableOpacity onPress={() => this.newVote(item)}><Text style={s.checkmark}>👍 </Text></TouchableOpacity>
+                      <Text style={s.subText}>{item.score}</Text>
+                    </View>
+                    <View style={s.rightContainer}>
+                      <Text style={s.questionText}>{item.text}</Text>
+                      {item.anom === false &&
+                      <Text style={s.nameText}>
+                        -{item.creator.firstName} {item.creator.lastName}
+                      </Text>
+                      }
+                      {item.anom === true &&
+                      <Text style={s.nameText}>
+                        -Anonymous
+                      </Text>
+                      }
+                    </View>
+                  </View>
+                  )
+              }
             }
           }
         }
-      }
-      }
-      />
-    </KeyboardAvoidingView>
-  )
-}
+        }
+        />
+      </KeyboardAvoidingView>
+    )
+  }
 
   originalOrder(questions){
     if (this.state.showRecent === false) {
