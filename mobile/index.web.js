@@ -3,8 +3,8 @@ import HomeView from './src/home-view'
 import { install } from '@doubledutch/rn-client/webShim'
 
 function runApp(DD) {
-  AppRegistry.registerComponent('qaapp', () => HomeView)
-  AppRegistry.runApplication('qaapp', {
+  AppRegistry.registerComponent('questionanswer', () => HomeView)
+  AppRegistry.runApplication('questionanswer', {
     rootTag: document.getElementById('react-root'),
     initialProps: { ddOverride: DD }
   })

@@ -3,7 +3,7 @@ import './App.css'
 import Modal  from 'react-modal'
 import client from '@doubledutch/admin-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
-const fbc = FirebaseConnector(client, 'qaapp')
+const fbc = FirebaseConnector(client, 'questionanswer')
 
 fbc.initializeAppWithSimpleBackend()
 

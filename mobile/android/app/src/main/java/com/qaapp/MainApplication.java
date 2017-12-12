@@ -1,4 +1,4 @@
-package com.qaapp;
+package com.questionanswer;
 
 import android.app.Application;
 

@@ -5,7 +5,7 @@ import ReactNative, {
 } from 'react-native'
 import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
-const fbc = FirebaseConnector(client, 'qaapp')
+const fbc = FirebaseConnector(client, 'questionanswer')
 fbc.initializeAppWithSimpleBackend()
 
 export default class HomeView extends Component {
