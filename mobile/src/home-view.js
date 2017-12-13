@@ -113,8 +113,8 @@ class HomeView extends Component {
   }
   render() {
     const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state   
-    var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.answered === false && item.block === false && item.session === session)
-    var otherQuestions = this.state.questions.filter(item => item.pin === false && item.answered === false && item.block === false && item.session === session)
+    var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session)
+    var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session)
     this.originalOrder(otherQuestions)
     let newQuestions = pinnedQuestions.concat(otherQuestions)
   
