@@ -1,33 +1,41 @@
 'use strict'
 import React, { Component } from 'react'
 import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal
+  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Image, Modal
 } from 'react-native'
 import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
+import MyList  from './table'
+import CustomModal from './modal'
 const fbc = FirebaseConnector(client, 'qaapp')
 fbc.initializeAppWithSimpleBackend()
 
-export default class HomeView extends Component {
+class HomeView extends Component {
   constructor() {
     super()
     this.state = {
-      question: '',
-      vote: '',
-      questions: [],
-      sharedVotes: [],
-      moderator: [],
-      characterCount: 0,
-      showRecent: false,
-      newUpdate: false,
-      modalVisible: false,
-      anom: false,
-      color: 'white',
-      height: 20,
-      newValue: '',
-      marginTop: 18
+      question: '', 
+      vote: '', 
+      launch: true, 
+      disable: true, 
+      session: '', 
+      sessions: [], 
+      questions: [], 
+      sharedVotes: [], 
+      moderator: [], 
+      characterCount: 0, 
+      showRecent: false, 
+      showAnswer: false, 
+      showError: "white", 
+      newUpdate: false, 
+      modalVisible: true, 
+      anom: false, 
+      color: 'white', 
+      height: 20, 
+      newValue: '', 
+      marginTop: 18, 
+      animation: "none"
     }
-    
     this.signin = fbc.signin()
       .then(user => this.user = user)
       .catch(err => console.error(err))
@@ -38,6 +46,11 @@ export default class HomeView extends Component {
       const questionsRef = fbc.database.public.allRef('questions')
       const votesRef = fbc.database.public.allRef('votes')
       const modRef = fbc.database.public.allRef('moderators')
+      const sessRef = fbc.database.public.allRef('sessions')
+
+      sessRef.on('child_added', data => {
+        this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
+      })
 
       modRef.on('child_added', data => {
         this.setState({ moderator: [...this.state.moderator, {...data.val(), key: data.key }] })
@@ -49,7 +62,6 @@ export default class HomeView extends Component {
           if (moderator[i].key === data.key) {
             moderator[i].approve = data.val().approve
             this.setState({moderator})
-            console.log(moderator)
             break;
           }
         }
@@ -58,16 +70,9 @@ export default class HomeView extends Component {
       questionsRef.on('child_added', data => {
         this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
         fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
-          // const votesForQuestion = (this.state.votes[data.key] || 0) + 1
-          // this.setState({votes: {...this.state.votes, [data.key]: votesForQuestion}})
-          // var userVote = false
           const userVote = vote.key === client.currentUser.id
-          // if (vote.key === client.currentUser.id){
-          //   userVote = true
-          // }
           var questions = this.state.questions.map(question => 
             question.key === data.key ?
-            // transform the one with a matching id
             { ...question, myVote: userVote, score: question.score + 1}
             : 
             question
@@ -75,15 +80,12 @@ export default class HomeView extends Component {
           this.setState({questions})
         })
         fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
-          // const votesForQuestion = (this.state.votes[question.key] || 0) - 1
-          // this.setState({votes: {...this.state.votes, [question.key]: votesForQuestion}})
           var userVote = true
           if (vote.key === client.currentUser.id){
             userVote = false
           }
           var questions = this.state.questions.map(question => 
             question.key === data.key ?
-                    // transform the one with a matching id
               { ...question, myVote: userVote, score: question.score - 1}
               : 
               question
@@ -96,7 +98,8 @@ export default class HomeView extends Component {
         var questions = this.state.questions
         for (var i in questions) {
           if (questions[i].key === data.key) {
-            questions[i].approve = data.val().approve
+            questions[i] = data.val()
+            questions[i].key = data.key
             this.setState({questions})
             break
           }
@@ -106,192 +109,108 @@ export default class HomeView extends Component {
       questionsRef.on('child_removed', data => {
           this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
       })
-
     })
   }
-
-  renderHeader = (questions) => {
-    if (this.state.showRecent === false) {
-      return (
-        <View style={s.buttonContainer}>
-          <View style={s.divider}/>
-          <TouchableOpacity style={s.button1} onPress={() => this.findOrder(questions)}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
-          <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={() => this.findOrderDate(questions)}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
-          <View style={s.divider}/>
-        </View>
-      )
-    }
-    if (this.state.showRecent === true) {
-      return (
-        <View style={s.buttonContainer}>
-          <View style={s.divider}/>
-          <TouchableOpacity style={s.button2} onPress={() => this.findOrder(questions)}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
-          <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button1} onPress={() => this.findOrderDate(questions)}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
-          <View style={s.divider}/>
-        </View>
-      )
-    }
-  };
-
-  showModal(){
-    this.setState({modalVisible: true})
-  }
-
-  hideModal(){
-    this.setState({modalVisible: false})
-  }
-
-  makeTrue(){
-    if (this.state.anom === false){
-      this.setState({anom: true, color: 'black'})
-    }
-    if (this.state.anom === true){
-      this.setState({anom: false, color: 'white'})
-    }
-  }
-
-  updateSize = (height) => {
-    this.setState({
-      height,
-    });
-  }
-
   render() {
-    const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator} = this.state   
-      this.originalOrder(questions)
-      const newStyle = {
-        height,
-        flex: 1,
-        marginTop,
-        marginBottom: 20,
-        fontSize: 18,
-        color: '#9B9B9B',
-        textAlignVertical: 'top'
-      }
-    
+    const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state   
+    var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session)
+    var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session)
+    this.originalOrder(otherQuestions)
+    let newQuestions = pinnedQuestions.concat(otherQuestions)
+  
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
       <TitleBar title="Keynote" client={client} signin={this.signin} />
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={this.state.modalVisible}
-        onRequestClose={() => {alert("Modal has been closed.")}}>
-        <View style={s.modal}>
-          <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-            <TextInput style={[newStyle]} placeholder="Type your question here"
-              value={this.state.question}
-              onChangeText={question => this.setState({question, marginTop: 20})} 
-              maxLength={250}
-              autoFocus={true}
-              multiline={true}
-              placeholderTextColor="#9B9B9B"
-              onContentSizeChange={(e) => this.updateSize(e.nativeEvent.contentSize.height)}/>
-            <Text style={s.counter}>{250 - this.state.question.length} </Text>
-        </View>
-        <View style={s.bottomButtons}>
-          <View style={s.anomBox}>
-            <TouchableOpacity style={s.checkButton} onPress={() => this.makeTrue()}><Text style={{color:this.state.color, textAlign: 'center'}}>X</Text></TouchableOpacity>
-            <Text style={s.anomText}>Ask anonymously</Text>
-          </View>
-            <TouchableOpacity style={s.sendButton} onPress={this.createSharedTask}><Text style={s.sendButtonText}>Ask Question</Text></TouchableOpacity>
-        </View>
-          <TouchableOpacity style={s.modalBottom} onPress={() => this.hideModal()}></TouchableOpacity> 
-      </Modal>
+      <CustomModal
+      sessions={sessions}
+      launch={launch}
+      showModal = {this.showModal}
+      closeSessionModal = {this.closeSessionModal}
+      makeTrue = {this.makeTrue}
+      createSharedTask = {this.createSharedTask}
+      selectSession = {this.selectSession}
+      disable = {this.state.disable}
+      question = {this.state.question}
+      showError = {this.state.showError}
+      session = {this.state.session}
+      hideModal = {this.hideModal}
+      modalVisible = {this.state.modalVisible}
+      />
       <View>
         <TouchableOpacity style={s.compose} onPress={() => this.showModal()}>
           <TouchableOpacity style={s.circleBox} onPress={() => this.showModal()}><Text style={s.whiteText}>?</Text></TouchableOpacity>
           <TouchableOpacity style={s.composeBox} onPress={() => this.showModal()}><Text style={s.composeText}>Type your question here</Text></TouchableOpacity>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={questions}
-        ListHeaderComponent={this.renderHeader(questions)}
-        renderItem={({item}) =>{          
-          if (moderator.length === 0) {
-            return (
-              <View style={s.listContainer}>
-                <View style={s.leftContainer}>
-                  <TouchableOpacity onPress={() => this.newVote(item)}><Text style={s.checkmark}>👍 </Text></TouchableOpacity>
-                  <Text style={s.subText}>{item.score}</Text>
-                </View>
-                <View style={s.rightContainer}>
-                  <Text style={s.questionText}>{item.text}</Text>
-                  {item.anom === false &&
-                  <Text style={s.nameText}>
-                    -{item.creator.firstName} {item.creator.lastName}
-                  </Text>
-                }
-                {item.anom === true &&
-                  <Text style={s.nameText}>
-                    -Anonymous
-                  </Text>
-                }
-                </View>
-              </View>
-              )
-            }
-          if (moderator.length > 0){
-            if (moderator[0].approve !== true ) {
-              return(
-                <View style={s.listContainer}>
-                  <View style={s.leftContainer}>
-                    <TouchableOpacity onPress={() => this.newVote(item)}><Text style={s.checkmark}>👍 </Text></TouchableOpacity>
-                    <Text style={s.subText}>{item.score}</Text>
-                  </View>
-                  <View style={s.rightContainer}>
-                    <Text style={s.questionText}>{item.text}</Text>
-                    {item.anom === false &&
-                    <Text style={s.nameText}>
-                      -{item.creator.firstName} {item.creator.lastName}
-                    </Text>
-                  }
-                    {item.anom === true &&
-                    <Text style={s.nameText}>
-                      -Anonymous
-                    </Text>
-                  }
-                  </View>
-                </View>
-                )
-              }
-
-            if (moderator[0].approve === true ){
-              if (item.approve === true){
-                return(
-                  <View style={s.listContainer}>
-                    <View style={s.leftContainer}>
-                      <TouchableOpacity onPress={() => this.newVote(item)}><Text style={s.checkmark}>👍 </Text></TouchableOpacity>
-                      <Text style={s.subText}>{item.score}</Text>
-                    </View>
-                    <View style={s.rightContainer}>
-                      <Text style={s.questionText}>{item.text}</Text>
-                      {item.anom === false &&
-                      <Text style={s.nameText}>
-                        -{item.creator.firstName} {item.creator.lastName}
-                      </Text>
-                      }
-                      {item.anom === true &&
-                      <Text style={s.nameText}>
-                        -Anonymous
-                      </Text>
-                      }
-                    </View>
-                  </View>
-                  )
-              }
-            }
-          }
-        }
-        }
-        />
+      <MyList 
+      questions={newQuestions}
+      showAnswer = {this.state.showAnswer}
+      moderator = {this.state.moderator}
+      showRecent = {this.state.showRecent}
+      showAnswered = {this.showAnswered}
+      findOrder = {this.findOrder}
+      findOrderDate = {this.findOrderDate}
+      originalOrder = {this.originalOrder}
+      showModal = {this.showModal}
+      newVote = {this.newVote}
+      />
       </KeyboardAvoidingView>
     )
   }
 
-  originalOrder(questions){
+  showAnswered = () => {
+    this.setState({showAnswer: true})
+}
+
+  renderIcon = (question) => {
+    if (question.myVote === true){
+      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={require('./icons/Active.png')}/></TouchableOpacity>
+    }
+    else {
+      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={require('./icons/Inactive.png')}/></TouchableOpacity>
+    }
+  }
+
+  showModal = () => {
+    this.setState({modalVisible: true, animation: "none"})
+  }
+
+  hideModal = () => {
+    if (this.state.launch === false) {
+      this.setState({modalVisible: false, animation: "slide"})
+    }
+    if (this.state.launch === true){
+      this.setState({modalVisible: false, animation: "slide"})
+    }
+  }
+  
+  selectSession = (session) => {
+    this.setState({session, disable: false})
+  }
+
+  closeSessionModal = () => {
+    this.setState({launch: false})
+    this.hideModal()
+  }
+
+  renderModalHeader = () => {
+    return(
+      <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
+        <Text style={s.modHeader}> Please confirm your session</Text>
+      </View>
+      )
+    }
+
+  renderModIcon= (item) => {
+    if (this.state.session === item) {
+      return <Image source={require('./icons/radio_active.png')}/>
+    }
+    else {
+      return <Image source={require('./icons/radio_inactive.png')}/>
+    }
+  }
+
+  originalOrder = (questions) => {
     if (this.state.showRecent === false) {
       questions.sort(function (a,b){
         return b.score - a.score
@@ -304,34 +223,47 @@ export default class HomeView extends Component {
     }
   }
 
-  findOrder(questions){
-    this.setState({showRecent: false})
+  findOrder = () => {
+    this.setState({showRecent: false, showAnswer: false})
   }
 
-  findOrderDate(questions){
-    this.setState({showRecent: true})
+  findOrderDate = () => {
+    this.setState({showRecent: true, showAnswer: false})
   }
 
-  createSharedTask = () => this.createQuestion(fbc.database.public.allRef)
+  createSharedTask = (question, anom) => this.createQuestion(fbc.database.public.allRef, question, anom)
  
-  createQuestion(ref) {
+  createQuestion = (ref, question, anom) => {
     var time = new Date().getTime()
-    if (this.user && this.state.question) {
+    if (question.length === 0) {
+      this.setState({showError: "red"})
+    }
+    if (this.user && question.length > 0) {
       ref('questions').push({
-        text: this.state.question,
+        text: question,
         creator: client.currentUser,
         score : 0,
         dateCreate: time,
-        anom: this.state.anom,
-        approve: false
+        anom: anom,
+        approve: false,
+        block: false,
+        event: client.currentEvent,
+        new: true,
+        answered: false,
+        pin: false,
+        lastEdit: time, 
+        session: this.state.session
       })
-      .then(() => this.setState({question: '', anom: false}))
+      .then(() => this.setState({question: '', anom: false, showError: "white"}))
       .catch (x => console.error(x))
+      .then(setTimeout(() => {
+        this.hideModal()
+        }
+        ,250))
     }
-    this.hideModal()    
   }
 
-  newVote(question){
+  newVote = (question) => {
     if (question.myVote === true) {
       fbc.database.public.allRef("votes").child(question.key).child(client.currentUser.id).remove()
     }
@@ -341,8 +273,9 @@ export default class HomeView extends Component {
       .catch (x => console.error(x))
     }
   }
- 
 }
+
+export default HomeView
 
 const fontSize = 18
 const s = ReactNative.StyleSheet.create({
@@ -354,6 +287,14 @@ const s = ReactNative.StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     
+  },
+
+  modHeader: {
+    backgroundColor: 'white', 
+    height: 51, 
+    fontSize: 18, 
+    textAlign: "center", 
+    paddingTop: 15, 
   },
   bottomButtons: {
     flexDirection: 'row',
@@ -382,6 +323,17 @@ const s = ReactNative.StyleSheet.create({
     color: '#9B9B9B',
 
   },
+  bigButton:{
+    backgroundColor: new Color().rgbString() ,
+    height: 42, 
+    marginTop: 30, 
+    marginBottom: 30, 
+    marginLeft: 21, 
+    marginRight: 21,
+    borderRadius: 4,
+    borderTopWidth: 1,
+    borderTopColor: "#b7b7b7"
+  },
   button: {
     width: '25%',
     height: 40,
@@ -397,6 +349,7 @@ const s = ReactNative.StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: new Color().rgbString() 
   },
+
   button2: {
     height: 40,
     paddingTop: 10,
@@ -404,10 +357,10 @@ const s = ReactNative.StyleSheet.create({
     justifyContent: 'center', 
   },
   divider: {
-    width: 110
+    flex: 1
   },
   dividerSm: {
-    flex: 1
+    width: 30
   },
   questionText:{
     fontSize: 16,
@@ -442,16 +395,22 @@ const s = ReactNative.StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
   },
+  rightBox: {
+    flex: 1,
+    flexDirection: 'column',
+  },
   anomText: {
     flex:1,
     fontSize: 14,
     color: '#364247',
     marginLeft: 5,
-    marginTop: 32,
+    marginTop: 16,
   },
   checkmark: {
     textAlign: 'center',
-    fontSize,
+    height: 16,
+    width: 16,
+    marginTop: 4
   },
   compose: {
     flexDirection: 'row',
@@ -473,8 +432,8 @@ const s = ReactNative.StyleSheet.create({
     paddingBottom: 8,
     paddingLeft: 8,
     paddingRight: 8,
-    height: 20,
-    borderRadius: 100/2,
+    height: 22,
+    borderRadius: 50,
   },
   sendButtons: {
     justifyContent: 'center',
@@ -502,7 +461,7 @@ const s = ReactNative.StyleSheet.create({
   checkButton: {
     justifyContent: 'center',
     marginLeft: 12,
-    marginTop: 32,
+    marginTop: 15,
     height: 19,
     width: 19,
     borderColor: '#9B9B9B',
