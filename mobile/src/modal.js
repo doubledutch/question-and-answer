@@ -137,14 +137,25 @@ export class CustomModal extends Component {
    }
 
    renderModalHeader = () => {
+    if (this.props.sessions.length === 0){
         return(
-        <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
+        <View>
+          <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1, marginBottom: 150}}>
             <Text style={s.modHeader}> Please confirm your session</Text>
+          </View >
+            <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>No Live Sessions Available</Text>
         </View>
         )
+      }
+      else {
+        return( 
+        <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
+          <Text style={s.modHeader}> Please confirm your session</Text>
+        </View >
+        )
+      }
   }
    
-
 }
 
 export default CustomModal

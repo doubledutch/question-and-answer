@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="18px" viewBox="0 0 24 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>check</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Step-3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-1231.000000, -490.000000)">
+        <g id="New-Questions" transform="translate(20.000000, 412.000000)" fill="#009DCD">
+            <g id="Group" transform="translate(1211.000000, 78.000000)">
+                <path d="M8.801124,16.8290143 C8.396124,17.2340143 7.740124,17.2340143 7.335124,16.8290143 L0.540123995,10.0340143 C-0.251876005,9.2420143 -0.172876005,7.9090143 0.777123995,7.2250143 C1.522124,6.6880143 2.568124,6.8460143 3.218124,7.4960143 L7.340124,11.6180143 C7.743124,12.0210143 8.397124,12.0210143 8.800124,11.6180143 L19.823124,0.595014301 C20.472124,-0.0549856992 21.518124,-0.212985699 22.264124,0.324014301 C23.214124,1.0080143 23.293124,2.3420143 22.501124,3.1340143 L8.801124,16.8290143" id="check"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -20,15 +20,19 @@ export class MyList extends Component {
     const showRecent = this.props.showRecent
     const moderator = this.props.moderator
     let newQuestions = this.props.questions
+
     if (showAnswer === true){
       newQuestions = newQuestions.filter(item => item.answered === true)
+    }
+    if (showAnswer === false){
+      newQuestions = newQuestions.filter(item => item.answered === false)
     }
 
     return (
       <FlatList
       data={newQuestions}
       ListHeaderComponent={this.renderHeader(this.props.questions)}
-      renderItem={({item}) => {   
+      renderItem={({item}) => {
         if (moderator.length > 0){
           if (moderator[0].approve !== true && item.answered === false) {
             return(
@@ -54,7 +58,6 @@ export class MyList extends Component {
             )
           }
           if (moderator[0].approve === true && item.approve === true && item.answered === false){
-           
               return(
                 <View style={s.listContainer}>
                   <View style={s.leftContainer}>
@@ -141,14 +144,14 @@ export class MyList extends Component {
           <View style={s.divider}/>
           <TouchableOpacity style={s.button1}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
           <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={this.findOrderDate}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
+          <TouchableOpacity style={s.button2} onPress={this.props.findOrderDate}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
           <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={this.showAnswer.bind(this)}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
+          <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
           <View style={s.divider}/>
           </View>
           <View style={{marginTop: 96}}>
           <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>Be the First to Ask a Question!</Text>
-          <TouchableOpacity onPress={this.modalOpen.bind(this)}><Text style={{textAlign: "center", fontSize: 16, color: new Color().rgbString()}}>Tap here to get started</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 16, color: new Color().rgbString()}}>Tap here to get started</Text></TouchableOpacity>
             </View>
         </View>
       )
@@ -175,7 +178,7 @@ export class MyList extends Component {
           <View style={s.dividerSm}/>
           <TouchableOpacity style={s.button2} onPress={this.props.findOrderDate}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
           <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={this.showAnswer.bind(this)}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
+          <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
           <View style={s.divider}/>
         </View>
       )
@@ -188,16 +191,16 @@ export class MyList extends Component {
           <View style={s.dividerSm}/>
           <TouchableOpacity style={s.button1}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
           <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={this.showAnswer.bind(this)}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
+          <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
           <View style={s.divider}/>
         </View>
       )
     }
   }
 
-  origOrder = () => {
-    this.props.originalOrder(this.otherQuestions)
-  }
+  // origOrder = () => {
+  //   this.props.originalOrder(this.otherQuestions)
+  // }
  
   renderIcon = (question) => {
     if (question.myVote === true){
@@ -212,13 +215,13 @@ export class MyList extends Component {
     this.props.newVote(question)
   }
 
-  showAnswer(){
-    this.props.showAnswered()
-  }
+  // showAnswer(){
+  //   this.props.showAnswered()
+  // }
 
-  modalOpen(){
-    this.props.showModal()
-  }
+  // modalOpen(){
+  //   this.props.showModal()
+  // }
 
 }
 
