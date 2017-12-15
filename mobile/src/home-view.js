@@ -137,9 +137,9 @@ class HomeView extends Component {
       modalVisible = {this.state.modalVisible}
       />
       <View>
-        <TouchableOpacity style={s.compose} onPress={() => this.showModal()}>
-          <TouchableOpacity style={s.circleBox} onPress={() => this.showModal()}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-          <TouchableOpacity style={s.composeBox} onPress={() => this.showModal()}><Text style={s.composeText}>Type your question here</Text></TouchableOpacity>
+        <TouchableOpacity style={s.compose} onPress={this.showModal}>
+          <TouchableOpacity style={s.circleBox} onPress={this.showModal}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+          <TouchableOpacity style={s.composeBox} onPress={this.showModal}><Text style={s.composeText}>Type your question here</Text></TouchableOpacity>
         </TouchableOpacity>
       </View>
       <MyList 
