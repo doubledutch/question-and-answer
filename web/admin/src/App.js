@@ -199,7 +199,6 @@ export default class App extends Component {
               })
               }
             </ul>
-            <button className="answerButton" onClick={this.openModal}>Remove All</button>
           </span>
         </div>
         )
