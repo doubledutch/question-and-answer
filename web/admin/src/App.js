@@ -476,7 +476,7 @@ export default class App extends Component {
                     <li className='cellBox' key={task.key}>
                       <CustomCell
                       task = {task}
-                      difference = {this.difference}
+                      difference = {difference}
                       />
                       <CustomButtons
                       task = {task}
