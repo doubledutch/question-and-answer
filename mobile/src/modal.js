@@ -38,23 +38,18 @@ export class CustomModal extends Component {
 
     render(){
         const newStyle = {
-            height: this.state.height,
             flex: 1,
-            marginTop: this.state.marginTop,
             marginBottom: 20,
             fontSize: 18,
             color: '#9B9B9B',
-            textAlignVertical: 'top'
+            textAlignVertical: 'top',
+            height: this.state.height,
+            marginTop: this.state.marginTop
         }
 
         if (this.props.launch === true) {
             return(
-                <Modal
-                animationType={this.props.animation}
-                transparent={true}
-                visible={this.props.modalVisible}
-                onRequestClose={() => {alert("Modal has been closed.")}}>
-                    <TouchableOpacity style={s.modalTop} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
+                <View style={{flex: 1}}>
                     <FlatList
                     style={{backgroundColor: '#EFEFEF'}}
                     ListHeaderComponent={this.renderModalHeader()}
@@ -69,24 +64,20 @@ export class CustomModal extends Component {
                                 <Text style={{fontSize: 16}}>{item.sessionName}</Text>
                             </View>
                         </TouchableOpacity>
-                        )   
+                        )
                     }
                     }
                     />
-                    <View style={{borderTopColor:"#b7b7b7", borderTopWidth: 1}}>
+                    <View style={{borderTopColor:"#b7b7b7", borderTopWidth: 1, backgroundColor: '#EFEFEF'}}>
                         <TouchableOpacity disabled={this.props.disable} onPress={this.props.closeSessionModal} style={s.bigButton}><Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>Join Q&A</Text></TouchableOpacity>
                     </View>
-                </Modal>
+                </View>
             )
-      }
+        }
 
       else {
         return (
-            <Modal
-            animationType={this.props.animation}
-            transparent={true}
-            visible={this.props.modalVisible}
-            onRequestClose={() => {alert("Modal has been closed.")}}>
+            <View style={{flex: 1}}>
                 <View style={s.modal}>
                     <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
                     <TextInput style={[newStyle]} placeholder="Type your question here"
@@ -110,7 +101,7 @@ export class CustomModal extends Component {
                 <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anom)}><Text style={s.sendButtonText}>Ask Question</Text></TouchableOpacity>
             </View>
             <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
-        </Modal>
+        </View>
         )
       }
     }
@@ -187,9 +178,7 @@ const s = ReactNative.StyleSheet.create({
 
   },
 
- 
   modal: {
-    marginTop: 65,
     flexDirection: 'row',
     backgroundColor: 'white',
     borderBottomColor: '#EFEFEF',
@@ -201,10 +190,6 @@ const s = ReactNative.StyleSheet.create({
     opacity: 0.5
   },
 
-  modalTop: {
-    height: 65,
-    opacity: 1
-  },
   subText:{
     fontSize: 12,
     color: '#9B9B9B'
