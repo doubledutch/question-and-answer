@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/dd-rn-packager/react-native/local-cli/cli.js start --port 8081",
-    "clean": "watchman watch-del-all && rm -rf node_modules && rm -fr $TMPDIR/react-* && (yarn || npm i)",
+    "clean": "watchman watch-del-all && rm -rf node_modules && rm -fr $TMPDIR/react-* && (yarn || npm i) && rm -rf ./ios/build",
     "ios": "node node_modules/dd-rn-packager/react-native/local-cli/cli.js run-ios",
     "android": "node node_modules/dd-rn-packager/react-native/local-cli/cli.js run-android"
   },
@@ -15,7 +15,10 @@
     "react": "~16.0.0-alpha.12",
     "react-native": "0.46.4",
     "react-native-cached-image": "^1.3.3",
-    "react-native-fetch-blob": "^0.10.8"
+    "react-native-camera": "^0.12.0",
+    "react-native-fetch-blob": "^0.10.8",
+    "react-native-video": "^2.0.0",
+    "react-native-youtube": "^1.0.1"
   },
   "devDependencies": {
     "babel-preset-env": "^1.6.1",
