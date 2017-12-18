@@ -199,7 +199,6 @@ export default class App extends Component {
               })
               }
             </ul>
-            <button className="answerButton" onClick={this.openModal}>Remove All</button>
           </span>
         </div>
         )
@@ -476,7 +475,7 @@ export default class App extends Component {
                     <li className='cellBox' key={task.key}>
                       <CustomCell
                       task = {task}
-                      difference = {this.difference}
+                      difference = {difference}
                       />
                       <CustomButtons
                       task = {task}
