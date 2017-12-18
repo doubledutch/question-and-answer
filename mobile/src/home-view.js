@@ -112,15 +112,49 @@ class HomeView extends Component {
     })
   }
   render() {
+    return (
+      <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
+        <TitleBar title="Keynote" client={client} signin={this.signin} />
+        {this.renderHome()}
+      </KeyboardAvoidingView> 
+    )
+  }
+
+
+
+  renderHome = () => {
     const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state   
     var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session)
     var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session)
     this.originalOrder(otherQuestions)
     let newQuestions = pinnedQuestions.concat(otherQuestions)
   
-    return (
-      <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
-      <TitleBar title="Keynote" client={client} signin={this.signin} />
+    if (this.state.modalVisible === false){
+      return(
+      <View>  
+        <View>
+          <TouchableOpacity style={s.compose} onPress={this.showModal}>
+            <TouchableOpacity style={s.circleBox} onPress={this.showModal}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+            <TouchableOpacity style={s.composeBox} onPress={this.showModal}><Text style={s.composeText}>Type your question here</Text></TouchableOpacity>
+          </TouchableOpacity>
+        </View>
+        <MyList 
+        questions={newQuestions}
+        showAnswer = {this.state.showAnswer}
+        moderator = {this.state.moderator}
+        showRecent = {this.state.showRecent}
+        showAnswered = {this.showAnswered}
+        findOrder = {this.findOrder}
+        findOrderDate = {this.findOrderDate}
+        originalOrder = {this.originalOrder}
+        showModal = {this.showModal}
+        newVote = {this.newVote}
+        />
+      </View>
+      )
+    }
+    else {
+      return(
       <CustomModal
       sessions={sessions}
       launch={launch}
@@ -136,31 +170,13 @@ class HomeView extends Component {
       hideModal = {this.hideModal}
       modalVisible = {this.state.modalVisible}
       />
-      <View>
-        <TouchableOpacity style={s.compose} onPress={this.showModal}>
-          <TouchableOpacity style={s.circleBox} onPress={this.showModal}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-          <TouchableOpacity style={s.composeBox} onPress={this.showModal}><Text style={s.composeText}>Type your question here</Text></TouchableOpacity>
-        </TouchableOpacity>
-      </View>
-      <MyList 
-      questions={newQuestions}
-      showAnswer = {this.state.showAnswer}
-      moderator = {this.state.moderator}
-      showRecent = {this.state.showRecent}
-      showAnswered = {this.showAnswered}
-      findOrder = {this.findOrder}
-      findOrderDate = {this.findOrderDate}
-      originalOrder = {this.originalOrder}
-      showModal = {this.showModal}
-      newVote = {this.newVote}
-      />
-      </KeyboardAvoidingView>
-    )
+      )
+    }
   }
 
   showAnswered = () => {
     this.setState({showAnswer: true})
-}
+  }
 
   renderIcon = (question) => {
     if (question.myVote === true){
