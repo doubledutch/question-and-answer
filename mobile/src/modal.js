@@ -51,10 +51,10 @@ export class CustomModal extends Component {
             return(
                 <Modal
                 animationType={this.props.animation}
-                transparent={false}
+                transparent={true}
                 visible={this.props.modalVisible}
                 onRequestClose={() => {alert("Modal has been closed.")}}>
-                    <TitleBar title="Keynote" client={client} signin={this.signin}  />
+                    <TouchableOpacity style={s.modalTop} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
                     <FlatList
                     style={{backgroundColor: '#EFEFEF'}}
                     ListHeaderComponent={this.renderModalHeader()}
@@ -137,7 +137,14 @@ export class CustomModal extends Component {
    }
 
    renderModalHeader = () => {
-    if (this.props.sessions.length === 0){
+      if (this.props.sessions.length > 0){
+        return( 
+        <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
+          <Text style={s.modHeader}> Please confirm your session</Text>
+        </View >
+        )
+      }
+      else {
         return(
         <View>
           <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1, marginBottom: 150}}>
@@ -147,15 +154,7 @@ export class CustomModal extends Component {
         </View>
         )
       }
-      else {
-        return( 
-        <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
-          <Text style={s.modHeader}> Please confirm your session</Text>
-        </View >
-        )
-      }
   }
-   
 }
 
 export default CustomModal
@@ -200,6 +199,11 @@ const s = ReactNative.StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     opacity: 0.5
+  },
+
+  modalTop: {
+    height: 65,
+    opacity: 1
   },
   subText:{
     fontSize: 12,
