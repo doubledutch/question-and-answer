@@ -209,14 +209,6 @@ class HomeView extends Component {
     this.hideModal()
   }
 
-  renderModalHeader = () => {
-    return(
-      <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
-        <Text style={s.modHeader}> Please confirm your session</Text>
-      </View>
-      )
-    }
-
   renderModIcon= (item) => {
     if (this.state.session === item) {
       return <Image source={require('./icons/radio_active.png')}/>
