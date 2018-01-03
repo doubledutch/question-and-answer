@@ -7,7 +7,7 @@ import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import MyList  from './table'
 import CustomModal from './modal'
-const fbc = FirebaseConnector(client, 'questionanswerrrrr5')
+const fbc = FirebaseConnector(client, 'questionanswer')
 fbc.initializeAppWithSimpleBackend()
 
 class HomeView extends Component {
