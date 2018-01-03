@@ -180,10 +180,10 @@ class HomeView extends Component {
 
   renderIcon = (question) => {
     if (question.myVote === true){
-      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={{uri: "https://dd.prod.assets.s3.amazonaws.com/extensions/question-and-answer/Active.png"}}/></TouchableOpacity>
+      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Active.png"}}/></TouchableOpacity>
     }
     else {
-      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={{uri: "https://dd.prod.assets.s3.amazonaws.com/extensions/question-and-answer/Inactive.png"}}/></TouchableOpacity>
+      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Inactive.png"}}/></TouchableOpacity>
     }
   }
 
@@ -219,10 +219,10 @@ class HomeView extends Component {
 
   renderModIcon= (item) => {
     if (this.state.session === item) {
-      return <Image style={{width: 20, height: 20}} source={{uri: "https://dd.prod.assets.s3.amazonaws.com/extensions/question-and-answer/radio_active.png"}}/>
+      return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_active.png"}}/>
     }
     else {
-      return <Image style={{width: 20, height: 20}} source={{uri: "https://dd.prod.assets.s3.amazonaws.com/extensions/question-and-answer/radio_inactive.png"}}/>
+      return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_inactive.png"}}/>
     }
   }
 
