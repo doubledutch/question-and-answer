@@ -114,7 +114,7 @@ class HomeView extends Component {
   render() {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
-        <TitleBar title="Keynote" client={client} signin={this.signin} />
+        <TitleBar title="Q & A" client={client} signin={this.signin} />
         {this.renderHome()}
       </KeyboardAvoidingView> 
     )
@@ -180,10 +180,10 @@ class HomeView extends Component {
 
   renderIcon = (question) => {
     if (question.myVote === true){
-      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={require('./icons/Active.png')}/></TouchableOpacity>
+      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Active.png"}}/></TouchableOpacity>
     }
     else {
-      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={require('./icons/Inactive.png')}/></TouchableOpacity>
+      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Inactive.png"}}/></TouchableOpacity>
     }
   }
 
@@ -211,10 +211,10 @@ class HomeView extends Component {
 
   renderModIcon= (item) => {
     if (this.state.session === item) {
-      return <Image source={require('./icons/radio_active.png')}/>
+      return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_active.png"}}/>
     }
     else {
-      return <Image source={require('./icons/radio_inactive.png')}/>
+      return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_inactive.png"}}/>
     }
   }
 

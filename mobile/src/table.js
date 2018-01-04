@@ -204,10 +204,10 @@ export class MyList extends Component {
  
   renderIcon = (question) => {
     if (question.myVote === true){
-      return <TouchableOpacity onPress={() => this.newVotes(question)}><Image style={s.checkmark} source={require('./icons/Active.png')}/></TouchableOpacity>
+      return <TouchableOpacity onPress={() => this.newVotes(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Active.png"}}/></TouchableOpacity>
     }
     else {
-       return <TouchableOpacity onPress={() => this.newVotes(question)}><Image style={s.checkmark} source={require('./icons/Inactive.png')}/></TouchableOpacity>
+       return <TouchableOpacity onPress={() => this.newVotes(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Inactive.png"}}/></TouchableOpacity>
     }
   }
 

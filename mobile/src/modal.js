@@ -120,10 +120,10 @@ export class CustomModal extends Component {
     
     renderModIcon= (item) => {
         if (this.props.session === item) {
-            return <Image source={require('./icons/radio_active.png')}/>
+            return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_active.png"}}/>
         }
         else {
-            return <Image source={require('./icons/radio_inactive.png')}/>
+            return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_inactive.png"}}/>
         }
    }
 
