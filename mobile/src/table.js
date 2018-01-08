@@ -330,7 +330,6 @@ const s = ReactNative.StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 10,
     backgroundColor: 'white',
-    flexDirection: 'column',
     alignItems:'center',
     height: '100%',
     paddingTop: 15
