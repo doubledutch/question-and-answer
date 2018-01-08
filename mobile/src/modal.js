@@ -46,6 +46,17 @@ export class CustomModal extends Component {
             height: this.state.height,
             marginTop: this.state.marginTop
         }
+        const androidStyle = {
+          flex: 1,
+          marginBottom: 20,
+          paddingTop: 2,
+          paddingLeft: 0,
+          fontSize: 18,
+          color: '#9B9B9B',
+          textAlignVertical: 'top',
+          height: this.state.height,
+          marginTop: this.state.marginTop
+        }
 
         if (this.props.launch === true) {
             return(
@@ -74,8 +85,9 @@ export class CustomModal extends Component {
                 </View>
             )
         }
-
+      
       else {
+        if (Platform.OS === "ios") {
         return (
             <View style={{flex: 1}}>
                 <View style={s.modal}>
@@ -103,6 +115,37 @@ export class CustomModal extends Component {
             <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
         </View>
         )
+      }
+
+        if (Platform.OS === "android") {
+          return (
+            <View style={{flex: 1}}>
+                <View style={s.modal}>
+                    <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+                    <TextInput style={[androidStyle]} placeholder="Type your question here"
+                    value={this.state.question}
+                    onChangeText={question => this.setState({question, marginTop: 20})} 
+                    maxLength={250}
+                    autoFocus={true}
+                    multiline={true}
+                    placeholderTextColor="#9B9B9B"
+                    onContentSizeChange={(e) => this.updateSize(e.nativeEvent.contentSize.height)}/>
+                    <Text style={s.counter}>{250 - this.state.question.length} </Text>
+                </View>
+                <View style={s.bottomButtons}>
+                <View style={s.rightBox}>
+                    <Text style={{color: this.props.showError, paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a question</Text>
+                    <View style={s.anomBox}>
+                        <TouchableOpacity style={s.checkButton} onPress={() => this.makeTrue()}><Text style={{color:this.state.color, textAlign: 'center', fontWeight: "bold"}}>X</Text></TouchableOpacity>
+                        <Text style={s.anomText}>Ask anonymously</Text>
+                    </View>
+                </View>
+                <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anom)}><Text style={s.sendButtonText}>Ask Question</Text></TouchableOpacity>
+            </View>
+            <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
+        </View>
+        )
+        }
       }
     }
 
@@ -255,7 +298,6 @@ const s = ReactNative.StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 10,
     backgroundColor: 'white',
-    flexDirection: 'column',
     alignItems:'center',
     height: '100%',
     paddingTop: 15
