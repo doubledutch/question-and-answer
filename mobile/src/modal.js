@@ -46,6 +46,18 @@ export class CustomModal extends Component {
             height: this.state.height,
             marginTop: this.state.marginTop
         }
+        
+        const androidStyle = {
+          flex: 1,
+          marginBottom: 20,
+          paddingTop: 2,
+          paddingLeft: 0,
+          fontSize: 18,
+          color: '#9B9B9B',
+          textAlignVertical: 'top',
+          height: this.state.height,
+          marginTop: this.state.marginTop
+        }
 
         if (this.props.launch === true) {
             return(
@@ -80,7 +92,7 @@ export class CustomModal extends Component {
             <View style={{flex: 1}}>
                 <View style={s.modal}>
                     <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-                    <TextInput style={[newStyle]} placeholder="Type your question here"
+                    <TextInput style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
                     value={this.state.question}
                     onChangeText={question => this.setState({question, marginTop: 20})} 
                     maxLength={250}
