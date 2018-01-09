@@ -46,6 +46,11 @@ export class CustomModal extends Component {
             height: this.state.height,
             marginTop: this.state.marginTop
         }
+        
+        const androidStyle = {
+          paddingTop: 2,
+          paddingLeft: 0
+        }
 
         if (this.props.launch === true) {
             return(
@@ -80,7 +85,7 @@ export class CustomModal extends Component {
             <View style={{flex: 1}}>
                 <View style={s.modal}>
                     <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-                    <TextInput style={[newStyle]} placeholder="Type your question here"
+                    <TextInput style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
                     value={this.state.question}
                     onChangeText={question => this.setState({question, marginTop: 20})} 
                     maxLength={250}
@@ -255,7 +260,6 @@ const s = ReactNative.StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 10,
     backgroundColor: 'white',
-    flexDirection: 'column',
     alignItems:'center',
     height: '100%',
     paddingTop: 15

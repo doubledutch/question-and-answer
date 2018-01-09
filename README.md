@@ -1,4 +1,4 @@
-# personal-leads
+# question-and-answer
 
 A React Native extension for DoubleDutch apps, providing simple Q&A with audience upvoting.
 
