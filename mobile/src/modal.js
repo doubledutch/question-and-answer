@@ -48,15 +48,8 @@ export class CustomModal extends Component {
         }
         
         const androidStyle = {
-          flex: 1,
-          marginBottom: 20,
           paddingTop: 2,
-          paddingLeft: 0,
-          fontSize: 18,
-          color: '#9B9B9B',
-          textAlignVertical: 'top',
-          height: this.state.height,
-          marginTop: this.state.marginTop
+          paddingLeft: 0
         }
 
         if (this.props.launch === true) {
