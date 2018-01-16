@@ -41,8 +41,8 @@ export default class App extends Component {
     this.signin.then(() => {
       const questionsRef = fbc.database.public.allRef('questions')
       const votesRef = fbc.database.public.allRef('votes')
-      const modRef = fbc.database.public.allRef('moderators')
-      const sessRef = fbc.database.public.allRef('sessions')
+      const modRef = fbc.database.public.adminRef('moderators')
+      const sessRef = fbc.database.public.adminRef('sessions')
 
       sessRef.on('child_added', data => {
         this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
@@ -625,29 +625,29 @@ export default class App extends Component {
 
   newSession = (newSession) =>  {
     if (this.state.moderator.length === 0){
-      fbc.database.public.allRef('moderators').push({"approve": false})
+      fbc.database.public.adminRef('moderators').push({"approve": false})
     }
-    fbc.database.public.allRef('sessions').push({sessionName: newSession})
+    fbc.database.public.adminRef('sessions').push({sessionName: newSession})
   }
 
   onApprove = () => {
     if (this.state.moderator.length === 0) {
-      fbc.database.public.allRef('moderators').push({"approve": true})
+      fbc.database.public.adminRef('moderators').push({"approve": true})
     }
     else {
       var mod = this.state.moderator[0]
-      fbc.database.public.allRef('moderators').child(mod.key).update({"approve": true})
+      fbc.database.public.adminRef('moderators').child(mod.key).update({"approve": true})
     }
   }
 
   makeSession = (text) => {
-    fbc.database.public.allRef('sessions').set({"sessionID": text})
+    fbc.database.public.adminRef('sessions').set({"sessionID": text})
   }
 
   offApprove = () => {
     var mod = this.state.moderator[0]
     // mod.approve = false
-    fbc.database.public.allRef('moderators').child(mod.key).update({"approve": false})
+    fbc.database.public.adminRef('moderators').child(mod.key).update({"approve": false})
   }
 
   makeApprove = (question) => {

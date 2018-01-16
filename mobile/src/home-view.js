@@ -45,8 +45,8 @@ class HomeView extends Component {
     this.signin.then(() => {
       const questionsRef = fbc.database.public.allRef('questions')
       const votesRef = fbc.database.public.allRef('votes')
-      const modRef = fbc.database.public.allRef('moderators')
-      const sessRef = fbc.database.public.allRef('sessions')
+      const modRef = fbc.database.public.adminRef('moderators')
+      const sessRef = fbc.database.public.adminRef('sessions')
 
       sessRef.on('child_added', data => {
         this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
