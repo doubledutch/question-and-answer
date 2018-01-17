@@ -57,13 +57,13 @@
 }
 
 .cellBox {
-  box-sizing: border-box;
+ box-sizing: border-box;
  border-bottom: 1px;
  min-height: 86px;
  flex-grow: 1;
  display: flex;
  flex-flow: nowrap;
-background-color: white;
+ background-color: white;
  border-bottom-style: solid;
  border-bottom-color: #DEDEDE;
 }
@@ -93,12 +93,26 @@ background-color: white;
 }
 
 .closeButton{
-  margin-Top: 5px;
   border: none;
   font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
-  margin-Left: 5px;
-  color:#898989;
+  font-size: 13px;
+  background-color: #9b9b9b;
+  height: 28px;
+  width: 200px;
+  border-radius: 2px;
+  color: white;
+}
 
+.smallCloseButton{
+  border: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 13px;
+  background-color: #D8D8D8;
+  height: 28px;
+  width: 68px;
+  margin-top: 6px;
+  border-radius: 2px;
+  color: #393939;
 }
 
 .qaButton{
@@ -110,6 +124,18 @@ background-color: white;
   height: 121px;
   height: 28px;
   margin-top: 10px;
+  border-radius: 2px;
+}
+
+.modalButton{
+  background-color: #009DCD;
+  border: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: white;
+  font-size: 13px;
+  height: 28px;
+  border-radius: 2px;
+  float: right;
 }
 
 .cellBoxText{
@@ -123,21 +149,59 @@ background-color: white;
 
 .Modal {
   position: absolute;
-  top: 40px;
-  left: 40px;
-  right: 40px;
-  bottom: 40px;
+  width: 650px;
   border: 1px solid #CDCDCD;
   border-radius: 4px;
-  background-color: #FFFFFF;
+  background-color: #FAFAFA;
 }
 
 .Overlay {
   position: fixed;
-  top: 10%;
-  left: 30%;
-  right: 30%;
-  bottom: 50%
+  top: 1%;
+  left: 28%;
+  background-color: #ffffff;
+}
+
+.sessionList {
+  border: 1px solid #CDCDCD;
+  padding: 0px;
+  background-color: #ffffff;
+  list-style: none;
+  overflow:hidden; 
+  overflow-y:scroll;
+  max-height: 200px;
+  min-height: 40px;
+  margin-left: 5px;
+  box-sizing: border-box;
+  list-style-type: none;
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+
+.sessionCell{
+  display: flex;
+  flex-direction: row;
+  width: 100%
+}
+
+.sessionTitle {
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 13px;
+  margin-left: 10px;
+  display: flex;
+  color: #393939;
+  border: none;
+  width: 100%;
+  
+}
+
+
+.modalButtonsBox {
+  display: flex;
+  margin-bottom: 30px;
+  margin-top: 5px;
+  margin-left: 25px;
+  margin-right: 25px;
 }
 
 .dropdownMenu{
@@ -286,12 +350,24 @@ background-color: white;
   border-radius: 50%;
 }
 
+
+.smallButton{
+  
+}
+
+.rightButtons{
+  margin-left: 20px;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: row
+}
 .modButton{
   border: none;
   background-color: #009DCD;
   color: white;
   height: 30px;
   width: 40px;
+  border-radius: 6px;
 }
 .modButton2{
   background-color: #D8D8D8;
@@ -299,6 +375,7 @@ background-color: white;
   color: white;
   height: 30px;
   width: 40px;
+  border-radius: 6px;
 }
 
 .listButton{
@@ -313,6 +390,14 @@ background-color: white;
   margin-top: 0px;
   white-space: nowrap;
 }
+
+.modalCellBox {
+  height: 40px;
+  margin: 0px;
+  border-bottom: 1px solid #CDCDCD;
+  display: flex;
+  background-color: #ffffff;
+ }
 
 .listButton2{
   border: none;
@@ -349,12 +434,42 @@ background-color: white;
 .boxTitle{
   font-size: 14px;
   height: 20px;
-  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   margin-bottom: 5px;
   color: #393939;
   white-space: nowrap;
   padding-top: 5px;
+  margin-right: 5px;
+}
+
+.modalTitle {
+  font-size: 16px;
+  height: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin-bottom: 5px;
+  color: #393939;
+  white-space: nowrap;
+  padding-top: 0px;
   margin-right: 5px;  
+  margin-left: 5px;
+
+
+}
+
+.inputBox {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.box {
+  border: 1px solid #CDCDCD;
+  margin-bottom: 0px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 13px;
+  display: flex;
+  width: 100%;
+  height: 36px;
+  padding-left: 10px;
 }
 
 .bigBoxTitle{

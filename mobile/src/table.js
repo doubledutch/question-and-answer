@@ -28,6 +28,8 @@ export class MyList extends Component {
       newQuestions = newQuestions.filter(item => item.answered === false)
     }
 
+    console.log(newQuestions)
+
     return (
       <FlatList
       data={newQuestions}

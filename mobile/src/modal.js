@@ -9,8 +9,8 @@ import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 export class CustomModal extends Component {
     constructor(props){
         super(props)
-        this.sessionSelect = this.sessionSelect.bind(this)
-        this.makeQuestion = this.makeQuestion.bind(this)
+        // this.sessionSelect = this.sessionSelect.bind(this)
+        // this.makeQuestion = this.makeQuestion.bind(this)
         this.state = {
             question: '', 
             anom: false, 
@@ -26,12 +26,12 @@ export class CustomModal extends Component {
 
  
 
-    sessionSelect(session){
+    sessionSelect = (session) => {
         this.props.selectSession(session)
     }
 
 
-    makeQuestion(question, anom){
+    makeQuestion = (question, anom) => {
         this.props.createSharedTask(question, anom)
         this.setState({question: '', anom: false})
     }
@@ -56,9 +56,9 @@ export class CustomModal extends Component {
                     data = {this.props.sessions}
                     renderItem={({item}) =>{  
                         return (
-                        <TouchableOpacity onPress={() => this.sessionSelect(item.sessionName)}style={s.listContainer}>
+                        <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
                             <View style={s.leftContainer}>
-                                {this.renderModIcon(item.sessionName)}
+                                {this.renderModIcon(item)}
                             </View>
                             <View style={s.rightContainer}>
                                 <Text style={{fontSize: 16}}>{item.sessionName}</Text>

@@ -8,6 +8,7 @@ import CustomModal from './modal'
 import { CustomCell } from './cell'
 import ModIcon from './modicon'
 import { CustomHeader } from './header';
+import editCell from './editCell'
 import CustomHeaderOff from './headeroff';
 import CustomButtons from './buttons';
 const fbc = FirebaseConnector(client, 'questionanswer')
@@ -32,7 +33,7 @@ export default class App extends Component {
       showBlock: false, 
       showAnswer: false, 
       newQuestions: 0, 
-      openVar: false}
+      openVar: false }
     this.signin = fbc.signinAdmin()
       .then(user => this.user = user)
       .catch(err => console.error(err))
@@ -46,6 +47,23 @@ export default class App extends Component {
 
       sessRef.on('child_added', data => {
         this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
+      })
+
+      sessRef.on('child_changed', data => {
+        var sessions = this.state.sessions
+        console.log(data)
+        for (var i in sessions){
+          if (sessions[i].key === data.key) {
+            sessions[i] = data.val()
+            sessions[i].key = data.key
+            this.setState({sessions})
+          }
+        }
+      })
+
+      sessRef.on('child_removed', data => {
+        console.log(data)
+        this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key) })
       })
     
       modRef.on('child_added', data => {
@@ -128,6 +146,9 @@ export default class App extends Component {
       afterOpenModal = {this.afterOpenModal}
       closeModal = {this.closeModal}
       newSession = {this.newSession}
+      sessions = {this.state.sessions}
+      confirmDelete = {this.confirmDelete}
+      confirmEdit = {this.confirmEdit}
       />
       <div className="topBox">
         <p className='bigBoxTitle'>{'Q & A'}</p>
@@ -161,13 +182,12 @@ export default class App extends Component {
             onApprove = {this.onApprove}
             />
             <p className="dropdownTitle">View: </p>
-            
             <form className="dropdownMenu" onSubmit={this.handleSubmit}>
               <select className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
               <option style={{textAlign: "center"}}value="All">{'\xa0\xa0'}All Sessions</option>
               { sessions.map(task => {
                 return (
-                <option key={task.key} value={task.sessionName}>{'\xa0\xa0' + task.sessionName}</option>  
+                <option key={task.key} value={task.key}>{'\xa0\xa0' + task.sessionName}</option>  
                 )      
               })
               }
@@ -221,7 +241,7 @@ export default class App extends Component {
               <option style={{textAlign: "center"}}value="All">{'\xa0\xa0'}All Sessions</option>
               { sessions.map(task => {
                 return (
-                <option key={task.key} value={task.sessionName}>{'\xa0\xa0' + task.sessionName}</option>  
+                <option key={task.key} value={task.key}>{'\xa0\xa0' + task.sessionName}</option>  
                 )      
               })
               }
@@ -258,7 +278,7 @@ export default class App extends Component {
                 <option style={{textAlign: "center"}}value="All">{'\xa0\xa0'}All Sessions</option>
                 { sessions.map(task => {
                   return (
-                  <option key={task.key} value={task.sessionName}>{'\xa0\xa0' + task.sessionName}</option>  
+                  <option key={task.key} value={task.key}>{'\xa0\xa0' + task.sessionName}</option>  
                   )      
                 })
                 }    
@@ -561,8 +581,10 @@ export default class App extends Component {
       if (difference > 1) {
         return difference = difference + " minutes ago"
       }
-    }
-    if (difference > 60) {
+      else {
+        return difference = "0 minutes ago"
+      }
+    } else if (difference > 60 && difference < 1440) {
       difference = Math.floor(difference / 60) 
       if (difference === 1) {
         return difference = difference + " hour ago"
@@ -570,8 +592,7 @@ export default class App extends Component {
       if (difference > 1) {
         return difference = difference + " hours ago"
       }
-    }
-    if (difference > 1440) {
+    } else if (difference >= 1440) {
       difference = Math.floor(difference / 1440) 
       if (difference === 1) {
         return difference = difference + " day ago"
@@ -580,9 +601,14 @@ export default class App extends Component {
         return difference = difference + " days ago"
       }
     }
-    else {
-      return difference = "0 minutes ago"
-    }
+  }
+
+  confirmEdit = (task, value) => {
+    fbc.database.public.adminRef('sessions').child(task.key).update({sessionName: value})
+  }
+
+  confirmDelete = (task) => {
+    fbc.database.public.adminRef('sessions').child(task.key).remove()
   }
 
   handleClick = () => {
@@ -617,6 +643,7 @@ export default class App extends Component {
   }
 
   handleChange = (event) => {
+    console.log(event.target.value)
     this.setState({[event.target.name]: event.target.value});
   }
 
@@ -646,7 +673,6 @@ export default class App extends Component {
 
   offApprove = () => {
     var mod = this.state.moderator[0]
-    // mod.approve = false
     fbc.database.public.adminRef('moderators').child(mod.key).update({"approve": false})
   }
 

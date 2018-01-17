@@ -15,12 +15,12 @@ export class CustomCell extends Component {
         return(
         <span className='cellBoxLeft'>
           <span className='cellBoxTop'>
-            <p className='introText'>{task.session}</p>
+            <p className='introText'>{task.sessionName}</p>
             <p className='timeText'>{difference}</p>
             <img src={require('./icons/Inactive.png')}/>
             <p className='timeText'>{'\xa0'}{task.score}</p>
           </span>      
-          <p className="questionText">{task.text}</p>
+          <p className="questionText">"{task.text}"</p>
           {task.anom === false &&
             <p className="nameText">
             -{firstName} {lastName}
