@@ -51,7 +51,6 @@ export default class App extends Component {
 
       sessRef.on('child_changed', data => {
         var sessions = this.state.sessions
-        console.log(data)
         for (var i in sessions){
           if (sessions[i].key === data.key) {
             sessions[i] = data.val()
@@ -62,7 +61,6 @@ export default class App extends Component {
       })
 
       sessRef.on('child_removed', data => {
-        console.log(data)
         this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key) })
       })
     
@@ -643,7 +641,6 @@ export default class App extends Component {
   }
 
   handleChange = (event) => {
-    console.log(event.target.value)
     this.setState({[event.target.name]: event.target.value});
   }
 
