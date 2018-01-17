@@ -9,8 +9,6 @@ import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 export class CustomModal extends Component {
     constructor(props){
         super(props)
-        // this.sessionSelect = this.sessionSelect.bind(this)
-        // this.makeQuestion = this.makeQuestion.bind(this)
         this.state = {
             question: '', 
             anom: false, 
