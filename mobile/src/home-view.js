@@ -258,14 +258,6 @@ class HomeView extends Component {
     this.hideModal()
   }
 
-  renderModalHeader = () => {
-    return(
-      <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
-        <Text style={s.modHeader}> Please confirm your session</Text>
-      </View>
-      )
-    }
-
   renderModIcon= (item) => {
     if (this.state.session === item) {
       return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_active.png"}}/>
@@ -444,7 +436,6 @@ const s = ReactNative.StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 10,
     backgroundColor: 'white',
-    flexDirection: 'column',
     alignItems:'center',
     height: '100%',
     paddingTop: 15

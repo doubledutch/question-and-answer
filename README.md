@@ -24,5 +24,3 @@ The question object tracks much of the important data points that can be updated
 
 This allows us to attach it to the associated question and track votes by any given user. It is also stored under ```public/all```
 
-
-
