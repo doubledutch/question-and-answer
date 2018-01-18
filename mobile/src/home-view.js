@@ -66,8 +66,10 @@ class HomeView extends Component {
           }
         }
       })
+
+      if (this.state.session){
     
-      questionsRef.on('child_added', data => {
+        fbc.database.public.allRef('questions').child("session").child("key").equalTo(this.state.session).on('child_added', data => {
         this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
         fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
           const userVote = vote.key === client.currentUser.id
@@ -93,6 +95,7 @@ class HomeView extends Component {
           this.setState({questions})
         })
       })
+    }
 
       questionsRef.on('child_changed', data => {
         var questions = this.state.questions
@@ -124,8 +127,8 @@ class HomeView extends Component {
 
   renderHome = () => {
     const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state   
-    var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session)
-    var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session)
+    var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
+    var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session.key)
     this.originalOrder(otherQuestions)
     let newQuestions = pinnedQuestions.concat(otherQuestions)
   
@@ -202,6 +205,32 @@ class HomeView extends Component {
   
   selectSession = (session) => {
     this.setState({session, disable: false})
+    fbc.database.public.allRef('questions').orderByChild("session").equalTo(session.key).on('child_added', data => {
+      this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
+      fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
+        const userVote = vote.key === client.currentUser.id
+        var questions = this.state.questions.map(question => 
+          question.key === data.key ?
+          { ...question, myVote: userVote, score: question.score + 1}
+          : 
+          question
+        )
+        this.setState({questions})
+      })
+      fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
+        var userVote = true
+        if (vote.key === client.currentUser.id){
+          userVote = false
+        }
+        var questions = this.state.questions.map(question => 
+          question.key === data.key ?
+            { ...question, myVote: userVote, score: question.score - 1}
+            : 
+            question
+        )
+        this.setState({questions})
+      })
+    })
   }
 
   closeSessionModal = () => {
@@ -260,7 +289,8 @@ class HomeView extends Component {
         answered: false,
         pin: false,
         lastEdit: time, 
-        session: this.state.session
+        session: this.state.session.key,
+        sessionName: this.state.session.sessionName
       })
       .then(() => this.setState({question: '', anom: false, showError: "white"}))
       .catch (x => console.error(x))
