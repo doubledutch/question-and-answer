@@ -31,7 +31,6 @@ export class CellEdit extends Component {
                 <img style={{height: 16, width: 12, marginTop: 12}} value="delete" onClick={this.handleDelete} src={require('./icons/trashcan.svg')}/>
             </div>
             )
-
         }
 
         if (this.state.action === "delete") {
@@ -40,19 +39,16 @@ export class CellEdit extends Component {
                 <button className="smallCloseButton" value="delete" onClick={this.confirmDelete}>Confirm</button>
             </div>
             )
-
         }
 
         if (this.state.action === "edit") {
             return (
                 <div className="rightButtons">
-                    <button className="smallCloseButton" value="edit" onClick={this.confirmEdit}>Done</button>
+                    <button className="smallCloseButton" value="edit" onClick={this.confirmEdit}>Save</button>
                 </div>
             )
-
         }
     }
-
 
 
     handleEdit = () => {
@@ -76,9 +72,10 @@ export class CellEdit extends Component {
 
      handleChange = (event) => {
         this.setState({[event.target.name]: event.target.value});
-      }
-
-    
+        if (this.myInp) {
+            this.setState({action: "edit"})
+        }
+    }
 
 
 }

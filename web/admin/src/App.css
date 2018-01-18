@@ -269,6 +269,7 @@
   margin-right: 0px;
   text-align: right;
   white-space: nowrap;
+  background-color: #ffffff
 }
 
 .modTextBox{
@@ -389,6 +390,7 @@
   margin-right: 5px;
   margin-top: 0px;
   white-space: nowrap;
+  background-color: #ffffff
 }
 
 .modalCellBox {
@@ -409,6 +411,7 @@
   margin-right: 5px;
   margin-top: 0px;
   white-space: nowrap;
+  background-color: #ffffff
 }
 
 .introText {
