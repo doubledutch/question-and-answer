@@ -71,7 +71,6 @@ class HomeView extends Component {
     
         fbc.database.public.allRef('questions').child("session").child("key").equalTo(this.state.session).on('child_added', data => {
         this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
-        console.log(data.val())
         fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
           const userVote = vote.key === client.currentUser.id
           var questions = this.state.questions.map(question => 
@@ -206,11 +205,8 @@ class HomeView extends Component {
   
   selectSession = (session) => {
     this.setState({session, disable: false})
-    console.log(session.key)
-
     fbc.database.public.allRef('questions').orderByChild("session").equalTo(session.key).on('child_added', data => {
       this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
-      console.log(data.val())
       fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
         const userVote = vote.key === client.currentUser.id
         var questions = this.state.questions.map(question => 
