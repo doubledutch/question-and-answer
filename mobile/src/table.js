@@ -198,10 +198,6 @@ export class MyList extends Component {
     }
   }
 
-  // origOrder = () => {
-  //   this.props.originalOrder(this.otherQuestions)
-  // }
- 
   renderIcon = (question) => {
     if (question.myVote === true){
       return <TouchableOpacity onPress={() => this.newVotes(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Active.png"}}/></TouchableOpacity>
@@ -214,14 +210,6 @@ export class MyList extends Component {
   newVotes(question){
     this.props.newVote(question)
   }
-
-  // showAnswer(){
-  //   this.props.showAnswered()
-  // }
-
-  // modalOpen(){
-  //   this.props.showModal()
-  // }
 
 }
 

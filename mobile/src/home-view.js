@@ -67,51 +67,53 @@ class HomeView extends Component {
         }
       })
 
-      if (this.state.session){
+    //   if (this.state.session){
     
-        fbc.database.public.allRef('questions').child("session").child("key").equalTo(this.state.session).on('child_added', data => {
-        this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
-        fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
-          const userVote = vote.key === client.currentUser.id
-          var questions = this.state.questions.map(question => 
-            question.key === data.key ?
-            { ...question, myVote: userVote, score: question.score + 1}
-            : 
-            question
-          )
-          this.setState({questions})
-        })
-        fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
-          var userVote = true
-          if (vote.key === client.currentUser.id){
-            userVote = false
-          }
-          var questions = this.state.questions.map(question => 
-            question.key === data.key ?
-              { ...question, myVote: userVote, score: question.score - 1}
-              : 
-              question
-          )
-          this.setState({questions})
-        })
-      })
-    }
+    //     fbc.database.public.allRef('questions').child("session").child("key").equalTo(this.state.session).on('child_added', data => {
+    //     this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
+    //     fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
+    //       const userVote = vote.key === client.currentUser.id
+    //       var questions = this.state.questions.map(question => 
+    //         question.key === data.key ?
+    //         { ...question, myVote: userVote, score: question.score + 1}
+    //         : 
+    //         question
+    //       )
+    //       this.setState({questions})
+    //     })
+    //     fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
+    //       var userVote = true
+    //       if (vote.key === client.currentUser.id){
+    //         userVote = false
+    //       }
+    //       var questions = this.state.questions.map(question => 
+    //         question.key === data.key ?
+    //           { ...question, myVote: userVote, score: question.score - 1}
+    //           : 
+    //           question
+    //       )
+    //       this.setState({questions})
+    //     })
+    //   })
+    // }
 
-      questionsRef.on('child_changed', data => {
-        var questions = this.state.questions
-        for (var i in questions) {
-          if (questions[i].key === data.key) {
-            questions[i] = data.val()
-            questions[i].key = data.key
-            this.setState({questions})
-            break
-          }
-        }
-      })
+    //   questionsRef.on('child_changed', data => {
+    //     var questions = this.state.questions
+    //     for (var i in questions) {
+    //       if (questions[i].key === data.key) {
+    //         questions[i] = data.val()
+    //         questions[i].key = data.key
+    //         this.setState({questions})
+    //         break
+    //       }
+    //     }
+    //   })
 
-      questionsRef.on('child_removed', data => {
-          this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
-      })
+    //   questionsRef.on('child_removed', data => {
+    //       this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
+    //   })
+
+
     })
   }
   render() {
@@ -205,6 +207,7 @@ class HomeView extends Component {
   
   selectSession = (session) => {
     this.setState({session, disable: false})
+
     fbc.database.public.allRef('questions').orderByChild("session").equalTo(session.key).on('child_added', data => {
       this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
       fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
@@ -217,6 +220,7 @@ class HomeView extends Component {
         )
         this.setState({questions})
       })
+
       fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
         var userVote = true
         if (vote.key === client.currentUser.id){
@@ -230,6 +234,22 @@ class HomeView extends Component {
         )
         this.setState({questions})
       })
+    })
+    
+    fbc.database.public.allRef('questions').orderByChild("session").equalTo(session.key).on('child_changed', data => {
+      var questions = this.state.questions
+      for (var i in questions) {
+        if (questions[i].key === data.key) {
+          questions[i] = data.val()
+          questions[i].key = data.key
+          this.setState({questions})
+          break
+        }
+      }
+    })
+
+    fbc.database.public.allRef('questions').orderByChild("session").equalTo(session.key).on('child_removed', data => {
+        this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
     })
   }
 

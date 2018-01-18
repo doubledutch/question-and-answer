@@ -14,7 +14,8 @@ export class CustomModal extends Component {
             anom: false, 
             color: 'white', 
             marginTop: 18, 
-            height: 20}
+            height: 20
+          }
     }
 
     modalClose(){

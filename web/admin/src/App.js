@@ -181,7 +181,7 @@ export default class App extends Component {
             />
             <p className="dropdownTitle">View: </p>
             <form className="dropdownMenu" onSubmit={this.handleSubmit}>
-              <select className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
+              <select style={{textAlign: "center", paddingRight: 20}} className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
               <option style={{textAlign: "center"}}value="All">{'\xa0\xa0'}All Sessions</option>
               { sessions.map(task => {
                 return (
