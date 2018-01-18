@@ -285,7 +285,7 @@ export default class App extends Component {
             </span>
             <span className="questionBox">
               <div className="modTextBox">
-                <p className="bigModText">Create a Session to Start QA</p>
+                <p className="bigModText">Create a Session to Start Q &amp; A</p>
                 <p className="smallModText">All submitted questions will appear below</p>
               </div>
             </span>
