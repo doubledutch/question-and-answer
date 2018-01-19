@@ -13,7 +13,7 @@ Only one moderator object will exist at any given time and the bool can be updat
 
 * Sessions are created within the admin portal and activate the user functionality on the mobile side. They are stored as:
 ```json
-{"-L0LcTeJ3AiahF2eiLZm": {"sessionName": "Test"}
+{"-L0LcTeJ3AiahF2eiLZm": {"sessionName": "Test"} }
 ```
 
 Similar to moderator objects they should only be readable by users and are stored under `public/admin`
@@ -36,8 +36,8 @@ Similar to moderator objects they should only be readable by users and are store
     "title": "Character",
     "username": "jean@valjean.com"
   },
-  "dateCreate":1513352635626,
-  "event":{
+  "dateCreate": 1513352635626,
+  "event": {
     "appId": "sample-bundle-id",
     "description": "Happy New Year","endDate": "2017-01-02T00:00:00.000Z",
     "id": "sample-event-id",
