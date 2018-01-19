@@ -90,6 +90,7 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   margin-Left: 0px;
   color:#898989;
+  background-color: #ffffff;
 }
 
 .closeButton{
@@ -230,6 +231,8 @@
   appearance:none;
   -moz-appearance:none; /* Firefox */
   -webkit-appearance:none; 
+  text-align: center;
+  padding-right: 20px;
 }
 
 .topText{

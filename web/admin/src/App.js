@@ -47,8 +47,49 @@ export default class App extends Component {
 
       sessRef.on('child_added', data => {
         this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
+        var session = data
+        fbc.database.public.allRef('questions').child(session.key).on('child_added', data => {
+          this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
+          fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
+            const userVote = vote.key === client.currentUser.id
+            var questions = this.state.questions.map(question => 
+              question.key === data.key ?
+              { ...question, myVote: userVote, score: question.score + 1}
+              : 
+              question
+            )
+            this.setState({questions})
+          })
+          fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
+            var userVote = true
+            if (vote.key === client.currentUser.id){
+              userVote = false
+            }
+            var questions = this.state.questions.map(question => 
+              question.key === data.key ?
+                { ...question, myVote: userVote, score: question.score - 1}
+                : 
+                question
+            )
+            this.setState({questions})
+          })
+        })
+        fbc.database.public.allRef('questions').child(session.key).on('child_changed', data => {
+          var questions = this.state.questions
+          for (var i in questions) {
+            if (questions[i].key === data.key) {
+              questions[i] = data.val()
+              questions[i].key = data.key
+              this.setState({questions})
+              break
+            }
+          }
+        })
+        fbc.database.public.allRef('questions').child(session.key).on('child_removed', data => {
+          this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
+        })
       })
-
+      
       sessRef.on('child_changed', data => {
         var sessions = this.state.sessions
         for (var i in sessions){
@@ -78,51 +119,6 @@ export default class App extends Component {
           }
         }
       })    
-
-      questionsRef.on('child_added', data => {
-        this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
-        fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
-          var userVote = false
-          if (vote.key === client.currentUser.id){
-            userVote = true
-          }
-          var questions = this.state.questions.map(question => 
-            question.key === data.key ?
-            { ...question, myVote: userVote, score: question.score + 1}
-            : 
-            question
-          )
-          this.setState({questions})
-        })
-        fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
-          var userVote = true
-          if (vote.key === client.currentUser.id){
-            userVote = false
-          }
-          var questions = this.state.questions.map(question => 
-            question.key === data.key ?
-            { ...question, myVote: userVote, score: question.score - 1}
-            : 
-            question
-          )
-          this.setState({questions})
-        })
-      })
-
-      questionsRef.on('child_removed', data => {
-        this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
-      })
-
-      questionsRef.on('child_changed', data => {
-        var questions = this.state.questions
-        for (var i in questions){
-          if (questions[i].key === data.key) {
-            questions[i] = data.val()
-            questions[i].key = data.key
-            this.setState({questions})
-          }
-        }
-      })
     })
   }
 
@@ -150,7 +146,7 @@ export default class App extends Component {
       />
       <div className="topBox">
         <p className='bigBoxTitle'>{'Q & A'}</p>
-        <button className="qaButton" onClick={this.openModal}>Add QA Session</button>
+        <button className="qaButton" onClick={this.openModal}>Add Q&A Session</button>
       </div>
       <div className="container">
         {this.renderLeft(newQuestions, time, sessions)}
@@ -181,11 +177,16 @@ export default class App extends Component {
             />
             <p className="dropdownTitle">View: </p>
             <form className="dropdownMenu" onSubmit={this.handleSubmit}>
-              <select style={{textAlign: "center", paddingRight: 20}} className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
-              <option style={{textAlign: "center"}}value="All">{'\xa0\xa0'}All Sessions</option>
+              <select className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
+              <option style={{textAlign: "center"}} value="All">{'\xa0\xa0'}All Sessions</option>
               { sessions.map(task => {
+                var title = task.sessionName
+                if (title.length > 50){
+                  var newTitle = task.sessionName.slice(0, 75)
+                  title = newTitle + "..."
+                }
                 return (
-                <option key={task.key} value={task.key}>{'\xa0\xa0' + task.sessionName}</option>  
+                <option style={{textAlign: "center"}} key={task.key} value={task.key}>{'\xa0\xa0' + title}</option>  
                 )      
               })
               }
@@ -238,8 +239,13 @@ export default class App extends Component {
               <select className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
               <option style={{textAlign: "center"}}value="All">{'\xa0\xa0'}All Sessions</option>
               { sessions.map(task => {
+                  var title = task.sessionName
+                  if (title.length > 50){
+                    var newTitle = task.sessionName.slice(0, 75)
+                    title = newTitle + "..."
+                  }
                 return (
-                <option key={task.key} value={task.key}>{'\xa0\xa0' + task.sessionName}</option>  
+                <option key={task.key} value={task.key}>{'\xa0\xa0' + title}</option>  
                 )      
               })
               }
@@ -275,8 +281,13 @@ export default class App extends Component {
                 <select className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
                 <option style={{textAlign: "center"}}value="All">{'\xa0\xa0'}All Sessions</option>
                 { sessions.map(task => {
+                    var title = task.sessionName
+                    if (title.length > 50){
+                      var newTitle = task.sessionName.slice(0, 75)
+                      title = newTitle + "..."
+                    }
                   return (
-                  <option key={task.key} value={task.key}>{'\xa0\xa0' + task.sessionName}</option>  
+                  <option key={task.key} value={task.key}>{'\xa0\xa0' + title}</option>  
                   )      
                 })
                 }    
@@ -675,22 +686,22 @@ export default class App extends Component {
 
   makeApprove = (question) => {
     var time = new Date().getTime()
-    fbc.database.public.allRef('questions').child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
+    fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
   }
 
   makePin = (question) => {
     var pinned = this.state.questions.filter(task => task.pin === true)
     if (pinned.length < 3){
-      fbc.database.public.allRef('questions').child(question.key).update({"pin": true, "approve": true, 'block': false, 'new': false})
+      fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"pin": true, "approve": true, 'block': false, 'new': false})
     }
   }
 
   makeAnswer = (question) => {
-    fbc.database.public.allRef('questions').child(question.key).update({"answered": true, 'block': false, 'new': false, 'pin': false})
+    fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'block': false, 'new': false, 'pin': false})
   }
 
   blockQuestion = (question) => {
-    fbc.database.public.allRef('questions').child(question.key).update({"block": true, 'approve': false, 'new': false, 'pin': false})
+    fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true, 'approve': false, 'new': false, 'pin': false})
   }
 
   answerAll = () => {
@@ -698,7 +709,7 @@ export default class App extends Component {
     if (questions !== undefined) {
       questions.map(question => {
         if (question.block !== true){
-        fbc.database.public.allRef('questions').child(question.key).update({"answered": true, 'new': false, 'pin': false})
+        fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'new': false, 'pin': false})
         }
       })
     }

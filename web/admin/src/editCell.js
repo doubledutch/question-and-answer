@@ -17,7 +17,7 @@ export class CellEdit extends Component {
         const task = this.props.task
         return(
         <div className="sessionCell">
-            <input className="sessionTitle" name="value" maxLength="250" type="text" ref={(ip) => this.myInp = ip} value={this.state.value} onChange={this.handleChange} />
+            <input className="sessionTitle" name="value" maxLength="250" type="text" ref={(ip) => this.myInp = ip} onKeyPress={this.handleKeyPress} onFocus={this.handleEdit} onBlur={this.handleBlur} value={this.state.value} onChange={this.handleChange} />
             {this.renderIcons(task)}
         </div>
         )
@@ -50,6 +50,19 @@ export class CellEdit extends Component {
         }
     }
 
+    handleBlur = () => {
+        this.setState({action: "state"});
+    }
+
+    handleKeyPress = (event) => {
+        if (event.key === 'Enter'){
+            event.preventDefault()
+            if (this.state.value) {
+              this.confirmEdit()
+            }
+        }
+      }
+
 
     handleEdit = () => {
         this.myInp.focus()
@@ -68,6 +81,7 @@ export class CellEdit extends Component {
      confirmEdit = () => {
         this.props.confirmEdit(this.props.task, this.state.value)
         this.setState({action: "state"});
+        this.myInp.blur()
      }
 
      handleChange = (event) => {
