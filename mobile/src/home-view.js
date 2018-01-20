@@ -34,7 +34,9 @@ class HomeView extends Component {
       height: 20, 
       newValue: '', 
       marginTop: 18, 
-      animation: "none"
+      animation: "none",
+      title: "Q & A",
+      questionAsk: false
     }
     this.signin = fbc.signin()
       .then(user => this.user = user)
@@ -69,10 +71,23 @@ class HomeView extends Component {
     })
   }
   render() {
+    let titleText = this.state.title
+    if (this.state.session){
+      if (this.state.session.sessionName.length < 30){
+        titleText = this.state.session.sessionName
+      }
+      else {
+        var newText = this.state.session.sessionName.slice(0,25)
+        newText = newText + "..."
+        titleText = newText
+      }
+    }
+
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
-        <TitleBar title="Q & A" client={client} signin={this.signin} />
+        <TitleBar title={titleText} client={client} signin={this.signin} />
         {this.renderHome()}
+        {this.renderModal()}
       </KeyboardAvoidingView> 
     )
   }
@@ -159,82 +174,91 @@ class HomeView extends Component {
   
   selectSession = (session) => {
     this.setState({session, disable: false})
-    fbc.database.public.allRef('questions').orderByChild("session").equalTo(session.key).on('child_added', data => {
-      this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
-      fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
-        const userVote = vote.key === client.currentUser.id
-        var questions = this.state.questions.map(question => 
-          question.key === data.key ?
-          { ...question, myVote: userVote, score: question.score + 1}
-          : 
-          question
-        )
-        this.setState({questions})
-      })
-      fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
-        var userVote = true
-        if (vote.key === client.currentUser.id){
-          userVote = false
-        }
-        var questions = this.state.questions.map(question => 
-          question.key === data.key ?
-            { ...question, myVote: userVote, score: question.score - 1}
+      fbc.database.public.allRef('questions').child(session.key).on('child_added', data => {
+        this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
+        fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
+          const userVote = vote.key === client.currentUser.id
+          var questions = this.state.questions.map(question => 
+            question.key === data.key ?
+            { ...question, myVote: userVote, score: question.score + 1}
             : 
             question
-        )
-        this.setState({questions})
-      })
-    })
-    fbc.database.public.allRef('questions').orderByChild("session").equalTo(session.key).on('child_changed', data => {
-      var questions = this.state.questions
-      for (var i in questions) {
-        if (questions[i].key === data.key) {
-          questions[i] = data.val()
-          questions[i].key = data.key
+          )
           this.setState({questions})
-          break
+        })
+        fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
+          var userVote = true
+          if (vote.key === client.currentUser.id){
+            userVote = false
+          }
+          var questions = this.state.questions.map(question => 
+            question.key === data.key ?
+              { ...question, myVote: userVote, score: question.score - 1}
+              : 
+              question
+          )
+          this.setState({questions})
+        })
+      })
+      fbc.database.public.allRef('questions').child(session.key).on('child_changed', data => {
+        var questions = this.state.questions
+        for (var i in questions) {
+          if (questions[i].key === data.key) {
+            questions[i] = data.val()
+            questions[i].key = data.key
+            this.setState({questions})
+            break
+          }
         }
-      }
-    })
-    fbc.database.public.allRef('questions').orderByChild("session").equalTo(session.key).on('child_removed', data => {
+      })
+      fbc.database.public.allRef('questions').child(session.key).on('child_removed', data => {
         this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
-    })
-  }
-
-  closeSessionModal = () => {
-    this.setState({launch: false})
-    this.hideModal()
-  }
-
-  renderModIcon= (item) => {
-    if (this.state.session === item) {
-      return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_active.png"}}/>
-    }
-    else {
-      return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_inactive.png"}}/>
-    }
-  }
-
-  originalOrder = (questions) => {
-    if (this.state.showRecent === false) {
-      questions.sort(function (a,b){
-        return b.score - a.score
       })
     }
-    if (this.state.showRecent === true) {
-      questions.sort(function (a,b){
-        return b.dateCreate - a.dateCreate
-      })
+
+    closeSessionModal = () => {
+      this.setState({launch: false})
+      this.hideModal()
     }
-  }
 
-  findOrder = () => {
-    this.setState({showRecent: false, showAnswer: false})
-  }
+    renderModal = () => {
+      if (this.state.questionAsk) {
+        return (
+        <Modal visible={true} transparent={true} style={{flex: 1}}>
+        <TouchableOpacity onPress={this.closeConfirm} style={{flex: 1, opacity: 1}}></TouchableOpacity> 
+        <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
+            <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
+            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>Your question has been submitted for approval!</Text>
+        </TouchableOpacity>
+        </Modal>
+        )
+      }
+    }
 
-  findOrderDate = () => {
-    this.setState({showRecent: true, showAnswer: false})
-  }
+    closeConfirm = () => {
+      this.setState({questionAsk: false})
+    }
+
+    originalOrder = (questions) => {
+      if (this.state.showRecent === false) {
+        questions.sort(function (a,b){
+          return b.score - a.score
+        })
+      }
+      if (this.state.showRecent === true) {
+        questions.sort(function (a,b){
+          return b.dateCreate - a.dateCreate
+        })
+      }
+    }
+
+    findOrder = () => {
+      this.setState({showRecent: false, showAnswer: false})
+    }
+
+    findOrderDate = () => {
+      this.setState({showRecent: true, showAnswer: false})
+    }
 
   createSharedTask = (question, anom) => this.createQuestion(fbc.database.public.allRef, question, anom)
  
@@ -244,7 +268,7 @@ class HomeView extends Component {
       this.setState({showError: "red"})
     }
     if (this.user && question.length > 0) {
-      ref('questions').push({
+      ref('questions').child(this.state.session.key).push({
         text: question,
         creator: client.currentUser,
         score : 0,
@@ -252,7 +276,6 @@ class HomeView extends Component {
         anom: anom,
         approve: false,
         block: false,
-        event: client.currentEvent,
         new: true,
         answered: false,
         pin: false,
@@ -264,6 +287,7 @@ class HomeView extends Component {
       .catch (x => console.error(x))
       .then(setTimeout(() => {
         this.hideModal()
+        this.setState({questionAsk: true})
         }
         ,250))
     }
@@ -340,6 +364,7 @@ const s = ReactNative.StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#b7b7b7"
   },
+
   button: {
     width: '25%',
     height: 40,
@@ -374,28 +399,13 @@ const s = ReactNative.StyleSheet.create({
     fontFamily: 'System',
   },
   listContainer: {
-    flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
+    backgroundColor: new Color().rgbString(),
+    height: 42, 
     alignItems:'center',
-    backgroundColor: 'white',
-    marginBottom: 2,
+    justifyContent: 'center',
   },
-  leftContainer: {
-    flexDirection: 'column',
-    paddingLeft: 10,
-    backgroundColor: 'white',
-    alignItems:'center',
-    height: '100%',
-    paddingTop: 15
-  },
-  rightContainer: {
-    flex: 1,
-    width: '80%',
-    paddingLeft: 15,
-    paddingRight: 20,
-    paddingTop: 15,
-    paddingBottom: 15,
-  },
+
   anomBox: {
     flex: 1,
     flexDirection: 'row',

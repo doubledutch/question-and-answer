@@ -98,7 +98,7 @@ export class CustomModal extends Component {
                 <View style={s.rightBox}>
                     <Text style={{color: this.props.showError, paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a question</Text>
                     <View style={s.anomBox}>
-                        <TouchableOpacity style={s.checkButton} onPress={() => this.makeTrue()}><Text style={{color:this.state.color, textAlign: 'center', fontWeight: "bold"}}>X</Text></TouchableOpacity>
+                        {this.renderAnomIcon()}
                         <Text style={s.anomText}>Ask anonymously</Text>
                     </View>
                 </View>
@@ -108,6 +108,20 @@ export class CustomModal extends Component {
         </View>
         )
       }
+    }
+
+    renderAnomIcon = () => {
+      if (this.state.anom){
+      return (
+        <TouchableOpacity onPress={() => this.makeTrue()}><Image style={s.checkButton} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_active.png"}}/></TouchableOpacity>
+
+      )
+    }
+    else {
+      return (
+        <TouchableOpacity onPress={() => this.makeTrue()}><Image style={s.checkButton} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_inactive.png"}}/></TouchableOpacity>
+      )
+    }
     }
 
     updateSize = (height) => {
@@ -178,9 +192,6 @@ const s = ReactNative.StyleSheet.create({
     backgroundColor: 'white',
     height: 82
   },
-  blankCircle: {
-
-  },
 
   modal: {
     flexDirection: 'row',
@@ -193,6 +204,8 @@ const s = ReactNative.StyleSheet.create({
     backgroundColor: 'black',
     opacity: 0.5
   },
+
+
 
   subText:{
     fontSize: 12,
@@ -344,9 +357,9 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 15,
     height: 19,
     width: 19,
-    borderColor: '#9B9B9B',
-    borderWidth: 1,
-    borderRadius: 2
+    // borderColor: '#9B9B9B',
+    // borderWidth: 1,
+    // borderRadius: 2
   },
   sendButtonText: {
     fontSize: 14,

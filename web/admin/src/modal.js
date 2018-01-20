@@ -33,7 +33,7 @@ export class CustomModal extends Component {
               <div className="inputBox">
                 <label className="boxTitle">
                   Session Name:
-                  <input className="box" name="value" maxLength="250" type="text" value={this.state.value} onChange={this.handleChange} />
+                  <input className="box" name="value" maxLength="250" type="text" value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} />
                 </label>
               </div>
             </form>
@@ -70,13 +70,29 @@ export class CustomModal extends Component {
       this.setState({[event.target.name]: event.target.value});
     }
 
+    handleKeyPress = (event) => {
+      if (event.key === 'Enter'){
+        event.preventDefault()
+        if (this.state.value) {
+          event.value = "true"
+          var keyPress = true
+          this.handleSubmit(event, keyPress)
+        }
+      }
+    }
 
-    handleSubmit = (event) => {
+
+    handleSubmit = (event, keyPress) => {
+      if (this.state.value) {
       this.props.newSession(this.state.value)
       this.setState({value: ""});
       if (event.target.value === "true") {
         this.props.closeModal()
       }
+      if (keyPress){
+        this.props.closeModal()
+      }
+    }
     }
 
     confirmDelete = (task) => {
