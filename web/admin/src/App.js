@@ -35,11 +35,11 @@ export default class App extends Component {
       newQuestions: 0, 
       openVar: false,
       modalColor: "#FAFAFA",
-      message: "* Please enter a session name" 
+      message: "* Please enter a valid session name" 
     }
     this.signin = fbc.signinAdmin()
       .then(user => this.user = user)
-      .catch(err => console.error(err))
+      .catch(error => {alert("Please try reloading page to connect to the database")})
   }
   componentDidMount() {
     this.signin.then(() => {
@@ -140,7 +140,6 @@ export default class App extends Component {
     <div className="App">
       <CustomModal
       openVar = {this.state.openVar}
-      afterOpenModal = {this.afterOpenModal}
       closeModal = {this.closeModal}
       newSession = {this.newSession}
       sessions = {this.state.sessions}
@@ -287,7 +286,7 @@ export default class App extends Component {
                 <option style={{textAlign: "center"}}value="All">{'\xa0\xa0'}All Sessions</option>
                 { sessions.map(task => {
                     var title = task.sessionName
-                    if (title.length > 50){
+                    if (title.length > 75){
                       var newTitle = task.sessionName.slice(0, 75)
                       title = newTitle + "..."
                     }
@@ -422,11 +421,6 @@ export default class App extends Component {
                 { questions.map(task => {
                   if (task.block === false && task.pin === false && task.answered === false){
                     var difference = this.doDateMath(task.dateCreate, time)
-                    var currentPin = false
-                    if (current === 0) {
-                      currentPin = true
-                    }
-                    current = current + 1
                     return (
                     <li className='cellBox' key={task.key}>
                       <CustomCell
@@ -440,7 +434,6 @@ export default class App extends Component {
                       blockQuestion = {this.blockQuestion}
                       makePin = {this.makePin}
                       makeAnswer = {this.makeAnswer}
-                      pin = {currentPin}
                       />
                     </li>
                     )
@@ -511,11 +504,6 @@ export default class App extends Component {
                   if (task.approve === true && task.block === false && task.pin === false & task.answered === false){
                     var block = false
                     var header = false
-                    var currentPin = false
-                    if (current === 0) {
-                      currentPin = true
-                    }
-                    current = current + 1
                     var difference = this.doDateMath(task.dateCreate, time)
                     return (
                     <li className='cellBox' key={task.key}>
@@ -530,7 +518,6 @@ export default class App extends Component {
                       blockQuestion = {this.blockQuestion}
                       makePin = {this.makePin}
                       makeAnswer = {this.makeAnswer}
-                      pin = {currentPin}
                       />
                     </li>
                     )
@@ -631,8 +618,36 @@ export default class App extends Component {
   }
 
   confirmEdit = (task, value) => {
+    // var status = true
+    // var named = value.trim()
+    // if (sessionName) {
+    //   for (var item of this.state.sessions){
+    //     if (item.sessionName === sessionName){
+    //       status = false
+    //     }
+    //   }
+    //   if (status){
+    //     fbc.database.public.adminRef('sessions').child(task.key).update({sessionName: sessionName})
+    //     .catch(error => {alert("Please retry saving your session")})
+  
+    //   }
+    //   else {
+    //     this.setState({modalColor: "red"});
+    //   }
+    // }
+    // else {
+    //   this.setState({modalColor: "red"});
+    // }
+
+
+
+
+
+
+
+
     fbc.database.public.adminRef('sessions').child(task.key).update({sessionName: value})
-    .catch(alert("Please retry saving your session"))
+    .catch(error => {alert("Please retry saving your session")})
   }
 
   confirmDelete = (task) => {
@@ -682,7 +697,7 @@ export default class App extends Component {
       fbc.database.public.adminRef('moderators').push({"approve": false})
     }
     fbc.database.public.adminRef('sessions').push({sessionName: newSession})
-    .catch(alert("Please retry saving your session"))
+    .catch(error => {alert("Please retry saving your session")})
   }
 
   onApprove = () => {

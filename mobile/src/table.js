@@ -1,7 +1,7 @@
 'use strict'
 import React, { Component } from 'react'
 import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
+  Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
 } from 'react-native'
 import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 
@@ -37,10 +37,11 @@ export class MyList extends Component {
   }
 
     return (
+    <View>
+      {this.renderHeader(testQuestions)}
       <FlatList
       data={newQuestions}
-      ListHeaderComponent={this.renderHeader(testQuestions)}
-      ListFooterComponent={<View style={{height: 150}}></View>}
+      ListFooterComponent={<View style={{height: 100}}></View>}
       renderItem={({item}) => {
         if (moderator.length > 0){
           if (moderator[0].approve !== true && item.answered === false) {
@@ -141,13 +142,14 @@ export class MyList extends Component {
       }
     }
     />
+  </View>
   )
  }
 
   renderHeader = (questions) => {
     if (questions.length === 0) {
       return (
-        <View>
+      <View style={{height: 60}}>
         <View style={s.buttonContainer}>
           <View style={s.divider}/>
           <TouchableOpacity style={s.button1}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
@@ -161,12 +163,13 @@ export class MyList extends Component {
             <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>Be the First to Ask a Question!</Text>
             <TouchableOpacity onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 16, color: new Color().rgbString()}}>Tap here to get started</Text></TouchableOpacity>
           </View>
-        </View>
+      </View>
       )
     }
 
     if (this.props.showAnswer === true) {
       return (
+      <View style={{height: 60}}>
         <View style={s.buttonContainer}>
           <View style={s.divider}/>
           <TouchableOpacity style={s.button2} onPress={this.props.findOrder}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
@@ -176,10 +179,12 @@ export class MyList extends Component {
           <TouchableOpacity style={s.button1}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
           <View style={s.divider}/>
         </View> 
+      </View>
       )
     }
     if (this.props.showRecent === false) {
       return (
+      <View style={{height: 60}}>
         <View style={s.buttonContainer}>
           <View style={s.divider}/>
           <TouchableOpacity style={s.button1} ><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
@@ -189,10 +194,12 @@ export class MyList extends Component {
           <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
           <View style={s.divider}/>
         </View>
+      </View>
       )
     }
     if (this.props.showRecent === true) {
       return (
+      <View style={{height: 60}}>
         <View style={s.buttonContainer}>
           <View style={s.divider}/>
           <TouchableOpacity style={s.button2} onPress={this.props.findOrder}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
@@ -202,6 +209,7 @@ export class MyList extends Component {
           <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
           <View style={s.divider}/>
         </View>
+      </View>
       )
     }
   }
@@ -232,8 +240,7 @@ const s = ReactNative.StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    flexDirection: 'row',
-    
+    flexDirection: 'row',    
   },
 
   modHeader: {
@@ -354,7 +361,6 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 16,
   },
   checkmark: {
-    textAlign: 'center',
     height: 16,
     width: 16,
     marginTop: 4

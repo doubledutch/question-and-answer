@@ -50,10 +50,6 @@ export class CellEdit extends Component {
         }
     }
 
-    handleBlur = () => {
-        this.setState({action: "state"});
-    }
-
     handleKeyPress = (event) => {
         if (event.key === 'Enter'){
             event.preventDefault()
@@ -66,7 +62,9 @@ export class CellEdit extends Component {
 
 
     handleEdit = () => {
-        this.myInp.focus()
+        this.myInp.focus();
+        var length = this.state.value.length
+        this.myInp.setSelectionRange(length, length)
         this.setState({action: "edit"});
      }
 
@@ -80,9 +78,16 @@ export class CellEdit extends Component {
      }
 
      confirmEdit = () => {
-        this.props.confirmEdit(this.props.task, this.state.value)
-        this.setState({action: "state"});
-        this.myInp.blur()
+        var sessionName = this.state.value.trim()
+        if (sessionName) {
+            this.props.confirmEdit(this.props.task, this.state.value)
+            this.setState({action: "state", value : this.props.task.sessionName});
+            this.myInp.blur()
+        }
+        else {
+            this.props.confirmEdit(this.props.task, "")
+            this.setState({value : this.props.task.sessionName});
+        }
      }
 
      handleChange = (event) => {
@@ -91,8 +96,6 @@ export class CellEdit extends Component {
             this.setState({action: "edit"})
         }
     }
-
-
 }
 
 export default CellEdit

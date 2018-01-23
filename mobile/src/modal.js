@@ -1,7 +1,7 @@
 'use strict'
 import React, { Component } from 'react'
 import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
+  Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
 } from 'react-native'
 import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 
@@ -14,7 +14,8 @@ export class CustomModal extends Component {
             anom: false, 
             color: 'white', 
             marginTop: 18, 
-            height: 20
+            height: 20, 
+            borderColor: '#EFEFEF'
           }
     }
 
@@ -43,6 +44,7 @@ export class CustomModal extends Component {
             color: '#9B9B9B',
             textAlignVertical: 'top',
             height: this.state.height,
+            maxHeight: 100,
             marginTop: this.state.marginTop
         }
         
@@ -67,7 +69,7 @@ export class CustomModal extends Component {
                     <FlatList
                     style={{backgroundColor: '#EFEFEF'}}
                     data = {this.props.sessions}
-                    ListFooterComponent={<View style={{height: 150}}></View>}
+                    ListFooterComponent={<View style={{height: 100}}></View>}
                     renderItem={({item}) =>{  
                         return (
                         <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
@@ -88,11 +90,13 @@ export class CustomModal extends Component {
                 </View>
             )
         }
-
       else {
+        var borderColor = this.state.borderColor
+        if (this.props.showError === "red"){borderColor = "red"}
+        const borderStyle = {borderBottomColor: borderColor, borderTopColor:borderColor}
         return (
             <View style={{flex: 1}}>
-                <View style={s.modal}>
+                <View style={[s.modal, borderStyle]}>
                     <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
                     <TextInput style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
                     value={this.state.question}
@@ -187,7 +191,6 @@ const s = ReactNative.StyleSheet.create({
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
-    
   },
 
   modHeader: {
@@ -206,16 +209,14 @@ const s = ReactNative.StyleSheet.create({
   modal: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    borderBottomColor: '#EFEFEF',
     borderBottomWidth: 1, 
+    borderTopWidth: 1
   },
   modalBottom: {
     flex: 1,
     backgroundColor: 'black',
     opacity: 0.5
   },
-
-
 
   subText:{
     fontSize: 12,

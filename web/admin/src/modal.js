@@ -11,7 +11,9 @@ export class CustomModal extends Component {
         this.state = {
             value: '',
             color: this.props.modalColor,
-            message: this.props.message
+            message: this.props.message,
+            reload: false,
+            task: ""
         }
     }
 
@@ -21,7 +23,7 @@ export class CustomModal extends Component {
       return(
       <Modal 
       isOpen={this.props.openVar}
-      onAfterOpen={this.props.afterOpenModal}
+      onAfterOpen={this.makeFocus}
       onRequestClose={this.props.closeModal}
       contentLabel="Modal"
       className="Modal"
@@ -29,13 +31,13 @@ export class CustomModal extends Component {
       >
         <div> 
           <div style={{padding: 25, paddingLeft: 20}}>
-            <center className="modalTitle" style={{textAlign: "left"}}>ADD NEW QA SESSION</center>
+            <center className="modalTitle" style={{textAlign: "left"}}>ADD NEW Q&A SESSION</center>
             <form style={{marginTop: 20}}>
               <div className="inputBox">
                 <label className="boxTitle">
                   Session Name:
                   <span className="textInputBox">
-                    <input className="box" name="value" maxLength="250" type="text" style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} />
+                    <input className="box" name="value" maxLength="250" type="text" style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip} />
                     <p className="counter">{250 - this.state.value.length} </p>
                   </span>
                   <p style={{color: this.state.color, fontSize: 12, margin: 0, padding: 0, marginTop: 2}}>{this.state.message}</p>
@@ -53,6 +55,8 @@ export class CustomModal extends Component {
                       task = {task}
                       confirmDelete = {this.confirmDelete}
                       confirmEdit = {this.confirmEdit}
+                      reload = {this.state.reload}
+                      task2 = {this.state.task}
                       />
                     </li>
                   )
@@ -91,30 +95,64 @@ export class CustomModal extends Component {
       this.props.closeModal()
     }
 
+    makeFocus = () => {
+      this.myInp.focus();
+   }
 
     handleSubmit = (event, keyPress) => {
+      var status = true
       var sessionName = this.state.value.trim()
       if (sessionName) {
-      this.props.newSession(sessionName)
-      this.setState({value: "", color: "#FAFAFA"});
-      if (event.target.value === "true") {
-        this.props.closeModal()
+        for (var item of this.props.sessions){
+          if (item.sessionName === sessionName){
+            status = false
+          }
+        }
+        if (status){
+        this.props.newSession(sessionName)
+        this.setState({value: "", color: "#FAFAFA"});
+        if (event.target.value === "true") {
+          this.props.closeModal()
+        }
+        if (keyPress){
+          this.props.closeModal()
+        }
       }
-      if (keyPress){
-        this.props.closeModal()
+      else {
+        this.setState({color: "red"});
       }
     }
-    else {
-      this.setState({color: "red"});
+      else {
+        this.setState({color: "red"});
+      }
     }
-    }
+
+
 
     confirmDelete = (task) => {
       this.props.confirmDelete(task)
     }
 
     confirmEdit = (task, value) => {
-      this.props.confirmEdit(task, value)
+      var status = true
+      var named = value.trim()
+      if (named) {
+        for (var item of this.props.sessions){
+          if (item.sessionName === named){
+            status = false
+          }
+        }
+        if (status){
+          this.props.confirmEdit(task, named)
+          this.setState({color: "#FAFAFA"});
+        }
+        else {
+          this.setState({color: "red", reload: true, task});
+        }
+      }
+      else {
+        this.setState({color: "red"});
+      }
     }
 
  

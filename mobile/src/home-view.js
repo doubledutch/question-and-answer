@@ -37,7 +37,8 @@ class HomeView extends Component {
       animation: "none",
       title: "Q & A",
       questionAsk: false,
-      questionError: "Ask Question"
+      questionError: "Ask Question",
+      topBorder: "#EFEFEF"
     }
     this.signin = fbc.signin()
       .then(user => this.user = user)
@@ -88,7 +89,6 @@ class HomeView extends Component {
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
         <TitleBar title={titleText} client={client} signin={this.signin} />
         {this.renderHome()}
-        {this.renderModal()}
       </KeyboardAvoidingView> 
     )
   }
@@ -96,33 +96,35 @@ class HomeView extends Component {
 
 
   renderHome = () => {
-    const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state   
+    const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state
     var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
     var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session.key)
     this.originalOrder(otherQuestions)
     let newQuestions = pinnedQuestions.concat(otherQuestions)
-  
     if (this.state.modalVisible === false){
       return(
-      <View>  
+      <View style={{flex:1}}>
         <View>
           <TouchableOpacity style={s.compose} onPress={this.showModal}>
             <TouchableOpacity style={s.circleBox} onPress={this.showModal}><Text style={s.whiteText}>?</Text></TouchableOpacity>
             <TouchableOpacity style={s.composeBox} onPress={this.showModal}><Text style={s.composeText}>Type your question here</Text></TouchableOpacity>
           </TouchableOpacity>
         </View>
-        <MyList 
-        questions={newQuestions}
-        showAnswer = {this.state.showAnswer}
-        moderator = {this.state.moderator}
-        showRecent = {this.state.showRecent}
-        showAnswered = {this.showAnswered}
-        findOrder = {this.findOrder}
-        findOrderDate = {this.findOrderDate}
-        originalOrder = {this.originalOrder}
-        showModal = {this.showModal}
-        newVote = {this.newVote}
-        />
+        <View style={{flex:1}}>
+          <MyList 
+          questions={newQuestions}
+          showAnswer = {this.state.showAnswer}
+          moderator = {this.state.moderator}
+          showRecent = {this.state.showRecent}
+          showAnswered = {this.showAnswered}
+          findOrder = {this.findOrder}
+          findOrderDate = {this.findOrderDate}
+          originalOrder = {this.originalOrder}
+          showModal = {this.showModal}
+          newVote = {this.newVote}
+          />
+        </View>
+        {this.renderModal()}
       </View>
       )
     }
@@ -167,10 +169,10 @@ class HomeView extends Component {
 
   hideModal = () => {
     if (this.state.launch === false) {
-      this.setState({modalVisible: false, animation: "slide"})
+      this.setState({modalVisible: false, animation: "slide", showError: "white"})
     }
     if (this.state.launch === true){
-      this.setState({modalVisible: false, animation: "slide"})
+      this.setState({modalVisible: false, animation: "slide", showError: "white"})
     }
   }
   
@@ -231,14 +233,15 @@ class HomeView extends Component {
         }
       }
       if (this.state.questionAsk && modOn) {
+        setTimeout(() => {
+          this.closeConfirm()
+          }
+          ,5000)
         return (
-        <Modal visible={true} transparent={true} style={{flex: 1}}>
-          <TouchableOpacity onPress={this.closeConfirm} style={{flex: 1, opacity: 1}}></TouchableOpacity> 
           <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
             <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
             <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>Your question has been submitted for approval!</Text>
           </TouchableOpacity>
-        </Modal>
         )
       }
     }
@@ -300,7 +303,7 @@ class HomeView extends Component {
           }
           ,250)
       })
-      .catch(this.setState({questionError: "Retry"}))
+      .catch(error => this.setState({questionError: "Retry"}))
     }
   }
 
@@ -328,7 +331,6 @@ const s = ReactNative.StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
   },
-
   modHeader: {
     backgroundColor: 'white', 
     height: 51, 
@@ -413,6 +415,7 @@ const s = ReactNative.StyleSheet.create({
     height: 42, 
     alignItems:'center',
     justifyContent: 'center',
+    marginBottom: 0,
   },
 
   anomBox: {
@@ -431,7 +434,6 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 16,
   },
   checkmark: {
-    textAlign: 'center',
     height: 16,
     width: 16,
     marginTop: 4
@@ -439,6 +441,8 @@ const s = ReactNative.StyleSheet.create({
   compose: {
     flexDirection: 'row',
     backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: "#ffffff"
   },
   composeBox: {
     marginTop: 20,

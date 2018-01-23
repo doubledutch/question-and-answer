@@ -355,7 +355,9 @@
 
 
 .smallButton{
-  
+  height: 15px;
+  width: 15px;
+  margin-top: 4px;
 }
 
 .rightButtons{
