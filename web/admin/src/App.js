@@ -33,7 +33,10 @@ export default class App extends Component {
       showBlock: false, 
       showAnswer: false, 
       newQuestions: 0, 
-      openVar: false }
+      openVar: false,
+      modalColor: "#FAFAFA",
+      message: "* Please enter a session name" 
+    }
     this.signin = fbc.signinAdmin()
       .then(user => this.user = user)
       .catch(err => console.error(err))
@@ -143,6 +146,8 @@ export default class App extends Component {
       sessions = {this.state.sessions}
       confirmDelete = {this.confirmDelete}
       confirmEdit = {this.confirmEdit}
+      modalColor = {this.state.modalColor}
+      message = {this.state.message}
       />
       <div className="topBox">
         <p className='bigBoxTitle'>{'Q & A'}</p>
@@ -399,6 +404,7 @@ export default class App extends Component {
       if (this.state.moderator[0].approve === false){
         if (this.state.showBlock === false && this.state.showAnswer === false){
           var approve = true
+          var current = 0
           return(
           <div className="questionContainer">
             <CustomHeaderOff
@@ -416,6 +422,11 @@ export default class App extends Component {
                 { questions.map(task => {
                   if (task.block === false && task.pin === false && task.answered === false){
                     var difference = this.doDateMath(task.dateCreate, time)
+                    var currentPin = false
+                    if (current === 0) {
+                      currentPin = true
+                    }
+                    current = current + 1
                     return (
                     <li className='cellBox' key={task.key}>
                       <CustomCell
@@ -429,6 +440,7 @@ export default class App extends Component {
                       blockQuestion = {this.blockQuestion}
                       makePin = {this.makePin}
                       makeAnswer = {this.makeAnswer}
+                      pin = {currentPin}
                       />
                     </li>
                     )
@@ -481,6 +493,7 @@ export default class App extends Component {
       if (this.state.moderator[0].approve === true){
         if (this.state.showBlock === false && this.state.showAnswer === false){
           var approve = true
+          var current = 0
           return(
           <div className="questionContainer">
             <CustomHeader
@@ -498,7 +511,11 @@ export default class App extends Component {
                   if (task.approve === true && task.block === false && task.pin === false & task.answered === false){
                     var block = false
                     var header = false
-                    var pin = false
+                    var currentPin = false
+                    if (current === 0) {
+                      currentPin = true
+                    }
+                    current = current + 1
                     var difference = this.doDateMath(task.dateCreate, time)
                     return (
                     <li className='cellBox' key={task.key}>
@@ -513,6 +530,7 @@ export default class App extends Component {
                       blockQuestion = {this.blockQuestion}
                       makePin = {this.makePin}
                       makeAnswer = {this.makeAnswer}
+                      pin = {currentPin}
                       />
                     </li>
                     )
@@ -614,6 +632,7 @@ export default class App extends Component {
 
   confirmEdit = (task, value) => {
     fbc.database.public.adminRef('sessions').child(task.key).update({sessionName: value})
+    .catch(alert("Please retry saving your session"))
   }
 
   confirmDelete = (task) => {
@@ -643,7 +662,7 @@ export default class App extends Component {
   }
 
   openModal = () => {
-    this.setState({openVar: true});
+    this.setState({openVar: true, modalColor: "#FAFAFA", message: "* Please enter a session name"});
   }
 
 
@@ -663,6 +682,7 @@ export default class App extends Component {
       fbc.database.public.adminRef('moderators').push({"approve": false})
     }
     fbc.database.public.adminRef('sessions').push({sessionName: newSession})
+    .catch(alert("Please retry saving your session"))
   }
 
   onApprove = () => {
@@ -673,10 +693,6 @@ export default class App extends Component {
       var mod = this.state.moderator[0]
       fbc.database.public.adminRef('moderators').child(mod.key).update({"approve": true})
     }
-  }
-
-  makeSession = (text) => {
-    fbc.database.public.adminRef('sessions').set({"sessionID": text})
   }
 
   offApprove = () => {
@@ -706,13 +722,27 @@ export default class App extends Component {
 
   answerAll = () => {
     const questions = this.state.questions
-    if (questions !== undefined) {
+    var modOn = false
+    if (this.state.moderator.length > 0) {
+      if (this.state.moderator[0]) {
+        modOn = this.state.moderator[0].approve
+      }
+    }
+    if (questions !== undefined ) {
       questions.map(question => {
-        if (question.block !== true){
-        fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'new': false, 'pin': false})
+        if (modOn) {
+          if (question.block !== true && question.approve){
+            fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'new': false, 'pin': false})
+          }
+        }
+        else {
+          if (question.block !== true){
+            fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'new': false, 'pin': false})
+          }
         }
       })
     }
+ 
   }
 
 }

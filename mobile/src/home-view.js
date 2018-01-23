@@ -36,7 +36,8 @@ class HomeView extends Component {
       marginTop: 18, 
       animation: "none",
       title: "Q & A",
-      questionAsk: false
+      questionAsk: false,
+      questionError: "Ask Question"
     }
     this.signin = fbc.signin()
       .then(user => this.user = user)
@@ -141,6 +142,7 @@ class HomeView extends Component {
       session = {this.state.session}
       hideModal = {this.hideModal}
       modalVisible = {this.state.modalVisible}
+      questionError = {this.state.questionError}
       />
       )
     }
@@ -222,14 +224,20 @@ class HomeView extends Component {
     }
 
     renderModal = () => {
-      if (this.state.questionAsk) {
+      var modOn = false
+      if (this.state.moderator.length > 0) {
+        if (this.state.moderator[0]) {
+          modOn = this.state.moderator[0].approve
+        }
+      }
+      if (this.state.questionAsk && modOn) {
         return (
         <Modal visible={true} transparent={true} style={{flex: 1}}>
-        <TouchableOpacity onPress={this.closeConfirm} style={{flex: 1, opacity: 1}}></TouchableOpacity> 
-        <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
+          <TouchableOpacity onPress={this.closeConfirm} style={{flex: 1, opacity: 1}}></TouchableOpacity> 
+          <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
             <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
             <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>Your question has been submitted for approval!</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </Modal>
         )
       }
@@ -264,12 +272,13 @@ class HomeView extends Component {
  
   createQuestion = (ref, question, anom) => {
     var time = new Date().getTime()
-    if (question.length === 0) {
+    var questionName = question.trim()
+    if (questionName.length === 0) {
       this.setState({showError: "red"})
     }
-    if (this.user && question.length > 0) {
+    if (this.user && questionName.length > 0) {
       ref('questions').child(this.state.session.key).push({
-        text: question,
+        text: questionName,
         creator: client.currentUser,
         score : 0,
         dateCreate: time,
@@ -283,13 +292,15 @@ class HomeView extends Component {
         session: this.state.session.key,
         sessionName: this.state.session.sessionName
       })
-      .then(() => this.setState({question: '', anom: false, showError: "white"}))
-      .catch (x => console.error(x))
-      .then(setTimeout(() => {
-        this.hideModal()
-        this.setState({questionAsk: true})
-        }
-        ,250))
+      .then(() => {
+        this.setState({question: '', anom: false, showError: "white"})
+        setTimeout(() => {
+          this.hideModal()
+          this.setState({questionAsk: true})
+          }
+          ,250)
+      })
+      .catch(this.setState({questionError: "Retry"}))
     }
   }
 
@@ -300,7 +311,7 @@ class HomeView extends Component {
     else {
       fbc.database.public.allRef('votes').child(question.key).child(client.currentUser.id).set(1)
       .then(() => this.setState({vote: ''}))
-      .catch (x => console.error(x))
+      .catch(x => console.error(x))
     }
   }
 }
@@ -316,7 +327,6 @@ const s = ReactNative.StyleSheet.create({
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
-    
   },
 
   modHeader: {
@@ -354,7 +364,6 @@ const s = ReactNative.StyleSheet.create({
 
   },
   bigButton:{
-    backgroundColor: new Color().rgbString() ,
     height: 42, 
     marginTop: 30, 
     marginBottom: 30, 
@@ -378,7 +387,7 @@ const s = ReactNative.StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'center',
     borderBottomWidth: 2,
-    borderBottomColor: new Color().rgbString() 
+    borderBottomColor: client.primaryColor
   },
 
   button2: {
@@ -400,7 +409,7 @@ const s = ReactNative.StyleSheet.create({
   },
   listContainer: {
     flexDirection: "row",
-    backgroundColor: new Color().rgbString(),
+    backgroundColor: client.primaryColor,
     height: 42, 
     alignItems:'center',
     justifyContent: 'center',
@@ -469,7 +478,7 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 20,
     marginRight: 10,
     width: 124,
-    backgroundColor: new Color().rgbString(),
+    backgroundColor: client.primaryColor,
     height: 42,
     borderRadius: 4,
   },

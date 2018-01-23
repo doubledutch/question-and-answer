@@ -11,7 +11,8 @@ export class MyList extends Component {
         super(props)
         this.newVotes = this.newVotes.bind(this)
         this.state = {
-          anom: false
+          anom: false,
+          showMessage: false
         }
     }
 
@@ -28,10 +29,18 @@ export class MyList extends Component {
       newQuestions = newQuestions.filter(item => item.answered === false)
     }
 
+    let testQuestions = this.props.questions
+    if (moderator.length > 0){    
+      if (moderator[0].approve === true){
+        testQuestions = testQuestions.filter(item => item.approve === true)
+    }
+  }
+
     return (
       <FlatList
       data={newQuestions}
-      ListHeaderComponent={this.renderHeader(this.props.questions)}
+      ListHeaderComponent={this.renderHeader(testQuestions)}
+      ListFooterComponent={<View style={{height: 150}}></View>}
       renderItem={({item}) => {
         if (moderator.length > 0){
           if (moderator[0].approve !== true && item.answered === false) {
@@ -135,7 +144,6 @@ export class MyList extends Component {
   )
  }
 
-
   renderHeader = (questions) => {
     if (questions.length === 0) {
       return (
@@ -150,9 +158,9 @@ export class MyList extends Component {
           <View style={s.divider}/>
           </View>
           <View style={{marginTop: 96}}>
-          <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>Be the First to Ask a Question!</Text>
-          <TouchableOpacity onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 16, color: new Color().rgbString()}}>Tap here to get started</Text></TouchableOpacity>
-            </View>
+            <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>Be the First to Ask a Question!</Text>
+            <TouchableOpacity onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 16, color: new Color().rgbString()}}>Tap here to get started</Text></TouchableOpacity>
+          </View>
         </View>
       )
     }
@@ -264,7 +272,7 @@ const s = ReactNative.StyleSheet.create({
 
   },
   bigButton:{
-    backgroundColor: new Color().rgbString() ,
+    backgroundColor: client.primaryColor,
     height: 42, 
     marginTop: 30, 
     marginBottom: 30, 
@@ -287,7 +295,7 @@ const s = ReactNative.StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'center',
     borderBottomWidth: 2,
-    borderBottomColor: new Color().rgbString() 
+    borderBottomColor: client.primaryColor
   },
 
   button2: {
@@ -393,7 +401,7 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 20,
     marginRight: 10,
     width: 124,
-    backgroundColor: new Color().rgbString(),
+    backgroundColor: client.primaryColor,
     height: 42,
     borderRadius: 4,
   },

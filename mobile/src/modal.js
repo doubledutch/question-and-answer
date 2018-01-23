@@ -51,13 +51,23 @@ export class CustomModal extends Component {
           paddingLeft: 0
         }
 
+        var newColor = "#9B9B9B"
+        if (this.props.sessions.length > 0){
+          newColor = client.primaryColor
+        }
+
+        const colorStyle = {
+          backgroundColor: newColor
+        }
+
         if (this.props.launch === true) {
             return(
                 <View style={{flex: 1}}>
+                    {this.renderModalHeader()}
                     <FlatList
                     style={{backgroundColor: '#EFEFEF'}}
-                    ListHeaderComponent={this.renderModalHeader()}
                     data = {this.props.sessions}
+                    ListFooterComponent={<View style={{height: 150}}></View>}
                     renderItem={({item}) =>{  
                         return (
                         <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
@@ -73,7 +83,7 @@ export class CustomModal extends Component {
                     }
                     />
                     <View style={{borderTopColor:"#b7b7b7", borderTopWidth: 1, backgroundColor: '#EFEFEF'}}>
-                        <TouchableOpacity disabled={this.props.disable} onPress={this.props.closeSessionModal} style={s.bigButton}><Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>Join Q&A</Text></TouchableOpacity>
+                        <TouchableOpacity disabled={this.props.disable} onPress={this.props.closeSessionModal} style={[s.bigButton, colorStyle]}><Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>Join Q&A</Text></TouchableOpacity>
                     </View>
                 </View>
             )
@@ -102,7 +112,7 @@ export class CustomModal extends Component {
                         <Text style={s.anomText}>Ask anonymously</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anom)}><Text style={s.sendButtonText}>Ask Question</Text></TouchableOpacity>
+                <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anom)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
             </View>
             <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
         </View>
@@ -218,7 +228,6 @@ const s = ReactNative.StyleSheet.create({
 
   },
   bigButton:{
-    backgroundColor: new Color().rgbString() ,
     height: 42, 
     marginTop: 30, 
     marginBottom: 30, 
@@ -241,7 +250,7 @@ const s = ReactNative.StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'center',
     borderBottomWidth: 2,
-    borderBottomColor: new Color().rgbString() 
+    borderBottomColor: client.primaryColor
   },
 
   button2: {
@@ -347,7 +356,7 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 20,
     marginRight: 10,
     width: 124,
-    backgroundColor: new Color().rgbString(),
+    backgroundColor: client.primaryColor,
     height: 42,
     borderRadius: 4,
   },
@@ -357,9 +366,6 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 15,
     height: 19,
     width: 19,
-    // borderColor: '#9B9B9B',
-    // borderWidth: 1,
-    // borderRadius: 2
   },
   sendButtonText: {
     fontSize: 14,

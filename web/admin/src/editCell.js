@@ -44,7 +44,7 @@ export class CellEdit extends Component {
         if (this.state.action === "edit") {
             return (
                 <div className="rightButtons">
-                    <button className="smallCloseButton" value="edit" onClick={this.confirmEdit}>Save</button>
+                    <button className="smallCloseButton" value="edit" onClick={this.confirmEdit}>Done</button>
                 </div>
             )
         }
@@ -57,7 +57,8 @@ export class CellEdit extends Component {
     handleKeyPress = (event) => {
         if (event.key === 'Enter'){
             event.preventDefault()
-            if (this.state.value) {
+            var sessionName = this.state.value.trim()
+            if (sessionName) {
               this.confirmEdit()
             }
         }
