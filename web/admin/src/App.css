@@ -193,7 +193,6 @@
   color: #393939;
   border: none;
   width: 100%;
-  
 }
 
 
@@ -356,7 +355,9 @@
 
 
 .smallButton{
-  
+  height: 15px;
+  width: 15px;
+  margin-top: 4px;
 }
 
 .rightButtons{
@@ -458,24 +459,43 @@
   padding-top: 0px;
   margin-right: 5px;  
   margin-left: 5px;
-
-
 }
 
 .inputBox {
   margin-left: 5px;
-  margin-right: 5px;
+}
+
+.textInputBox {
+  flex-direction: row;
+  display: flex;
+  margin: 0px;
+  padding: 0px;
+  border: 1px;
+  border-style: solid;
+  border-color:#CDCDCD;
+  background-color: #ffffff;
 }
 
 .box {
-  border: 1px solid #CDCDCD;
-  margin-bottom: 0px;
+  border: none;
+  margin: 0px;
   font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 13px;
   display: flex;
-  width: 100%;
-  height: 36px;
+  width: 90%;
   padding-left: 10px;
+}
+
+.counter {
+  justify-content: center;
+  width: 10%;
+  font-size: 14px;
+  height: 20;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: '#9B9B9B'; 
+  text-align: center;
+  color: #C1C1C1;
 }
 
 .bigBoxTitle{

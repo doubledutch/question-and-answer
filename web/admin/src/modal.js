@@ -9,7 +9,11 @@ export class CustomModal extends Component {
     constructor(props){
         super(props)
         this.state = {
-            value: ''
+            value: '',
+            color: this.props.modalColor,
+            message: this.props.message,
+            reload: false,
+            task: ""
         }
     }
 
@@ -19,7 +23,7 @@ export class CustomModal extends Component {
       return(
       <Modal 
       isOpen={this.props.openVar}
-      onAfterOpen={this.props.afterOpenModal}
+      onAfterOpen={this.makeFocus}
       onRequestClose={this.props.closeModal}
       contentLabel="Modal"
       className="Modal"
@@ -27,13 +31,16 @@ export class CustomModal extends Component {
       >
         <div> 
           <div style={{padding: 25, paddingLeft: 20}}>
-            <center className="modalTitle" style={{textAlign: "left"}}>ADD NEW QA SESSION</center>
-           
-            <form style={{marginTop: 20, marginBottom: 10}}>
+            <center className="modalTitle" style={{textAlign: "left"}}>ADD NEW Q&A SESSION</center>
+            <form style={{marginTop: 20}}>
               <div className="inputBox">
                 <label className="boxTitle">
                   Session Name:
-                  <input className="box" name="value" maxLength="250" type="text" value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} />
+                  <span className="textInputBox">
+                    <input className="box" name="value" maxLength="250" type="text" style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip} />
+                    <p className="counter">{250 - this.state.value.length} </p>
+                  </span>
+                  <p style={{color: this.state.color, fontSize: 12, margin: 0, padding: 0, marginTop: 2}}>{this.state.message}</p>
                 </label>
               </div>
             </form>
@@ -48,6 +55,8 @@ export class CustomModal extends Component {
                       task = {task}
                       confirmDelete = {this.confirmDelete}
                       confirmEdit = {this.confirmEdit}
+                      reload = {this.state.reload}
+                      task2 = {this.state.task}
                       />
                     </li>
                   )
@@ -57,7 +66,7 @@ export class CustomModal extends Component {
           </div>
         </div>
         <div className="modalButtonsBox">
-          <button className="closeButton" onClick={this.props.closeModal}>Close</button>
+          <button className="closeButton" onClick={this.handleClose}>Close</button>
           <span className="spacer"/>
           <button className="modalButton" style={{width: 200, height: 28, marginRight: 20}}onClick={this.handleSubmit} value='true'>Save & Exit</button>
           <button className="modalButton" style={{width: 350}} onClick={this.handleSubmit} value="false">Save & Add Another</button>
@@ -67,7 +76,7 @@ export class CustomModal extends Component {
     }
 
     handleChange = (event) => {
-      this.setState({[event.target.name]: event.target.value});
+      this.setState({[event.target.name]: event.target.value, color: "#FAFAFA"});
     }
 
     handleKeyPress = (event) => {
@@ -81,26 +90,69 @@ export class CustomModal extends Component {
       }
     }
 
+    handleClose = () => {
+      this.setState({value: "", color: "#FAFAFA"});
+      this.props.closeModal()
+    }
+
+    makeFocus = () => {
+      this.myInp.focus();
+   }
 
     handleSubmit = (event, keyPress) => {
-      if (this.state.value) {
-      this.props.newSession(this.state.value)
-      this.setState({value: ""});
-      if (event.target.value === "true") {
-        this.props.closeModal()
+      var status = true
+      var sessionName = this.state.value.trim()
+      if (sessionName) {
+        for (var item of this.props.sessions){
+          if (item.sessionName === sessionName){
+            status = false
+          }
+        }
+        if (status){
+        this.props.newSession(sessionName)
+        this.setState({value: "", color: "#FAFAFA"});
+        if (event.target.value === "true") {
+          this.props.closeModal()
+        }
+        if (keyPress){
+          this.props.closeModal()
+        }
       }
-      if (keyPress){
-        this.props.closeModal()
+      else {
+        this.setState({color: "red"});
       }
     }
+      else {
+        this.setState({color: "red"});
+      }
     }
+
+
 
     confirmDelete = (task) => {
       this.props.confirmDelete(task)
     }
 
     confirmEdit = (task, value) => {
-      this.props.confirmEdit(task, value)
+      var status = true
+      var named = value.trim()
+      if (named) {
+        for (var item of this.props.sessions){
+          if (item.sessionName === named){
+            status = false
+          }
+        }
+        if (status){
+          this.props.confirmEdit(task, named)
+          this.setState({color: "#FAFAFA"});
+        }
+        else {
+          this.setState({color: "red", reload: true, task});
+        }
+      }
+      else {
+        this.setState({color: "red"});
+      }
     }
 
  
