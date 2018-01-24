@@ -93,7 +93,7 @@ export class CustomModal extends Component {
       else {
         var borderColor = this.state.borderColor
         if (this.props.showError === "red"){borderColor = "red"}
-        const borderStyle = {borderBottomColor: borderColor, borderTopColor:borderColor}
+        const borderStyle = {borderColor: borderColor, borderColor:borderColor}
         return (
             <View style={{flex: 1}}>
                 <View style={[s.modal, borderStyle]}>
@@ -209,8 +209,7 @@ const s = ReactNative.StyleSheet.create({
   modal: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    borderBottomWidth: 1, 
-    borderTopWidth: 1
+    borderWidth: 1,
   },
   modalBottom: {
     flex: 1,

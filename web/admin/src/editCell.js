@@ -78,12 +78,24 @@ export class CellEdit extends Component {
      }
 
      confirmEdit = () => {
-        var sessionName = this.state.value.trim()
-        if (sessionName) {
-            this.props.confirmEdit(this.props.task, this.state.value)
-            this.setState({action: "state", value : this.props.task.sessionName});
-            this.myInp.blur()
+        var named = this.state.value.trim()
+        var status = true
+        if (named) {
+            for (var item of this.props.sessions){
+                if (item.sessionName === named){
+                  status = false
+                }
+            }
+            if (status){
+                this.setState({action: "state", value : this.props.task.sessionName});
+                this.myInp.blur()
+            }
+            else {
+                {this.handleEdit()}
+            }
+              this.props.confirmEdit(this.props.task, named, status)
         }
+        
         else {
             this.props.confirmEdit(this.props.task, "")
             this.setState({value : this.props.task.sessionName});
