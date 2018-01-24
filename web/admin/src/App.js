@@ -618,34 +618,6 @@ export default class App extends Component {
   }
 
   confirmEdit = (task, value) => {
-    // var status = true
-    // var named = value.trim()
-    // if (sessionName) {
-    //   for (var item of this.state.sessions){
-    //     if (item.sessionName === sessionName){
-    //       status = false
-    //     }
-    //   }
-    //   if (status){
-    //     fbc.database.public.adminRef('sessions').child(task.key).update({sessionName: sessionName})
-    //     .catch(error => {alert("Please retry saving your session")})
-  
-    //   }
-    //   else {
-    //     this.setState({modalColor: "red"});
-    //   }
-    // }
-    // else {
-    //   this.setState({modalColor: "red"});
-    // }
-
-
-
-
-
-
-
-
     fbc.database.public.adminRef('sessions').child(task.key).update({sessionName: value})
     .catch(error => {alert("Please retry saving your session")})
   }

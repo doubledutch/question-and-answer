@@ -12,8 +12,6 @@ export class CustomModal extends Component {
             value: '',
             color: this.props.modalColor,
             message: this.props.message,
-            reload: false,
-            task: ""
         }
     }
 
@@ -55,8 +53,7 @@ export class CustomModal extends Component {
                       task = {task}
                       confirmDelete = {this.confirmDelete}
                       confirmEdit = {this.confirmEdit}
-                      reload = {this.state.reload}
-                      task2 = {this.state.task}
+                      sessions = {sessions}
                       />
                     </li>
                   )
@@ -133,26 +130,14 @@ export class CustomModal extends Component {
       this.props.confirmDelete(task)
     }
 
-    confirmEdit = (task, value) => {
-      var status = true
-      var named = value.trim()
-      if (named) {
-        for (var item of this.props.sessions){
-          if (item.sessionName === named){
-            status = false
-          }
-        }
+    confirmEdit = (task, value, status) => {
         if (status){
-          this.props.confirmEdit(task, named)
+          this.props.confirmEdit(task, value)
           this.setState({color: "#FAFAFA"});
         }
-        else {
-          this.setState({color: "red", reload: true, task});
+        if (status === false) {
+          this.setState({color: "red"});
         }
-      }
-      else {
-        this.setState({color: "red"});
-      }
     }
 
  

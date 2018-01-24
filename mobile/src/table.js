@@ -158,11 +158,11 @@ export class MyList extends Component {
           <View style={s.dividerSm}/>
           <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
           <View style={s.divider}/>
-          </View>
-          <View style={{marginTop: 96}}>
-            <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>Be the First to Ask a Question!</Text>
-            <TouchableOpacity onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 16, color: new Color().rgbString()}}>Tap here to get started</Text></TouchableOpacity>
-          </View>
+        </View>
+        <View style={{marginTop: 96}}>
+          <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>Be the First to Ask a Question!</Text>
+          <TouchableOpacity style={{flex:1}} onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 18, color: client.primaryColor}}>Tap here to get started</Text></TouchableOpacity>
+        </View>
       </View>
       )
     }
@@ -240,7 +240,7 @@ const s = ReactNative.StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    flexDirection: 'row',    
+    flexDirection: 'row',
   },
 
   modHeader: {
@@ -428,7 +428,7 @@ const s = ReactNative.StyleSheet.create({
   },
   dashboardButton: {
     fontSize: 18,
-    color: '#9B9B9B',
+    color: '#9B9B9B'
   },
   composeText: {
     flex: 1,
