@@ -113,6 +113,7 @@ class HomeView extends Component {
         <View style={{flex:1}}>
           <MyList 
           questions={newQuestions}
+          showModal = {this.showModal}
           showAnswer = {this.state.showAnswer}
           moderator = {this.state.moderator}
           showRecent = {this.state.showRecent}
@@ -120,7 +121,6 @@ class HomeView extends Component {
           findOrder = {this.findOrder}
           findOrderDate = {this.findOrderDate}
           originalOrder = {this.originalOrder}
-          showModal = {this.showModal}
           newVote = {this.newVote}
           />
         </View>
@@ -441,8 +441,8 @@ const s = ReactNative.StyleSheet.create({
   compose: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderTopColor: "#ffffff"
+    borderWidth: 1,
+    borderColor: "#ffffff"
   },
   composeBox: {
     marginTop: 20,
