@@ -11,9 +11,7 @@ export class CellEdit extends Component {
             value : this.props.task.sessionName,
             focusBool: false,
             modalMessage: "",
-            height: 0,
-            padding: 0,
-            margin: 0
+            height: 0
         }
     }
 

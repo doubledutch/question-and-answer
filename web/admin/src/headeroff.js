@@ -32,46 +32,46 @@ export class CustomHeaderOff extends Component {
 
           }
           else {
-          return (
-          <span className="buttonSpan2">
-            <button className="listButton">Approved ({origQuestions.length})</button>
-            <button className="listButton2" onClick={this.props.handleClick}>Blocked ({blockedQuestions.length})</button>
-            <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
-            <span className="spacer"/>
-            <button className="answerButton" onClick={this.props.answerAll}>
-              <img className='smallButton' onClick={this.props.answerAll} src={require('./icons/check.svg')}/>
-              Mark All as Answered
-            </button>
-          </span>
-          )
+            return (
+              <span className="buttonSpan2">
+                <button className="listButton">Approved ({origQuestions.length})</button>
+                <button className="listButton2" onClick={this.props.handleClick}>Blocked ({blockedQuestions.length})</button>
+                <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
+                <span className="spacer"/>
+                <button className="answerButton" onClick={this.props.answerAll}>
+                  <img className='smallButton' onClick={this.props.answerAll} src={require('./icons/check.svg')}/>
+                  Mark All as Answered
+                </button>
+              </span>
+            )
         }
         }
         if (showAnswer === true && showBlock === false){
           return (
-          <span className="buttonSpan2">
-            <button className="listButton2" onClick={this.props.handleApproved}>Approved ({origQuestions.length})</button>
-            <button className="listButton2"  onClick={this.props.handleClick}>Blocked ({blockedQuestions.length})</button>
-            <button className="listButton">Answered ({answeredQuestions.length})</button>
-            <span className="spacer"/>
-            <button className="answerButton">
-              <img className='smallButton' src={require('./icons/check.svg')}/>
-              Mark All as Answered
-            </button>
-          </span>
+            <span className="buttonSpan2">
+              <button className="listButton2" onClick={this.props.handleApproved}>Approved ({origQuestions.length})</button>
+              <button className="listButton2"  onClick={this.props.handleClick}>Blocked ({blockedQuestions.length})</button>
+              <button className="listButton">Answered ({answeredQuestions.length})</button>
+              <span className="spacer"/>
+              <button className="answerButton">
+                <img className='smallButton' src={require('./icons/check.svg')}/>
+                Mark All as Answered
+              </button>
+            </span>
           )
         }
         if (showBlock === true && showAnswer === false){
           return (
-          <span className="buttonSpan2">
-            <button className="listButton2" onClick={this.props.handleApproved}>Approved ({origQuestions.length})</button>
-            <button className="listButton">Blocked ({blockedQuestions.length})</button>
-            <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
-            <span className="spacer"/>
-            <button className="answerButton">
-              <img className='smallButton' src={require('./icons/check.svg')}/>
-              Mark All as Answered
-            </button>
-          </span>
+            <span className="buttonSpan2">
+              <button className="listButton2" onClick={this.props.handleApproved}>Approved ({origQuestions.length})</button>
+              <button className="listButton">Blocked ({blockedQuestions.length})</button>
+              <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
+              <span className="spacer"/>
+              <button className="answerButton">
+                <img className='smallButton' src={require('./icons/check.svg')}/>
+                Mark All as Answered
+              </button>
+            </span>
           )
         }
     }
