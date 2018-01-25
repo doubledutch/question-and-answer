@@ -88,9 +88,6 @@ export default class App extends Component {
             }
           }
         })
-        fbc.database.public.allRef('questions').child(session.key).on('child_removed', data => {
-          this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
-        })
       })
       
       sessRef.on('child_changed', data => {
@@ -105,6 +102,7 @@ export default class App extends Component {
       })
 
       sessRef.on('child_removed', data => {
+        this.setState({ questions: this.state.questions.filter(x => x.session !== data.key) })
         this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key) })
       })
     
@@ -624,6 +622,7 @@ export default class App extends Component {
 
   confirmDelete = (task) => {
     fbc.database.public.adminRef('sessions').child(task.key).remove()
+    this.setState({ session: 'All' })
   }
 
   handleClick = () => {

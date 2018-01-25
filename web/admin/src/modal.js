@@ -12,6 +12,8 @@ export class CustomModal extends Component {
             value: '',
             color: this.props.modalColor,
             message: this.props.message,
+            editMessage: "",
+            height: 0
         }
     }
 
@@ -54,6 +56,8 @@ export class CustomModal extends Component {
                       confirmDelete = {this.confirmDelete}
                       confirmEdit = {this.confirmEdit}
                       sessions = {sessions}
+                      message = {this.state.modalMessage}
+                      height = {this.state.height}
                       />
                     </li>
                   )
@@ -65,8 +69,8 @@ export class CustomModal extends Component {
         <div className="modalButtonsBox">
           <button className="closeButton" onClick={this.handleClose}>Close</button>
           <span className="spacer"/>
-          <button className="modalButton" style={{width: 200, height: 28, marginRight: 20}}onClick={this.handleSubmit} value='true'>Save & Exit</button>
-          <button className="modalButton" style={{width: 350}} onClick={this.handleSubmit} value="false">Save & Add Another</button>
+          <button className="modalButton" style={{width: 121, height: 28, marginRight: 20}}onClick={this.handleSubmit} value='true'>Save & Exit</button>
+          <button className="modalButton" style={{width: 144}} onClick={this.handleSubmit} value="false">Save & Add Another</button>
         </div>
       </Modal>
       )
@@ -130,14 +134,8 @@ export class CustomModal extends Component {
       this.props.confirmDelete(task)
     }
 
-    confirmEdit = (task, value, status) => {
-        if (status){
-          this.props.confirmEdit(task, value)
-          this.setState({color: "#FAFAFA"});
-        }
-        if (status === false) {
-          this.setState({color: "red"});
-        }
+    confirmEdit = (task, value) => {
+        this.props.confirmEdit(task, value)
     }
 
  

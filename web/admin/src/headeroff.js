@@ -20,16 +20,31 @@ export class CustomHeaderOff extends Component {
         var answeredQuestions = newQuestions.filter(item => item.answered === true)
 
         if (showBlock === false && showAnswer === false){
+          if (origQuestions.length === 0){
+            return (
+              <span className="buttonSpan2">
+                <button className="listButton">Approved ({origQuestions.length})</button>
+                <button className="listButton2" onClick={this.props.handleClick}>Blocked ({blockedQuestions.length})</button>
+                <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
+                <span className="spacer"/>
+              </span>
+            )
+
+          }
+          else {
           return (
           <span className="buttonSpan2">
             <button className="listButton">Approved ({origQuestions.length})</button>
             <button className="listButton2" onClick={this.props.handleClick}>Blocked ({blockedQuestions.length})</button>
             <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
             <span className="spacer"/>
-            <img className='smallButton' onClick={this.props.answerAll} src={require('./icons/check.svg')}/>
-            <button className="answerButton" onClick={this.props.answerAll}>Mark All as Answered</button>
+            <button className="answerButton" onClick={this.props.answerAll}>
+              <img className='smallButton' onClick={this.props.answerAll} src={require('./icons/check.svg')}/>
+              Mark All as Answered
+            </button>
           </span>
           )
+        }
         }
         if (showAnswer === true && showBlock === false){
           return (
@@ -38,8 +53,10 @@ export class CustomHeaderOff extends Component {
             <button className="listButton2"  onClick={this.props.handleClick}>Blocked ({blockedQuestions.length})</button>
             <button className="listButton">Answered ({answeredQuestions.length})</button>
             <span className="spacer"/>
-            <img className='smallButton' src={require('./icons/check.svg')}/>
-            <button className="answerButton">Mark All as Answered</button>
+            <button className="answerButton">
+              <img className='smallButton' src={require('./icons/check.svg')}/>
+              Mark All as Answered
+            </button>
           </span>
           )
         }
@@ -50,8 +67,10 @@ export class CustomHeaderOff extends Component {
             <button className="listButton">Blocked ({blockedQuestions.length})</button>
             <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
             <span className="spacer"/>
-            <img className='smallButton' src={require('./icons/check.svg')}/>
-            <button className="answerButton">Mark All as Answered</button>
+            <button className="answerButton">
+              <img className='smallButton' src={require('./icons/check.svg')}/>
+              Mark All as Answered
+            </button>
           </span>
           )
         }
