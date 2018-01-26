@@ -24,7 +24,8 @@ export class CustomCell extends Component {
             <p className='timeText'>{difference}</p>
             <img src={require('./icons/Inactive.png')}/>
             <p className='timeText'>{'\xa0'}{task.score}</p>
-          </span>      
+          </span>
+          <span >    
           <p className="questionText">"{task.text}"</p>
           {task.anom === false &&
             <p className="nameText">
@@ -36,7 +37,8 @@ export class CustomCell extends Component {
             -Anonymous
             </p>
           }
-        </span>
+          </span>
+      </span>
         )
     }
 }

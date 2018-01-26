@@ -9,16 +9,21 @@ export class CellEdit extends Component {
         this.state = {
             action : "state",
             value : this.props.task.sessionName,
-            focusBool: false
+            focusBool: false,
+            modalMessage: "",
+            height: 0
         }
     }
 
     render() {
         const task = this.props.task
         return(
-        <div className="sessionCell">
+        <div className="sessionCell">    
+            <div className="sessionCellTop">
             <input className="sessionTitle" name="value" maxLength="250" type="text" ref={(ip) => this.myInp = ip} onKeyPress={this.handleKeyPress} onFocus={this.handleEdit} onBlur={this.handleBlur} value={this.state.value} onChange={this.handleChange} />
             {this.renderIcons(task)}
+            </div>
+            <p className="errorText" style={{height: this.state.height}}>{this.state.modalMessage}</p>
         </div>
         )
     }
@@ -53,10 +58,7 @@ export class CellEdit extends Component {
     handleKeyPress = (event) => {
         if (event.key === 'Enter'){
             event.preventDefault()
-            var sessionName = this.state.value.trim()
-            if (sessionName) {
-              this.confirmEdit()
-            }
+            this.confirmEdit()    
         }
       }
 
@@ -84,21 +86,24 @@ export class CellEdit extends Component {
             for (var item of this.props.sessions){
                 if (item.sessionName === named){
                   status = false
+                  if (item.sessionName === this.props.task.sessionName){
+                      status = true
+                  }
                 }
             }
             if (status){
-                this.setState({action: "state", value : this.props.task.sessionName});
+                this.setState({modalMessage: "", height: 0, action: "state"})
                 this.myInp.blur()
+                this.props.confirmEdit(this.props.task, named)
             }
-            else {
+            if (status === false) {
                 {this.handleEdit()}
-            }
-              this.props.confirmEdit(this.props.task, named, status)
+                this.setState({modalMessage: "* Please enter a valid session name", height: 20});
+            }   
         }
-        
         else {
-            this.props.confirmEdit(this.props.task, "")
-            this.setState({value : this.props.task.sessionName});
+            {this.handleEdit()}
+            this.setState({modalMessage: "* Please enter a valid session name", height: 20});
         }
      }
 
