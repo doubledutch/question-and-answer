@@ -81,7 +81,9 @@ export default class App extends Component {
           var questions = this.state.questions
           for (var i in questions) {
             if (questions[i].key === data.key) {
+              var score = questions[i].score
               questions[i] = data.val()
+              questions[i].score = score
               questions[i].key = data.key
               this.setState({questions})
               break
@@ -340,7 +342,11 @@ export default class App extends Component {
     )
   }
 
+
   renderAnswered = (questions, time) => {
+    questions.sort(function (a,b){
+      return b.lastEdit - a.lastEdit
+    })
     return (
       <span className="questionBox2">
         <ul className="listBox">
@@ -699,7 +705,8 @@ export default class App extends Component {
   }
 
   makeAnswer = (question) => {
-    fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'block': false, 'new': false, 'pin': false})
+    var time = new Date().getTime()
+    fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'block': false, 'new': false, 'pin': false, 'lastEdit': time})
   }
 
   blockQuestion = (question) => {

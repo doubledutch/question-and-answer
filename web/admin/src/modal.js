@@ -37,7 +37,7 @@ export class CustomModal extends Component {
                 <label className="boxTitle">
                   Session Name:
                   <span className="textInputBox">
-                    <input className="box" name="value" maxLength="250" type="text" style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip} />
+                    <input className="box" name="value" maxLength="250" type="text" style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
                     <p className="counter">{250 - this.state.value.length} </p>
                   </span>
                   <p style={{color: this.state.color, fontSize: 12, margin: 0, padding: 0, marginTop: 2}}>{this.state.message}</p>
@@ -105,7 +105,7 @@ export class CustomModal extends Component {
       var sessionName = this.state.value.trim()
       if (sessionName) {
         for (var item of this.props.sessions){
-          if (item.sessionName === sessionName){
+          if (item.sessionName.toUpperCase() === sessionName.toUpperCase()){
             status = false
           }
         }
@@ -127,8 +127,6 @@ export class CustomModal extends Component {
         this.setState({color: "red"});
       }
     }
-
-
 
     confirmDelete = (task) => {
       this.props.confirmDelete(task)

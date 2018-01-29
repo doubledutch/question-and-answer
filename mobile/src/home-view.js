@@ -38,7 +38,8 @@ class HomeView extends Component {
       title: "Q & A",
       questionAsk: false,
       questionError: "Ask Question",
-      topBorder: "#EFEFEF"
+      topBorder: "#EFEFEF",
+      approveVar: false
     }
     this.signin = fbc.signin()
       .then(user => this.user = user)
@@ -54,6 +55,25 @@ class HomeView extends Component {
 
       sessRef.on('child_added', data => {
         this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
+      })
+
+      sessRef.on('child_changed', data => {
+        var sessions = this.state.sessions
+        for (var i in sessions) {
+          if (sessions[i].key === data.key) {
+            sessions[i].sessionName = data.val().sessionName
+            if (this.state.session.key === data.key) {
+              var newSession = this.state.session
+              newSession.sessionName = data.val().sessionName
+              this.setState({sessions, session: newSession })
+              break;
+            }
+            else {
+              this.setState({sessions})
+              break;
+            }
+          }
+        }
       })
 
       modRef.on('child_added', data => {
@@ -208,9 +228,19 @@ class HomeView extends Component {
         var questions = this.state.questions
         for (var i in questions) {
           if (questions[i].key === data.key) {
+            var score = questions[i].score
+            var myVote = questions[i].myVote
+            var oldState = questions[i].approve
             questions[i] = data.val()
+            questions[i].score = score
+            questions[i].myVote = myVote
             questions[i].key = data.key
-            this.setState({questions})
+            if (data.val().creator.id === client.currentUser.id && oldState !== data.val().approve){
+              this.setState({questions, approveVar: true, questionAsk: true})
+            }
+            else {
+              this.setState({questions})
+            }
             break
           }
         }
@@ -232,7 +262,20 @@ class HomeView extends Component {
           modOn = this.state.moderator[0].approve
         }
       }
-      if (this.state.questionAsk && modOn) {
+      if (this.state.questionAsk && modOn && this.state.approveVar) {
+        setTimeout(() => {
+          this.closeConfirm()
+          }
+          ,5000)
+        return (
+          <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
+            <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
+            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>Your question has been approved!</Text>
+          </TouchableOpacity>
+        )
+      }
+
+      if (this.state.questionAsk && modOn && this.state.approveVar === false) {
         setTimeout(() => {
           this.closeConfirm()
           }
@@ -244,23 +287,31 @@ class HomeView extends Component {
           </TouchableOpacity>
         )
       }
+
     }
 
+ 
+
     closeConfirm = () => {
-      this.setState({questionAsk: false})
+      this.setState({questionAsk: false, approveVar: false})
     }
 
     originalOrder = (questions) => {
       if (this.state.showRecent === false) {
-        questions.sort(function (a,b){
+        this.dateSort(questions)
+        questions.sort(function (a,b){ 
           return b.score - a.score
         })
       }
       if (this.state.showRecent === true) {
-        questions.sort(function (a,b){
-          return b.dateCreate - a.dateCreate
-        })
+        this.dateSort(questions)
       }
+    }
+
+    dateSort = (questions) => {
+      questions.sort(function (a,b){
+        return b.dateCreate - a.dateCreate
+      })
     }
 
     findOrder = () => {
@@ -279,6 +330,12 @@ class HomeView extends Component {
     if (questionName.length === 0) {
       this.setState({showError: "red"})
     }
+    var approveVar = true
+    var newVar = false
+    if (this.state.moderator[0].approve){
+      approveVar = false
+      newVar = true
+    }
     if (this.user && questionName.length > 0) {
       ref('questions').child(this.state.session.key).push({
         text: questionName,
@@ -286,9 +343,9 @@ class HomeView extends Component {
         score : 0,
         dateCreate: time,
         anom: anom,
-        approve: false,
+        approve: approveVar,
         block: false,
-        new: true,
+        new: newVar,
         answered: false,
         pin: false,
         lastEdit: time, 
@@ -299,7 +356,7 @@ class HomeView extends Component {
         this.setState({question: '', anom: false, showError: "white"})
         setTimeout(() => {
           this.hideModal()
-          this.setState({questionAsk: true})
+          this.setState({questionAsk: this.state.moderator[0].approve})
           }
           ,250)
       })

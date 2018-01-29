@@ -13,8 +13,7 @@ export class CustomModal extends Component {
             question: '', 
             anom: false, 
             color: 'white', 
-            marginTop: 18, 
-            height: 20, 
+            height: 22, 
             borderColor: '#EFEFEF'
           }
     }
@@ -43,14 +42,14 @@ export class CustomModal extends Component {
             fontSize: 18,
             color: '#9B9B9B',
             textAlignVertical: 'top',
-            height: this.state.height,
             maxHeight: 100,
-            marginTop: this.state.marginTop
+            height: this.state.height,
+            marginTop: 20,
+            paddingTop: 0,
         }
         
-        const androidStyle = {
-          paddingTop: 2,
-          paddingLeft: 0
+        const androidStyle1 = {
+          paddingLeft: 0,
         }
 
         var newColor = "#9B9B9B"
@@ -93,14 +92,14 @@ export class CustomModal extends Component {
       else {
         var borderColor = this.state.borderColor
         if (this.props.showError === "red"){borderColor = "red"}
-        const borderStyle = {borderColor: borderColor, borderColor:borderColor}
+        const borderStyle = {borderColor: borderColor}
         return (
             <View style={{flex: 1}}>
                 <View style={[s.modal, borderStyle]}>
                     <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-                    <TextInput style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
+                    <TextInput style={Platform.select({ios: newStyle, android: [newStyle, androidStyle1]})} placeholder="Type your question here"
                     value={this.state.question}
-                    onChangeText={question => this.setState({question, marginTop: 20})} 
+                    onChangeText={question => this.setState({question})} 
                     maxLength={250}
                     autoFocus={true}
                     multiline={true}
