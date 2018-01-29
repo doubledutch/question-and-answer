@@ -93,7 +93,7 @@ export class CustomModal extends Component {
       else {
         var borderColor = this.state.borderColor
         if (this.props.showError === "red"){borderColor = "red"}
-        const borderStyle = {borderColor: borderColor, borderColor:borderColor}
+        const borderStyle = {borderColor: borderColor}
         return (
             <View style={{flex: 1}}>
                 <View style={[s.modal, borderStyle]}>
