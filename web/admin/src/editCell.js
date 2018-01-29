@@ -40,17 +40,17 @@ export class CellEdit extends Component {
 
         if (this.state.action === "delete") {
             return (
-            <div className="rightButtons">
-                <button className="smallCloseButton" value="delete" onClick={this.confirmDelete}>Confirm</button>
-            </div>
+              <div className="rightButtons">
+                  <button className="smallCloseButton" value="delete" onClick={this.confirmDelete}>Confirm</button>
+              </div>
             )
         }
 
         if (this.state.action === "edit") {
             return (
-                <div className="rightButtons">
-                    <button className="smallCloseButton" value="edit" onClick={this.confirmEdit}>Done</button>
-                </div>
+              <div className="rightButtons">
+                  <button className="smallCloseButton" ref={(ip) => this.myInp1 = ip }value="edit" onClick={this.confirmEdit}>Done</button>
+              </div>
             )
         }
     }
@@ -61,6 +61,16 @@ export class CellEdit extends Component {
             this.confirmEdit()    
         }
       }
+
+    handleBlur = (event) => {
+      var currentButton = event.relatedTarget.value
+      if (currentButton === "edit"){
+        this.confirmEdit()
+      }
+      else {
+        this.setState({action: "state", value: this.props.task.sessionName, modalMessage: "", height: 0});
+      }
+    }
 
 
     handleEdit = () => {
@@ -84,12 +94,12 @@ export class CellEdit extends Component {
         var status = true
         if (named) {
             for (var item of this.props.sessions){
-                if (item.sessionName === named){
-                  status = false
-                  if (item.sessionName === this.props.task.sessionName){
-                      status = true
-                  }
+              if (item.sessionName.toUpperCase() === named.toUpperCase()){
+                status = false
+                if (item.sessionName === this.props.task.sessionName){
+                  status = true
                 }
+              }
             }
             if (status){
                 this.setState({modalMessage: "", height: 0, action: "state"})
@@ -97,12 +107,12 @@ export class CellEdit extends Component {
                 this.props.confirmEdit(this.props.task, named)
             }
             if (status === false) {
-                {this.handleEdit()}
+                this.handleEdit()
                 this.setState({modalMessage: "* Please enter a valid session name", height: 20});
             }   
         }
         else {
-            {this.handleEdit()}
+            this.handleEdit()
             this.setState({modalMessage: "* Please enter a valid session name", height: 20});
         }
      }

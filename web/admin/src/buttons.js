@@ -40,7 +40,7 @@ export class CustomButtons extends Component {
         else {
           return(
           <span>
-            <button className="pinButton" onClick={()=>this.sendPin(task)}>Pin to Top</button>
+            <button className="pinButton" onClick={()=>this.sendPin(task)}><img className='button3' onClick={()=>this.sendAnswer(task)} src={require('./icons/thumbtack.svg')}/>Pin to Top</button>
             <span className='cellBoxRight'>
               <img className='button1' onClick={()=>this.sendAnswer(task)} src={require('./icons/check.svg')}/>
               <img className='button1' onClick={()=>this.sendBlock(task)} src={require('./icons/deleteocircle.svg')}/>
