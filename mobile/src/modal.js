@@ -48,12 +48,12 @@ export class CustomModal extends Component {
             paddingTop: 0,
         }
         
-        const androidStyle1 = {
+        const androidStyle = {
           paddingLeft: 0,
         }
 
         var newColor = "#9B9B9B"
-        if (this.props.sessions.length > 0){
+        if (this.props.session){
           newColor = client.primaryColor
         }
 
@@ -97,7 +97,7 @@ export class CustomModal extends Component {
             <View style={{flex: 1}}>
                 <View style={[s.modal, borderStyle]}>
                     <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-                    <TextInput style={Platform.select({ios: newStyle, android: [newStyle, androidStyle1]})} placeholder="Type your question here"
+                    <TextInput style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
                     value={this.state.question}
                     onChangeText={question => this.setState({question})} 
                     maxLength={250}

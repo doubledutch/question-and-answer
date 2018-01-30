@@ -39,7 +39,7 @@ class HomeView extends Component {
       questionAsk: false,
       questionError: "Ask Question",
       topBorder: "#EFEFEF",
-      approveVar: false
+      approve: false
     }
     this.signin = fbc.signin()
       .then(user => this.user = user)
@@ -57,6 +57,10 @@ class HomeView extends Component {
         this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
       })
 
+      sessRef.on('child_removed', data => {
+        this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key) })
+      })
+
       sessRef.on('child_changed', data => {
         var sessions = this.state.sessions
         for (var i in sessions) {
@@ -66,12 +70,11 @@ class HomeView extends Component {
               var newSession = this.state.session
               newSession.sessionName = data.val().sessionName
               this.setState({sessions, session: newSession })
-              break;
             }
             else {
               this.setState({sessions})
-              break;
             }
+            break;
           }
         }
       })
@@ -236,7 +239,7 @@ class HomeView extends Component {
             questions[i].myVote = myVote
             questions[i].key = data.key
             if (data.val().creator.id === client.currentUser.id && oldState !== data.val().approve){
-              this.setState({questions, approveVar: true, questionAsk: true})
+              this.setState({questions, approve: true, questionAsk: true})
             }
             else {
               this.setState({questions})
@@ -262,7 +265,7 @@ class HomeView extends Component {
           modOn = this.state.moderator[0].approve
         }
       }
-      if (this.state.questionAsk && modOn && this.state.approveVar) {
+      if (this.state.questionAsk && modOn && this.state.approve) {
         setTimeout(() => {
           this.closeConfirm()
           }
@@ -275,7 +278,7 @@ class HomeView extends Component {
         )
       }
 
-      if (this.state.questionAsk && modOn && this.state.approveVar === false) {
+      if (this.state.questionAsk && modOn && this.state.approve === false) {
         setTimeout(() => {
           this.closeConfirm()
           }
@@ -293,7 +296,7 @@ class HomeView extends Component {
  
 
     closeConfirm = () => {
-      this.setState({questionAsk: false, approveVar: false})
+      this.setState({questionAsk: false, approve: false})
     }
 
     originalOrder = (questions) => {
@@ -330,8 +333,8 @@ class HomeView extends Component {
     if (questionName.length === 0) {
       this.setState({showError: "red"})
     }
-    var approveVar = true
-    var newVar = false
+    let approveVar = true
+    let newVar = false
     if (this.state.moderator[0].approve){
       approveVar = false
       newVar = true

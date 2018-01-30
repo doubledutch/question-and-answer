@@ -95,10 +95,7 @@ export class CellEdit extends Component {
         if (named) {
             for (var item of this.props.sessions){
               if (item.sessionName.toUpperCase() === named.toUpperCase()){
-                status = false
-                if (item.sessionName === this.props.task.sessionName){
-                  status = true
-                }
+                status = (item.sessionName.toUpperCase() === this.props.task.sessionName.toUpperCase())
               }
             }
             if (status){
@@ -108,7 +105,7 @@ export class CellEdit extends Component {
             }
             if (status === false) {
                 this.handleEdit()
-                this.setState({modalMessage: "* Please enter a valid session name", height: 20});
+                this.setState({modalMessage: "This session name already exists. * Please enter a valid session name", height: 20});
             }   
         }
         else {

@@ -53,10 +53,6 @@ export class CustomHeader extends Component {
             <button className="listButton2"  onClick={this.props.handleClick}>Blocked ({blockedQuestions.length})</button>
             <button className="listButton">Answered ({answeredQuestions.length})</button>
             <span className="spacer"/>
-            <button className="answerButton">
-              <img className='smallButton' src={require('./icons/check.svg')}/>
-              Mark All as Answered
-            </button>
           </span>
         )
       }
@@ -68,10 +64,6 @@ export class CustomHeader extends Component {
             <button className="listButton">Blocked ({blockedQuestions.length})</button>
             <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
             <span className="spacer"/>
-            <button className="answerButton">
-              <img className='smallButton' src={require('./icons/check.svg')}/>
-              Mark All as Answered
-            </button>
           </span>
         )
       }
