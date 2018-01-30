@@ -39,6 +39,7 @@ export class MyList extends Component {
     return (
     <View>
       {this.renderHeader(testQuestions)}
+     
       <FlatList
       data={newQuestions}
       ListFooterComponent={<View style={{height: 100}}></View>}
@@ -149,21 +150,23 @@ export class MyList extends Component {
   renderHeader = (questions) => {
     if (questions.length === 0) {
       return (
-      <View style={{height: 60}}>
-        <View style={s.buttonContainer}>
-          <View style={s.divider}/>
-          <TouchableOpacity style={s.button1}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
-          <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={this.props.findOrderDate}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
-          <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
-          <View style={s.divider}/>
+        <View>
+          <View style={{height:60}}>
+            <View style={s.buttonContainer}>
+              <View style={s.divider}/>
+              <TouchableOpacity style={s.button1}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
+              <View style={s.dividerSm}/>
+              <TouchableOpacity style={s.button2} onPress={this.props.findOrderDate}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
+              <View style={s.dividerSm}/>
+              <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
+              <View style={s.divider}/>
+            </View>
+          </View>
+          <View style={{marginTop: 96}}b>
+            <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>Be the First to Ask a Question!</Text>
+            <TouchableOpacity style={{marginTop: 5, height: 25}} onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 18, color: client.primaryColor}}>Tap here to get started</Text></TouchableOpacity>
+          </View>
         </View>
-        <View style={{marginTop: 96}}>
-          <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>Be the First to Ask a Question!</Text>
-          <TouchableOpacity style={{flex:1}} onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 18, color: client.primaryColor}}>Tap here to get started</Text></TouchableOpacity>
-        </View>
-      </View>
       )
     }
 
@@ -241,6 +244,7 @@ const s = ReactNative.StyleSheet.create({
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
+    
   },
 
   modHeader: {
