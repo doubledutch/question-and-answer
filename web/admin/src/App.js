@@ -179,6 +179,7 @@ export default class App extends Component {
             offApprove = {this.offApprove}
             onApprove = {this.onApprove}
             />
+            <span className="spacer"/>
             <p className="dropdownTitle">View: </p>
             <form className="dropdownMenu" onSubmit={this.handleSubmit}>
               <select className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
@@ -238,6 +239,7 @@ export default class App extends Component {
             offApprove = {this.offApprove}
             onApprove = {this.onApprove}
             />
+            <span className="spacer"/>
             <p className="dropdownTitle">View: </p>   
             <form className="dropdownMenu" onSubmit={this.handleSubmit}>
               <select className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
@@ -280,6 +282,7 @@ export default class App extends Component {
               offApprove = {this.offApprove}
               onApprove = {this.onApprove}
               />
+              <span className="spacer"/>
               <p className="dropdownTitle">View: </p>
               <form className="dropdownMenu" onSubmit={this.handleSubmit}>
                 <select className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
@@ -312,6 +315,7 @@ export default class App extends Component {
   renderBlocked = (questions, time) => {
     return(
     <span className="questionBox2">
+      {this.renderMessage(questions, "Blocked Questions Will Display Here", "Blocked questions will not be visible to", "attendees")}
       <ul className="listBox">
         { questions.map(task => {
           if (task.approve === false && task.block === true){
@@ -349,6 +353,7 @@ export default class App extends Component {
     })
     return (
       <span className="questionBox2">
+        {this.renderMessage(questions, "Answered Questions Will Display Here", "Click Check next to any approved question", "to mark it as answered")}
         <ul className="listBox">
           { questions.map(task => {
             if (task.answered === true){
@@ -402,6 +407,18 @@ export default class App extends Component {
     )
   }
 
+  renderMessage = (questions, m1, m2, m3) => {
+    if (questions.length === 0) {
+      return (
+        <div className="modTextBox">
+          <p className="bigModText">{m1}</p>
+          <p className="smallModText">{m2}</p>
+          <p className="smallModText">{m3}</p>
+        </div>
+      )
+    }
+  }
+
   renderRight = (questions, time) => {
     if (this.state.moderator.length > 0){
       if (this.state.moderator[0].approve === false){
@@ -420,6 +437,7 @@ export default class App extends Component {
             handleApproved = {this.handleApproved}
             />
             <span className="questionBox2">
+              {this.renderMessage(questions, "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
               <ul className="listBox">
                 {this.renderPinned(questions, time)}
                 { questions.map(task => {

@@ -58,7 +58,12 @@ class HomeView extends Component {
       })
 
       sessRef.on('child_removed', data => {
-        this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key) })
+        if (data.key === this.state.session.key) {
+          this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key), session: '', launch: true, modalVisible: true})
+        }
+        else {
+          this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key) })
+        }
       })
 
       sessRef.on('child_changed', data => {
