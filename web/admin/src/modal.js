@@ -107,6 +107,7 @@ export class CustomModal extends Component {
         for (var item of this.props.sessions){
           if (item.sessionName.toUpperCase() === sessionName.toUpperCase()){
             status = false
+            this.setState({color: "red", message: "*This session name already exists. Please enter a new session name."});
           }
         }
         if (status){
@@ -119,12 +120,9 @@ export class CustomModal extends Component {
           this.props.closeModal()
         }
       }
-      else {
-        this.setState({color: "red"});
-      }
     }
       else {
-        this.setState({color: "red"});
+        this.setState({color: "red", message: "*Please enter a session name."});
       }
     }
 
