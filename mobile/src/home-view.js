@@ -172,6 +172,7 @@ class HomeView extends Component {
           hideModal = {this.hideModal}
           modalVisible = {this.state.modalVisible}
           questionError = {this.state.questionError}
+          style={{flex:1}}
         />
       )
     }
