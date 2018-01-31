@@ -57,7 +57,7 @@ The question object tracks much of the important data points that can be updated
 
 * Votes are the last relevant object. They are stored via the same key as their associated question. Within the JSON object each vote can be tracked simply by a numeral and the associated userID:
 ```json
-{"-L0Pq9I2_1mJXlZwcmbt":{"24601":1}
+{"-L0Pq9I2_1mJXlZwcmbt":{"24601":1}}
 ```
 
 This allows us to attach it to the associated question and track votes by any given user. It is also stored under `public/all`
