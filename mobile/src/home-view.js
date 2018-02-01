@@ -133,13 +133,13 @@ class HomeView extends Component {
       height: 22,
       marginTop: 20,
       paddingTop: 0,
-  }
-  
-  const androidStyle = {
-    paddingLeft: 0,
-    paddingBottom: 0,
-    textAlignVertical: 'center'
-  }
+    }
+    
+    const androidStyle = {
+      paddingLeft: 0,
+      paddingBottom: 0,
+      textAlignVertical: 'center'
+    }
 
     const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state
     var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
