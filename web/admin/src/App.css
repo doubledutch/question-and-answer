@@ -347,8 +347,8 @@
 }
 
 .modIcons{
-  /* display: flex;
-  flex-flow: nowrap; */
+  display: flex;
+  flex-flow: nowrap;
   margin-top:15px;
 }
 
