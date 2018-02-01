@@ -114,10 +114,18 @@ export default class App extends Component {
 
       modRef.on('child_changed', data => {
         var moderator = this.state.moderator
+        var questions = this.state.questions
         for (var i in moderator) {
           if (moderator[i].key === data.key) {
             moderator[i] = data.val()
             moderator[i].key = data.key
+            if (data.val().approve === false){
+              for (var i in questions){
+                if (questions[i].approve === false && questions[i].new === true){
+                  this.makeApprove(questions[i])
+                }
+              }
+            }
             this.setState({moderator})
           }
         }
@@ -312,10 +320,10 @@ export default class App extends Component {
   renderBlocked = (questions, time) => {
     return(
     <span className="questionBox2">
-      {this.renderMessage(questions.filter(task => task.approve === false && task.block === true), "Blocked Questions Will Display Here", "Blocked questions will not be visible to", "attendees")}
+      {this.renderMessage(questions.filter(task => task.new === false && task.block === true), "Blocked Questions Will Display Here", "Blocked questions will not be visible to", "attendees")}
       <ul className="listBox">
         { questions.map(task => {
-          if (task.approve === false && task.block === true){
+          if (task.block === true){
             var block = true
             var header = false
             var difference = this.doDateMath(task.dateCreate, time)
@@ -361,6 +369,8 @@ export default class App extends Component {
                 task = {task}
                 difference = {difference}
                 />
+                <span className='cellBoxRight'>
+                </span>
               </li>
               )
             }
@@ -434,7 +444,7 @@ export default class App extends Component {
             handleApproved = {this.handleApproved}
             />
             <span className="questionBox2">
-              {this.renderMessage(questions.filter(task => task.block === false && task.pin === false && task.answered === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
+              {this.renderMessage(questions.filter(task => task.block === false && task.answered === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
               <ul className="listBox">
                 {this.renderPinned(questions, time)}
                 { questions.map(task => {
@@ -517,7 +527,7 @@ export default class App extends Component {
             showAnswer = {this.state.showAnswer}
             />
             <span className="questionBox2">
-              {this.renderMessage(questions.filter(task => task.block === false && task.pin === false && task.answered === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
+              {this.renderMessage(questions.filter(task => task.block === false && task.answered === false && task.approve === true && task.new === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
               <ul className="listBox">
               {this.renderPinned(questions, time)}
                  { questions.map(task => {

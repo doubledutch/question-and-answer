@@ -17,6 +17,7 @@ export class CustomCell extends Component {
           var newTitle = task.sessionName.slice(0, 40)
           title = newTitle + "..."
         }
+      
         return(
         <span className='cellBoxLeft'>
           <span className='cellBoxTop'>
@@ -25,7 +26,6 @@ export class CustomCell extends Component {
             <img src={require('./icons/Inactive.png')}/>
             <p className='timeText'>{'\xa0'}{task.score}</p>
           </span>
-          <span >    
           <p className="questionText">"{task.text}"</p>
           {task.anom === false &&
             <p className="nameText">
@@ -37,7 +37,7 @@ export class CustomCell extends Component {
             -Anonymous
             </p>
           }
-          </span>
+          
       </span>
         )
     }
