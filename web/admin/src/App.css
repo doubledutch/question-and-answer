@@ -17,14 +17,14 @@
   box-sizing: border-box;
   height: 600px;
   font-size: 14; 
-  margin-left: 0px
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .questionContainer {
   display: flex;
   flex-flow: row wrap;
   flex-grow: 1;
-  max-width: 50%;
   margin-Top: 32px;
   margin-Left: 11px;
 }
@@ -48,7 +48,7 @@
   border-style: solid;
   border-color:#DEDEDE;
   background-color:#EFEFEF;
-  margin: 10px 40px 5px 0px;
+  margin: 10px 10px 5px 0px;
 }
 
 .listBox {
@@ -256,7 +256,7 @@
 
 .buttonSpan{
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   flex-grow: 1;
   margin-right: 40px;
   margin-bottom: 5px;
@@ -264,10 +264,10 @@
 
 .buttonSpan2{
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   flex-grow: 1;
   padding: 0px;
-  margin-right: 40px;
+  margin-right: 10px;
   margin-top: 15px;
   margin-bottom: 10px;
 }
