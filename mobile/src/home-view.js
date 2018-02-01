@@ -176,26 +176,25 @@ class HomeView extends Component {
         {this.renderModal()}
       </View>
       )
-    }
-    else {
+    } else {
       return(
-      <CustomModal
-      sessions={sessions}
-      launch={launch}
-      showModal = {this.showModal}
-      closeSessionModal = {this.closeSessionModal}
-      makeTrue = {this.makeTrue}
-      createSharedTask = {this.createSharedTask}
-      selectSession = {this.selectSession}
-      disable = {this.state.disable}
-      question = {this.state.question}
-      showError = {this.state.showError}
-      session = {this.state.session}
-      hideModal = {this.hideModal}
-      modalVisible = {this.state.modalVisible}
-      questionError = {this.state.questionError}
-      style={{flex:1}}
-      />
+        <CustomModal
+          sessions={sessions}
+          launch={launch}
+          showModal = {this.showModal}
+          closeSessionModal = {this.closeSessionModal}
+          makeTrue = {this.makeTrue}
+          createSharedTask = {this.createSharedTask}
+          selectSession = {this.selectSession}
+          disable = {this.state.disable}
+          question = {this.state.question}
+          showError = {this.state.showError}
+          session = {this.state.session}
+          hideModal = {this.hideModal}
+          modalVisible = {this.state.modalVisible}
+          questionError = {this.state.questionError}
+          style={{flex:1}}
+        />
       )
     }
   }

@@ -5,191 +5,180 @@ import ReactNative, {
 } from 'react-native'
 import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 
+export default class CustomModal extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      question: '', 
+      anom: false,
+      color: 'white', 
+      borderColor: '#EFEFEF',
+      inputHeight: 0
+    }
+  }
 
-export class CustomModal extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            question: '', 
-            anom: false, 
-            color: 'white', 
-            height: 20, 
-            borderColor: '#EFEFEF',
-            inputHeight: 0,
-          }
+  modalClose() {
+    this.setState({anom: false, color: 'white'})
+    this.props.hideModal()
+  }
+
+  sessionSelect = session => {
+    this.props.selectSession(session)
+  }
+
+  makeQuestion = (question, anom) => {
+    this.props.createSharedTask(question, anom)
+    this.setState({question: '', anom: false})
+  }
+
+  render() {
+    const newStyle = {
+      flex: 1,
+      fontSize: 18,
+      color: '#9B9B9B',
+      textAlignVertical: 'top',
+      maxHeight: 100,
+      height: Math.max(35, this.state.inputHeight),
+      paddingTop: 0,
+    }
+    
+    const androidStyle = {
+      paddingLeft: 0,
+      marginTop: 17,
+      marginBottom: 10
     }
 
-    modalClose(){
-        this.setState({anom: false, color: 'white'})
-        this.props.hideModal()
-    } 
-
-    sessionSelect = (session) => {
-        this.props.selectSession(session)
+    const iosStyle = {
+      marginTop: 20,
+      marginBottom: 10,
+    }
+    
+    var newColor = "#9B9B9B"
+    if (this.props.session){
+      newColor = client.primaryColor
     }
 
-
-    makeQuestion = (question, anom) => {
-        this.props.createSharedTask(question, anom)
-        this.setState({question: '', anom: false})
+    const colorStyle = {
+      backgroundColor: newColor
     }
 
-    render(){
-        const newStyle = {
-            flex: 1,
-            fontSize: 18,
-            color: '#9B9B9B',
-            textAlignVertical: 'top',
-            maxHeight: 100,
-            height: Math.max(35, this.state.inputHeight),
-            paddingTop: 0,
-        }
-        
-        const androidStyle = {
-          paddingLeft: 0,
-          marginTop: 17,
-          marginBottom: 10
-        }
-
-        const iosStyle = {
-          marginTop: 20,
-          marginBottom: 10,
-        }
-
-        var newColor = "#9B9B9B"
-        if (this.props.session){
-          newColor = client.primaryColor
-        }
-
-        const colorStyle = {
-          backgroundColor: newColor
-        }
-
-        if (this.props.launch === true) {
-            return(
-                <View style={{flex: 1}}>
-                    {this.renderModalHeader()}
-                    <FlatList
-                    style={{backgroundColor: '#EFEFEF'}}
-                    data = {this.props.sessions}
-                    ListFooterComponent={<View style={{height: 100}}></View>}
-                    renderItem={({item}) =>{  
-                        return (
-                        <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
-                            <View style={s.leftContainer}>
-                                {this.renderModIcon(item)}
-                            </View>
-                            <View style={s.rightContainer}>
-                                <Text style={{fontSize: 16}}>{item.sessionName}</Text>
-                            </View>
-                        </TouchableOpacity>
-                        )
-                    }
-                    }
-                    />
-                    <View style={{borderTopColor:"#b7b7b7", borderTopWidth: 1, backgroundColor: '#EFEFEF'}}>
-                        <TouchableOpacity disabled={this.props.disable} onPress={this.props.closeSessionModal} style={[s.bigButton, colorStyle]}><Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>Join Q&A</Text></TouchableOpacity>
-                    </View>
+    if (this.props.launch === true) {
+      return(
+        <View style={{flex: 1}}>
+          {this.renderModalHeader()}
+          <FlatList
+          style={{backgroundColor: '#EFEFEF'}}
+          data = {this.props.sessions}
+          ListFooterComponent={<View style={{height: 100}}></View>}
+          renderItem={({item}) => (
+            <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
+                <View style={s.leftContainer}>
+                    {this.renderModIcon(item)}
                 </View>
-            )
-        }
-      else {
-        var borderColor = this.state.borderColor
-        if (this.props.showError === "red"){borderColor = "red"}
-        const borderStyle = {borderColor: borderColor}
-        return (
-            <View style={{flex: 1}}>
-                <View style={[s.modal, borderStyle]}>
-                    <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-                    <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Type your question here"
-                    value={this.state.question}
-                    onChangeText={question => this.setState({question})} 
-                    maxLength={250}
-                    autoFocus={true}
-                    multiline={true}
-                    placeholderTextColor="#9B9B9B"
-                    onContentSizeChange={(event) => this._handleSizeChange(event)}
-                    />
-                    <Text style={s.counter}>{250 - this.state.question.length} </Text>
+                <View style={s.rightContainer}>
+                    <Text style={{fontSize: 16}}>{item.sessionName}</Text>
                 </View>
-                <View style={s.bottomButtons}>
-                <View style={s.rightBox}>
-                    <Text style={{color: this.props.showError, paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a question</Text>
-                    <View style={s.anomBox}>
-                        {this.renderAnomIcon()}
-                        <Text style={s.anomText}>Ask anonymously</Text>
-                    </View>
-                </View>
-                <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anom)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
-            </View>
-            <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
+            </TouchableOpacity>
+          )} />
+          <View style={{borderTopColor:"#b7b7b7", borderTopWidth: 1, backgroundColor: '#EFEFEF'}}>
+            <TouchableOpacity disabled={this.props.disable} onPress={this.props.closeSessionModal} style={[s.bigButton, colorStyle]}>
+              <Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>Join Q&A</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        )
-      }
-    }
-
-    renderAnomIcon = () => {
-      if (this.state.anom){
+      )
+    } else {
+      var borderColor = this.state.borderColor
+      if (this.props.showError === "red"){borderColor = "red"}
+      const borderStyle = {borderColor: borderColor}
       return (
-        <TouchableOpacity onPress={() => this.makeTrue()}><Image style={s.checkButton} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_active.png"}}/></TouchableOpacity>
-
+        <View style={{flex: 1}}>
+          <View style={[s.modal, borderStyle]}>
+              <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+              <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Type your question here"
+                value={this.state.question}
+                onChangeText={question => this.setState({question})} 
+                maxLength={250}
+                autoFocus={true}
+                multiline={true}
+                placeholderTextColor="#9B9B9B"
+                onContentSizeChange={(event) => this._handleSizeChange(event)}
+              />
+              <Text style={s.counter}>{250 - this.state.question.length} </Text>
+          </View>
+          <View style={s.bottomButtons}>
+            <View style={s.rightBox}>
+              <Text style={{color: this.props.showError, paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a question</Text>
+              <View style={s.anomBox}>
+                {this.renderAnomIcon()}
+                <Text style={s.anomText}>Ask anonymously</Text>
+              </View>
+            </View>
+            <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anom)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
+          </View>
+          <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
+        </View>
       )
     }
-    else {
+  }
+
+  renderAnomIcon = () => {
+    if (this.state.anom) {
+      return (
+        <TouchableOpacity onPress={() => this.makeTrue()}><Image style={s.checkButton} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_active.png"}}/></TouchableOpacity>
+      )
+    } else {
       return (
         <TouchableOpacity onPress={() => this.makeTrue()}><Image style={s.checkButton} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_inactive.png"}}/></TouchableOpacity>
       )
     }
-    }
-    
-    _handleSizeChange = event => {
-      this.setState({
-        inputHeight: event.nativeEvent.contentSize.height
-      });
-    };
+  }
 
-    makeTrue(){
-        if (this.state.anom === false){
-            this.setState({anom: true, color: 'black'})
-        }
-        if (this.state.anom === true){
-            this.setState({anom: false, color: 'white'})
-        }
-    }
-    
-    renderModIcon= (item) => {
-        if (this.props.session === item) {
-            return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_active.png"}}/>
-        }
-        else {
-            return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_inactive.png"}}/>
-        }
-   }
+  _handleSizeChange = event => {
+    this.setState({
+      inputHeight: event.nativeEvent.contentSize.height
+    });
+  };
 
-   renderModalHeader = () => {
-      if (this.props.sessions.length > 0){
-        return( 
+  makeTrue() {
+    if (this.state.anom === false){
+      this.setState({anom: true, color: 'black'})
+    }
+    if (this.state.anom === true){
+      this.setState({anom: false, color: 'white'})
+    }
+  }
+  
+  renderModIcon = item => {
+    if (this.props.session === item) {
+      return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_active.png"}}/>
+    }
+    else {
+      return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_inactive.png"}}/>
+    }
+  }
+
+  renderModalHeader = () => {
+    if (this.props.sessions.length > 0) {
+      return ( 
         <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
           <Text style={s.modHeader}> Please confirm your session</Text>
         </View >
-        )
-      }
-      else {
-        return(
+      )
+    }
+    else {
+      return (
         <View>
           <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1, marginBottom: 150}}>
             <Text style={s.modHeader}> Please confirm your session</Text>
           </View >
             <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>No Live Sessions Available</Text>
         </View>
-        )
-      }
+      )
+    }
   }
 }
 
-export default CustomModal
-
-const fontSize = 18
 const s = ReactNative.StyleSheet.create({
   container: {
     flex: 1,
