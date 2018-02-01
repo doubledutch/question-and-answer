@@ -27,6 +27,7 @@
   flex-grow: 1;
   margin-Top: 32px;
   margin-Left: 11px;
+  max-width: 50%;
 }
 
 .questionBox {
