@@ -105,12 +105,12 @@ export class CellEdit extends Component {
             }
             if (status === false) {
                 this.handleEdit()
-                this.setState({modalMessage: "This session name already exists. * Please enter a valid session name", height: 20});
+                this.setState({modalMessage: "*This session name already exists. Please enter a valid session name", height: 20});
             }   
         }
         else {
             this.handleEdit()
-            this.setState({modalMessage: "* Please enter a valid session name", height: 20});
+            this.setState({modalMessage: "*Please enter a valid session name", height: 20});
         }
      }
 

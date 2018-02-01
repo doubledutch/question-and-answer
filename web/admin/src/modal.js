@@ -67,7 +67,7 @@ export class CustomModal extends Component {
           </div>
         </div>
         <div className="modalButtonsBox">
-          <button className="closeButton" onClick={this.handleClose}>Close</button>
+          <button className="closeButton" onClick={this.handleClose}>Cancel</button>
           <span className="spacer"/>
           <button className="modalButton" style={{width: 121, height: 28, marginRight: 20}}onClick={this.handleSubmit} value='true'>Save & Exit</button>
           <button className="modalButton" style={{width: 144}} onClick={this.handleSubmit} value="false">Save & Add Another</button>
@@ -87,6 +87,9 @@ export class CustomModal extends Component {
           event.value = "true"
           var keyPress = true
           this.handleSubmit(event, keyPress)
+        }
+        else {
+          this.setState({color: "red", message: "*Please enter a session name."});
         }
       }
     }

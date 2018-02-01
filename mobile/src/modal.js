@@ -13,17 +13,16 @@ export class CustomModal extends Component {
             question: '', 
             anom: false, 
             color: 'white', 
-            height: 22, 
-            borderColor: '#EFEFEF'
+            height: 20, 
+            borderColor: '#EFEFEF',
+            inputHeight: 0,
           }
     }
 
     modalClose(){
         this.setState({anom: false, color: 'white'})
         this.props.hideModal()
-    }
-
- 
+    } 
 
     sessionSelect = (session) => {
         this.props.selectSession(session)
@@ -38,18 +37,23 @@ export class CustomModal extends Component {
     render(){
         const newStyle = {
             flex: 1,
-            marginBottom: 20,
             fontSize: 18,
             color: '#9B9B9B',
             textAlignVertical: 'top',
             maxHeight: 100,
-            height: this.state.height,
-            marginTop: 20,
+            height: Math.max(35, this.state.inputHeight),
             paddingTop: 0,
         }
         
         const androidStyle = {
           paddingLeft: 0,
+          marginTop: 17,
+          marginBottom: 10
+        }
+
+        const iosStyle = {
+          marginTop: 20,
+          marginBottom: 10,
         }
 
         var newColor = "#9B9B9B"
@@ -97,14 +101,15 @@ export class CustomModal extends Component {
             <View style={{flex: 1}}>
                 <View style={[s.modal, borderStyle]}>
                     <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-                    <TextInput style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
+                    <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Type your question here"
                     value={this.state.question}
                     onChangeText={question => this.setState({question})} 
                     maxLength={250}
                     autoFocus={true}
                     multiline={true}
                     placeholderTextColor="#9B9B9B"
-                    onContentSizeChange={(e) => this.updateSize(e.nativeEvent.contentSize.height)}/>
+                    onContentSizeChange={(event) => this._handleSizeChange(event)}
+                    />
                     <Text style={s.counter}>{250 - this.state.question.length} </Text>
                 </View>
                 <View style={s.bottomButtons}>
@@ -136,10 +141,13 @@ export class CustomModal extends Component {
       )
     }
     }
+    
+    _handleSizeChange = event => {
+      this.setState({
+        inputHeight: event.nativeEvent.contentSize.height
+      });
+    };
 
-    updateSize = (height) => {
-        this.setState({height});
-    }
     makeTrue(){
         if (this.state.anom === false){
             this.setState({anom: true, color: 'black'})

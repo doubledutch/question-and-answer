@@ -3,6 +3,11 @@
   text-align: center;
 }
 
+.App {
+  padding: 0px;
+  margin: 0px;
+}
+
 .avatar {
   width: 40px;
 }
@@ -12,6 +17,7 @@
   box-sizing: border-box;
   height: 600px;
   font-size: 14; 
+  margin-left: 0px
 }
 
 .questionContainer {
@@ -20,7 +26,7 @@
   flex-grow: 1;
   max-width: 50%;
   margin-Top: 32px;
-  margin-Left: 21px;
+  margin-Left: 11px;
 }
 
 .questionBox {
@@ -30,7 +36,7 @@
   border: 1px;
   border-style: solid;
   border-color:#DEDEDE;
-  margin: 10px 50px 5px 0px;
+  margin: 10px 40px 5px 0px;
   background-color:#EFEFEF;
 }
 
@@ -42,7 +48,7 @@
   border-style: solid;
   border-color:#DEDEDE;
   background-color:#EFEFEF;
-  margin: 10px 50px 5px 0px;
+  margin: 10px 40px 5px 0px;
 }
 
 .listBox {
@@ -252,7 +258,8 @@
   display: flex;
   flex-flow: row wrap;
   flex-grow: 1;
-  margin-right: 50px;
+  margin-right: 40px;
+  margin-bottom: 5px;
 }
 
 .buttonSpan2{
@@ -260,7 +267,7 @@
   flex-flow: row wrap;
   flex-grow: 1;
   padding: 0px;
-  margin-right: 50px;
+  margin-right: 40px;
   margin-top: 15px;
   margin-bottom: 10px;
 }
@@ -268,6 +275,7 @@
 .spacer{
   flex: 1;
   height: 25px;
+  min-width: 0px;
 }
 
 .answerButton{
@@ -339,8 +347,8 @@
 }
 
 .modIcons{
-  display: flex;
-  flex-flow: nowrap;
+  /* display: flex;
+  flex-flow: nowrap; */
   margin-top:15px;
 }
 
@@ -411,7 +419,6 @@
   height: 25px;
   font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
   color: #393939;
-  margin-right: 5px;
   margin-top: 0px;
   white-space: nowrap;
   background-color: #ffffff
@@ -432,7 +439,6 @@
   font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
   color: #393939;
   border-bottom-color: #009DCD;
-  margin-right: 5px;
   height: 25px;
   margin-top: 0px;
   white-space: nowrap;
@@ -539,5 +545,5 @@
 }
 
 .topBox{
-  margin-left: 21px;
+  margin-left: 11px;
 }
