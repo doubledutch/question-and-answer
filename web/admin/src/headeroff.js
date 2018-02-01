@@ -27,6 +27,9 @@ export class CustomHeaderOff extends Component {
                 <button className="listButton2" onClick={this.props.handleClick}>Blocked ({blockedQuestions.length})</button>
                 <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
                 <span className="spacer"/>
+                <button className="answerButton2">
+                  Mark All as Answered
+                </button>
               </span>
             )
 
@@ -52,6 +55,9 @@ export class CustomHeaderOff extends Component {
               <button className="listButton2"  onClick={this.props.handleClick}>Blocked ({blockedQuestions.length})</button>
               <button className="listButton">Answered ({answeredQuestions.length})</button>
               <span className="spacer"/>
+              <button className="answerButton2">
+                  Mark All as Answered
+              </button>
             </span>
           )
         }
@@ -62,6 +68,9 @@ export class CustomHeaderOff extends Component {
               <button className="listButton">Blocked ({blockedQuestions.length})</button>
               <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
               <span className="spacer"/>
+              <button className="answerButton2">
+                  Mark All as Answered
+              </button>
             </span>
           )
         }
