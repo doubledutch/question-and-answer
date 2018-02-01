@@ -312,7 +312,7 @@ export default class App extends Component {
   renderBlocked = (questions, time) => {
     return(
     <span className="questionBox2">
-      {this.renderMessage(questions, "Blocked Questions Will Display Here", "Blocked questions will not be visible to", "attendees")}
+      {this.renderMessage(questions.filter(task => task.approve === false && task.block === true), "Blocked Questions Will Display Here", "Blocked questions will not be visible to", "attendees")}
       <ul className="listBox">
         { questions.map(task => {
           if (task.approve === false && task.block === true){
@@ -350,7 +350,7 @@ export default class App extends Component {
     })
     return (
       <span className="questionBox2">
-        {this.renderMessage(questions, "Answered Questions Will Display Here", "Click Check next to any approved question", "to mark it as answered")}
+        {this.renderMessage(questions.filter(task => task.answered === true), "Answered Questions Will Display Here", "Click Check next to any approved question", "to mark it as answered")}
         <ul className="listBox">
           { questions.map(task => {
             if (task.answered === true){
@@ -434,7 +434,7 @@ export default class App extends Component {
             handleApproved = {this.handleApproved}
             />
             <span className="questionBox2">
-              {this.renderMessage(questions, "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
+              {this.renderMessage(questions.filter(task => task.block === false && task.pin === false && task.answered === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
               <ul className="listBox">
                 {this.renderPinned(questions, time)}
                 { questions.map(task => {
@@ -517,7 +517,7 @@ export default class App extends Component {
             showAnswer = {this.state.showAnswer}
             />
             <span className="questionBox2">
-              {this.renderMessage(questions, "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
+              {this.renderMessage(questions.filter(task => task.block === false && task.pin === false && task.answered === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
               <ul className="listBox">
               {this.renderPinned(questions, time)}
                  { questions.map(task => {
