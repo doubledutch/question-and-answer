@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import './App.css'
-import ReactDOM from 'react-dom'
-import client, {Color} from '@doubledutch/admin-client'
 
 export class CellEdit extends Component {
     constructor(props){
@@ -32,8 +30,8 @@ export class CellEdit extends Component {
         if (this.state.action === "state") {
             return (
             <div className="rightButtons">
-                <img style={{height: 16, width: 16, marginTop: 12, marginRight: 10}} value="edit"  onClick={this.handleEdit} src={require('./icons/Pencil.png')}/>
-                <img style={{height: 16, width: 12, marginTop: 12}} value="delete" onClick={this.handleDelete} src={require('./icons/trashcan.svg')}/>
+                <img style={{height: 16, width: 16, marginTop: 12, marginRight: 10}} value="edit"  onClick={this.handleEdit} src={require('./icons/Pencil.png')} alt="edit" />
+                <img style={{height: 16, width: 12, marginTop: 12}} value="delete" onClick={this.handleDelete} src={require('./icons/trashcan.svg')} alt="delete" />
             </div>
             )
         }

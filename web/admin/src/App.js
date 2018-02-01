@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
 import './App.css'
-import Modal  from 'react-modal'
-import ReactDOM from 'react-dom'
-import client, {Color} from '@doubledutch/admin-client'
+import client from '@doubledutch/admin-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import CustomModal from './modal'
-import { CustomCell } from './cell'
+import CustomCell from './cell'
 import ModIcon from './modicon'
-import { CustomHeader } from './header';
-import editCell from './editCell'
+import CustomHeader from './header';
 import CustomHeaderOff from './headeroff';
 import CustomButtons from './buttons';
 const fbc = FirebaseConnector(client, 'questionanswer')
@@ -43,8 +40,6 @@ export default class App extends Component {
   }
   componentDidMount() {
     this.signin.then(() => {
-      const questionsRef = fbc.database.public.allRef('questions')
-      const votesRef = fbc.database.public.allRef('votes')
       const modRef = fbc.database.public.adminRef('moderators')
       const sessRef = fbc.database.public.adminRef('sessions')
 
@@ -134,7 +129,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { questions, showRecent, marginTop, moderator, showAnswer, sessions } = this.state 
+    const { questions, sessions } = this.state 
     const time = new Date().getTime()
     questions.sort(function (a,b){
       return b.dateCreate - a.dateCreate
@@ -207,28 +202,25 @@ export default class App extends Component {
           </span>
           <span className="questionBox">
             <ul className='listBox'>
-              { questions.map(task => {
-                if (task.new === true){
-                  var difference = this.doDateMath(task.dateCreate, time)
-                  return (
-                    <li className='cellBox' key={task.key}>
-                      <CustomCell
+              { questions.filter(task => task.new).map(task => {
+                var difference = this.doDateMath(task.dateCreate, time)
+                return (
+                  <li className='cellBox' key={task.key}>
+                    <CustomCell
                       task = {task}
                       difference = {difference}
-                      />
-                      <CustomButtons
+                    />
+                    <CustomButtons
                       task = {task}
                       header = {header}
                       makeApprove = {this.makeApprove}
                       blockQuestion = {this.blockQuestion}
                       makePin = {this.makePin}
                       makeAnswer = {this.makeAnswer}
-                      />
-                    </li>
-                  )
-                }
-              })
-              }
+                    />
+                  </li>
+                )
+              }) }
             </ul>
           </span>
         </div>
@@ -322,30 +314,26 @@ export default class App extends Component {
     <span className="questionBox2">
       {this.renderMessage(questions.filter(task => task.new === false && task.block === true), "Blocked Questions Will Display Here", "Blocked questions will not be visible to", "attendees")}
       <ul className="listBox">
-        { questions.map(task => {
-          if (task.block === true){
-            var block = true
-            var header = false
-            var difference = this.doDateMath(task.dateCreate, time)
-            return (
+        { questions.filter(task => task.block).map(task => {
+          var block = true
+          var difference = this.doDateMath(task.dateCreate, time)
+          return (
             <li className='cellBox' key={task.key}>
               <CustomCell
-              task = {task}
-              difference = {difference}
+                task = {task}
+                difference = {difference}
               />
               <CustomButtons
-              task = {task}
-              block = {block}
-              makeApprove = {this.makeApprove}
-              blockQuestion = {this.blockQuestion}
-              makePin = {this.makePin}
-              makeAnswer = {this.makeAnswer}
+                task = {task}
+                block = {block}
+                makeApprove = {this.makeApprove}
+                blockQuestion = {this.blockQuestion}
+                makePin = {this.makePin}
+                makeAnswer = {this.makeAnswer}
               />
             </li>
-            )
-          }
-        }) 
-        }
+          )
+        }) }
       </ul>
     </span>
     )
@@ -360,22 +348,18 @@ export default class App extends Component {
       <span className="questionBox2">
         {this.renderMessage(questions.filter(task => task.answered === true), "Answered Questions Will Display Here", "Click Check next to any approved question", "to mark it as answered")}
         <ul className="listBox">
-          { questions.map(task => {
-            if (task.answered === true){
-              var difference = this.doDateMath(task.dateCreate, time)
-              return (
+          { questions.filter(task => task.answered).map(task => {
+            var difference = this.doDateMath(task.dateCreate, time)
+            return (
               <li className='cellBox' key={task.key}>
                 <CustomCell
-                task = {task}
-                difference = {difference}
+                  task = {task}
+                  difference = {difference}
                 />
-                <span className='cellBoxRight'>
-                </span>
+                <span className='cellBoxRight'></span>
               </li>
-              )
-            }
-          }) 
-          }
+            )
+          }) }
         </ul>
       </span>
     )
@@ -384,33 +368,30 @@ export default class App extends Component {
 
   renderPinned = (questions, time) => {
     return (
-    <span>
-      { questions.map(task => {
-        if (task.pin === true){
+      <span>
+        { questions.filter(task => task.pin).map(task => {
           var pin = true
           var approve = true
           var difference = this.doDateMath(task.dateCreate, time)
           return (
-          <li className='cellBox' key={task.key}>
-            <CustomCell
-            task = {task}
-            difference = {difference}
-            />
-            <CustomButtons
-            task = {task}
-            pin = {pin}
-            approve = {approve}
-            makeApprove = {this.makeApprove}
-            blockQuestion = {this.blockQuestion}
-            makePin = {this.makePin}
-            makeAnswer = {this.makeAnswer}
-            />
-          </li>
+            <li className='cellBox' key={task.key}>
+              <CustomCell
+              task = {task}
+              difference = {difference}
+              />
+              <CustomButtons
+              task = {task}
+              pin = {pin}
+              approve = {approve}
+              makeApprove = {this.makeApprove}
+              blockQuestion = {this.blockQuestion}
+              makePin = {this.makePin}
+              makeAnswer = {this.makeAnswer}
+              />
+            </li>
           )
-        }
-      })
-      }
-    </span>
+        }) }
+      </span>
     )
   }
 
@@ -427,57 +408,51 @@ export default class App extends Component {
   }
 
   renderRight = (questions, time) => {
-    if (this.state.moderator.length > 0){
-      if (this.state.moderator[0].approve === false){
-        if (this.state.showBlock === false && this.state.showAnswer === false){
-          var approve = true
-          var current = 0
+    if (this.state.moderator.length > 0) {
+      if (this.state.moderator[0].approve === false) {
+        if (this.state.showBlock === false && this.state.showAnswer === false) {
+          let approve = true
           return(
-          <div className="questionContainer">
-            <CustomHeaderOff
-            questions = {questions}
-            handleClick = {this.handleClick}
-            handleAnswer = {this.handleAnswer}
-            answerAll = {this.answerAll}
-            showBlock = {this.state.showBlock}
-            showAnswer = {this.state.showAnswer}
-            handleApproved = {this.handleApproved}
-            />
-            <span className="questionBox2">
-              {this.renderMessage(questions.filter(task => task.block === false && task.answered === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
-              <ul className="listBox">
-                {this.renderPinned(questions, time)}
-                { questions.map(task => {
-                  if (task.block === false && task.pin === false && task.answered === false){
+            <div className="questionContainer">
+              <CustomHeaderOff
+                questions = {questions}
+                handleClick = {this.handleClick}
+                handleAnswer = {this.handleAnswer}
+                answerAll = {this.answerAll}
+                showBlock = {this.state.showBlock}
+                showAnswer = {this.state.showAnswer}
+                handleApproved = {this.handleApproved}
+              />
+              <span className="questionBox2">
+                {this.renderMessage(questions.filter(task => task.block === false && task.answered === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
+                <ul className="listBox">
+                  {this.renderPinned(questions, time)}
+                  { questions.filter(t => !t.block && !t.pin && !t.answered).map(task => {
                     var difference = this.doDateMath(task.dateCreate, time)
                     return (
-                    <li className='cellBox' key={task.key}>
-                      <CustomCell
-                      task = {task}
-                      difference = {difference}
-                      />
-                      <CustomButtons
-                      task = {task}
-                      approve = {approve}
-                      makeApprove = {this.makeApprove}
-                      blockQuestion = {this.blockQuestion}
-                      makePin = {this.makePin}
-                      makeAnswer = {this.makeAnswer}
-                      />
-                    </li>
+                      <li className='cellBox' key={task.key}>
+                        <CustomCell
+                        task = {task}
+                        difference = {difference}
+                        />
+                        <CustomButtons
+                        task = {task}
+                        approve = {approve}
+                        makeApprove = {this.makeApprove}
+                        blockQuestion = {this.blockQuestion}
+                        makePin = {this.makePin}
+                        makeAnswer = {this.makeAnswer}
+                        />
+                      </li>
                     )
-                  }
-                })
-                }
-              </ul>
-            </span>
-          </div>
+                  }) }
+                </ul>
+              </span>
+            </div>
           )
         }
 
         if (this.state.showAnswer === true){
-          var block = false
-          var header = false
           return(
           <div className="questionContainer">
             <CustomHeaderOff
@@ -514,55 +489,43 @@ export default class App extends Component {
 
       if (this.state.moderator[0].approve === true){
         if (this.state.showBlock === false && this.state.showAnswer === false){
-          var approve = true
-          var current = 0
-          return(
-          <div className="questionContainer">
-            <CustomHeader
-            questions = {questions}
-            handleClick = {this.handleClick}
-            handleAnswer = {this.handleAnswer}
-            answerAll = {this.answerAll}
-            showBlock = {this.state.showBlock}
-            showAnswer = {this.state.showAnswer}
-            />
-            <span className="questionBox2">
-              {this.renderMessage(questions.filter(task => task.block === false && task.answered === false && task.approve === true && task.new === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
-              <ul className="listBox">
-              {this.renderPinned(questions, time)}
-                 { questions.map(task => {
-                  if (task.approve === true && task.block === false && task.pin === false & task.answered === false){
-                    var block = false
-                    var header = false
-                    var difference = this.doDateMath(task.dateCreate, time)
-                    return (
+          return (
+            <div className="questionContainer">
+              <CustomHeader
+              questions = {questions}
+              handleClick = {this.handleClick}
+              handleAnswer = {this.handleAnswer}
+              answerAll = {this.answerAll}
+              showBlock = {this.state.showBlock}
+              showAnswer = {this.state.showAnswer}
+              />
+              <span className="questionBox2">
+                {this.renderMessage(questions.filter(task => task.block === false && task.answered === false && task.approve === true && task.new === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
+                <ul className="listBox">
+                {this.renderPinned(questions, time)}
+                  { questions.filter(t => t.approve && !t.block && !t.pin && !t.answered).map(task => (
                     <li className='cellBox' key={task.key}>
                       <CustomCell
                       task = {task}
-                      difference = {difference}
+                      difference = {this.doDateMath(task.dateCreate, time)}
                       />
                       <CustomButtons
                       task = {task}
-                      approve = {approve}
+                      approve = {true}
                       makeApprove = {this.makeApprove}
                       blockQuestion = {this.blockQuestion}
                       makePin = {this.makePin}
                       makeAnswer = {this.makeAnswer}
                       />
-                    </li>
-                    )
-                  }
-                })
-                }
-              </ul>
-            </span>
-          </div>
+                    </li> )
+                  ) }
+                </ul>
+              </span>
+            </div>
           )
         }
 
         if (this.state.showAnswer === true){
-          var block = false
-          var header = false
           return(
           <div className="questionContainer">
             <CustomHeader
@@ -616,33 +579,32 @@ export default class App extends Component {
   }
 
   doDateMath = (date, time) => {
-    var difference = Math.floor((time - date) / (1000*60))
-    if (difference < 60) {
-      difference = difference
-      if (difference === 1) {
-        return difference = difference + " minute ago"
+    const minutesAgo = Math.floor((time - date) / (1000*60))
+    if (minutesAgo < 60) {
+      if (minutesAgo === 1) {
+        return minutesAgo + " minute ago"
       }
-      if (difference > 1) {
-        return difference = difference + " minutes ago"
+      if (minutesAgo > 1) {
+        return minutesAgo + " minutes ago"
       }
       else {
-        return difference = "0 minutes ago"
+        return "0 minutes ago"
       }
-    } else if (difference > 60 && difference < 1440) {
-      difference = Math.floor(difference / 60) 
-      if (difference === 1) {
-        return difference = difference + " hour ago"
+    } else if (minutesAgo > 60 && minutesAgo < 1440) {
+      const hoursAgo = Math.floor(minutesAgo / 60) 
+      if (hoursAgo === 1) {
+        return hoursAgo + " hour ago"
       }
-      if (difference > 1) {
-        return difference = difference + " hours ago"
+      if (hoursAgo > 1) {
+        return hoursAgo + " hours ago"
       }
-    } else if (difference >= 1440) {
-      difference = Math.floor(difference / 1440) 
-      if (difference === 1) {
-        return difference = difference + " day ago"
+    } else if (minutesAgo >= 1440) {
+      const daysAgo = Math.floor(minutesAgo / 1440) 
+      if (daysAgo === 1) {
+        return daysAgo + " day ago"
       }
-      if (difference > 1) {
-        return difference = difference + " days ago"
+      if (daysAgo > 1) {
+        return daysAgo + " days ago"
       }
     }
   }
@@ -708,30 +670,30 @@ export default class App extends Component {
       fbc.database.public.adminRef('moderators').push({"approve": true})
     }
     else {
-      var mod = this.state.moderator[0]
+      const mod = this.state.moderator[0]
       fbc.database.public.adminRef('moderators').child(mod.key).update({"approve": true})
     }
   }
 
   offApprove = () => {
-    var mod = this.state.moderator[0]
+    const mod = this.state.moderator[0]
     fbc.database.public.adminRef('moderators').child(mod.key).update({"approve": false})
   }
 
   makeApprove = (question) => {
-    var time = new Date().getTime()
+    const time = new Date().getTime()
     fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
   }
 
   makePin = (question) => {
-    var pinned = this.state.questions.filter(task => task.pin === true)
+    const pinned = this.state.questions.filter(task => task.pin === true)
     if (pinned.length < 3){
       fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"pin": true, "approve": true, 'block': false, 'new': false})
     }
   }
 
   makeAnswer = (question) => {
-    var time = new Date().getTime()
+    const time = new Date().getTime()
     fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'block': false, 'new': false, 'pin': false, 'lastEdit': time})
   }
 
@@ -741,14 +703,14 @@ export default class App extends Component {
 
   answerAll = () => {
     const questions = this.state.questions
-    var modOn = false
+    let modOn = false
     if (this.state.moderator.length > 0) {
       if (this.state.moderator[0]) {
         modOn = this.state.moderator[0].approve
       }
     }
-    if (questions !== undefined ) {
-      questions.map(question => {
+    if (questions) {
+      questions.forEach(question => {
         if (modOn) {
           if (question.block !== true && question.approve){
             fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'new': false, 'pin': false})
@@ -761,12 +723,5 @@ export default class App extends Component {
         }
       })
     }
- 
   }
-
 }
-
-
-
-
-

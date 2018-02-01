@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import Modal  from 'react-modal'
-import ReactDOM from 'react-dom'
 import CellEdit from './editCell'
-import client, {Color} from '@doubledutch/admin-client'
 
 export class CustomModal extends Component {
     constructor(props){
@@ -18,7 +16,6 @@ export class CustomModal extends Component {
     }
 
     render() {
-      const questions = this.props.questions
       const sessions = this.props.sessions
       return(
       <Modal 
