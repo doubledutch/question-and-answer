@@ -115,9 +115,9 @@ export default class App extends Component {
             moderator[i] = data.val()
             moderator[i].key = data.key
             if (data.val().approve === false){
-              for (var i in questions){
-                if (questions[i].approve === false && questions[i].new === true){
-                  this.makeApprove(questions[i])
+              for (var q in questions){
+                if (questions[q].approve === false && questions[q].new === true){
+                  this.makeApprove(questions[q])
                 }
               }
             }
