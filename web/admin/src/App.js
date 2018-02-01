@@ -215,6 +215,7 @@ export default class App extends Component {
                       header = {header}
                       makeApprove = {this.makeApprove}
                       blockQuestion = {this.blockQuestion}
+                      canPin = {this.canPin}
                       makePin = {this.makePin}
                       makeAnswer = {this.makeAnswer}
                     />
@@ -328,6 +329,7 @@ export default class App extends Component {
                 block = {block}
                 makeApprove = {this.makeApprove}
                 blockQuestion = {this.blockQuestion}
+                canPin = {this.canPin}
                 makePin = {this.makePin}
                 makeAnswer = {this.makeAnswer}
               />
@@ -385,6 +387,7 @@ export default class App extends Component {
               approve = {approve}
               makeApprove = {this.makeApprove}
               blockQuestion = {this.blockQuestion}
+              canPin = {this.canPin}
               makePin = {this.makePin}
               makeAnswer = {this.makeAnswer}
               />
@@ -440,6 +443,7 @@ export default class App extends Component {
                         approve = {approve}
                         makeApprove = {this.makeApprove}
                         blockQuestion = {this.blockQuestion}
+                        canPin = {this.canPin}
                         makePin = {this.makePin}
                         makeAnswer = {this.makeAnswer}
                         />
@@ -514,6 +518,7 @@ export default class App extends Component {
                       approve = {true}
                       makeApprove = {this.makeApprove}
                       blockQuestion = {this.blockQuestion}
+                      canPin = {this.canPin}
                       makePin = {this.makePin}
                       makeAnswer = {this.makeAnswer}
                       />
@@ -685,9 +690,10 @@ export default class App extends Component {
     fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
   }
 
+  canPin = () => this.state.questions.filter(task => task.pin === true).length < 3
+
   makePin = (question) => {
-    const pinned = this.state.questions.filter(task => task.pin === true)
-    if (pinned.length < 3){
+    if (this.canPin()) {
       fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"pin": true, "approve": true, 'block': false, 'new': false})
     }
   }
