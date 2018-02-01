@@ -124,6 +124,23 @@ class HomeView extends Component {
 
 
   renderHome = () => {
+    const newStyle = {
+      flex: 1,
+      marginBottom: 20,
+      fontSize: 18,
+      color: '#9B9B9B',
+      maxHeight: 100,
+      height: 22,
+      marginTop: 20,
+      paddingTop: 0,
+  }
+  
+  const androidStyle = {
+    paddingLeft: 0,
+    paddingBottom: 0,
+    textAlignVertical: 'center'
+  }
+
     const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state
     var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
     var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session.key)
@@ -132,11 +149,15 @@ class HomeView extends Component {
     if (this.state.modalVisible === false){
       return(
       <View style={{flex:1}}>
-        <View>
-          <TouchableOpacity style={s.compose} onPress={this.showModal}>
+        <View style={s.textBox}>
             <TouchableOpacity style={s.circleBox} onPress={this.showModal}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-            <TouchableOpacity style={s.composeBox} onPress={this.showModal}><Text style={s.composeText}>Type your question here</Text></TouchableOpacity>
-          </TouchableOpacity>
+            <TextInput  underlineColorAndroid='transparent' style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
+            value={this.state.question}
+            autoFocus={false}
+            onFocus={this.showModal}
+            multiline={true}
+            placeholderTextColor="#9B9B9B"
+            />
         </View>
         <View style={{flex:1}}>
           <MyList 
@@ -408,6 +429,17 @@ const s = ReactNative.StyleSheet.create({
     backgroundColor: 'white',
     height: 82
   },
+
+
+
+  textBox: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#EFEFEF'
+  },
+
+
   modal: {
     marginTop: 65,
     flexDirection: 'row',
@@ -513,6 +545,7 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 20,
     flex: 1,
     justifyContent: 'center',
+    padding: 0
   },
   circleBox: {
     marginTop:20,
@@ -574,6 +607,7 @@ const s = ReactNative.StyleSheet.create({
     flex: 1,
     fontSize: 18,
     color: '#9B9B9B',
+    paddingTop: 0,
   },
   whiteText: {
     fontSize: 18,

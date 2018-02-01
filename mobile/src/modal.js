@@ -5,16 +5,15 @@ import ReactNative, {
 } from 'react-native'
 import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 
-
 export default class CustomModal extends Component {
   constructor(props){
     super(props)
     this.state = {
       question: '', 
-      anom: false, 
+      anom: false,
       color: 'white', 
-      height: 22, 
-      borderColor: '#EFEFEF'
+      borderColor: '#EFEFEF',
+      inputHeight: 0
     }
   }
 
@@ -23,12 +22,9 @@ export default class CustomModal extends Component {
     this.props.hideModal()
   }
 
-
-
   sessionSelect = session => {
     this.props.selectSession(session)
   }
-
 
   makeQuestion = (question, anom) => {
     this.props.createSharedTask(question, anom)
@@ -38,20 +34,25 @@ export default class CustomModal extends Component {
   render() {
     const newStyle = {
       flex: 1,
-      marginBottom: 20,
       fontSize: 18,
       color: '#9B9B9B',
       textAlignVertical: 'top',
       maxHeight: 100,
-      height: this.state.height,
-      marginTop: 20,
+      height: Math.max(35, this.state.inputHeight),
       paddingTop: 0,
     }
     
     const androidStyle = {
       paddingLeft: 0,
+      marginTop: 17,
+      marginBottom: 10
     }
 
+    const iosStyle = {
+      marginTop: 20,
+      marginBottom: 10,
+    }
+    
     var newColor = "#9B9B9B"
     if (this.props.session){
       newColor = client.primaryColor
@@ -94,14 +95,15 @@ export default class CustomModal extends Component {
         <View style={{flex: 1}}>
           <View style={[s.modal, borderStyle]}>
               <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-              <TextInput style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
+              <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Type your question here"
                 value={this.state.question}
                 onChangeText={question => this.setState({question})} 
                 maxLength={250}
                 autoFocus={true}
                 multiline={true}
                 placeholderTextColor="#9B9B9B"
-                onContentSizeChange={(e) => this.updateSize(e.nativeEvent.contentSize.height)} />
+                onContentSizeChange={(event) => this._handleSizeChange(event)}
+              />
               <Text style={s.counter}>{250 - this.state.question.length} </Text>
           </View>
           <View style={s.bottomButtons}>
@@ -132,8 +134,12 @@ export default class CustomModal extends Component {
     }
   }
 
-  updateSize = height => this.setState({height})
-  
+  _handleSizeChange = event => {
+    this.setState({
+      inputHeight: event.nativeEvent.contentSize.height
+    });
+  };
+
   makeTrue() {
     if (this.state.anom === false){
       this.setState({anom: true, color: 'black'})

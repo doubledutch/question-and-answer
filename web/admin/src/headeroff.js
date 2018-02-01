@@ -39,7 +39,6 @@ export class CustomHeaderOff extends Component {
                 <button className="listButton2"  onClick={this.props.handleAnswer}>Answered ({answeredQuestions.length})</button>
                 <span className="spacer"/>
                 <button className="answerButton" onClick={this.props.answerAll}>
-                  <img className='smallButton' onClick={this.props.answerAll} src={require('./icons/check.svg')}/>
                   Mark All as Answered
                 </button>
               </span>
