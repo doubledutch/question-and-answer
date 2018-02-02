@@ -24,6 +24,9 @@ export class MyList extends Component {
 
     if (showAnswer === true){
       newQuestions = newQuestions.filter(item => item.answered === true)
+      newQuestions.sort(function (a,b){
+        return b.lastEdit - a.lastEdit
+      })
     }
     if (showAnswer === false){
       newQuestions = newQuestions.filter(item => item.answered === false)
@@ -39,7 +42,6 @@ export class MyList extends Component {
     return (
     <View>
       {this.renderHeader(testQuestions)}
-     
       <FlatList
       data={newQuestions}
       ListFooterComponent={<View style={{height: 100}}></View>}
