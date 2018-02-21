@@ -48,8 +48,6 @@ class HomeView extends Component {
 
   componentDidMount() {
     this.signin.then(() => {
-      const questionsRef = fbc.database.public.allRef('questions')
-      const votesRef = fbc.database.public.allRef('votes')
       const modRef = fbc.database.public.adminRef('moderators')
       const sessRef = fbc.database.public.adminRef('sessions')
 
@@ -100,6 +98,7 @@ class HomeView extends Component {
       })
     })
   }
+
   render() {
     let titleText = this.state.title
     if (this.state.session){
@@ -231,27 +230,24 @@ class HomeView extends Component {
       fbc.database.public.allRef('questions').child(session.key).on('child_added', data => {
         this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
         fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
-          const userVote = vote.key === client.currentUser.id
-          var questions = this.state.questions.map(question => 
-            question.key === data.key ?
-            { ...question, myVote: userVote, score: question.score + 1}
-            : 
-            question
-          )
-          this.setState({questions})
+          const isThisMyVote = vote.key === client.currentUser.id
+          this.setState(prevState => ({
+            questions: prevState.questions.map(question => 
+              question.key === data.key
+                ? { ...question, myVote: question.myVote || isThisMyVote, score: question.score + 1}
+                : question
+            )
+          }))
         })
         fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
-          var userVote = true
-          if (vote.key === client.currentUser.id){
-            userVote = false
-          }
-          var questions = this.state.questions.map(question => 
-            question.key === data.key ?
-              { ...question, myVote: userVote, score: question.score - 1}
-              : 
-              question
-          )
-          this.setState({questions})
+          const wasThisMyVote = vote.key === client.currentUser.id
+          this.setState(prevState => ({
+            questions: prevState.questions.map(question => 
+              question.key === data.key
+                ? { ...question, myVote: question.myVote && !wasThisMyVote, score: question.score - 1}
+                : question
+            )
+          }))
         })
       })
       fbc.database.public.allRef('questions').child(session.key).on('child_changed', data => {
@@ -352,58 +348,58 @@ class HomeView extends Component {
       this.setState({showRecent: true, showAnswer: false})
     }
 
-  createSharedTask = (question, anom) => this.createQuestion(fbc.database.public.allRef, question, anom)
- 
-  createQuestion = (ref, question, anom) => {
-    var time = new Date().getTime()
-    var questionName = question.trim()
-    if (questionName.length === 0) {
-      this.setState({showError: "red"})
+    createSharedTask = (question, anom) => this.createQuestion(fbc.database.public.allRef, question, anom)
+  
+    createQuestion = (ref, question, anom) => {
+      var time = new Date().getTime()
+      var questionName = question.trim()
+      if (questionName.length === 0) {
+        this.setState({showError: "red"})
+      }
+      let approveVar = true
+      let newVar = false
+      if (this.state.moderator[0].approve){
+        approveVar = false
+        newVar = true
+      }
+      if (this.user && questionName.length > 0) {
+        ref('questions').child(this.state.session.key).push({
+          text: questionName,
+          creator: client.currentUser,
+          score : 0,
+          dateCreate: time,
+          anom: anom,
+          approve: approveVar,
+          block: false,
+          new: newVar,
+          answered: false,
+          pin: false,
+          lastEdit: time, 
+          session: this.state.session.key,
+          sessionName: this.state.session.sessionName
+        })
+        .then(() => {
+          this.setState({question: '', anom: false, showError: "white"})
+          setTimeout(() => {
+            this.hideModal()
+            this.setState({questionAsk: this.state.moderator[0].approve})
+            }
+            ,250)
+        })
+        .catch(error => this.setState({questionError: "Retry"}))
+      }
     }
-    let approveVar = true
-    let newVar = false
-    if (this.state.moderator[0].approve){
-      approveVar = false
-      newVar = true
-    }
-    if (this.user && questionName.length > 0) {
-      ref('questions').child(this.state.session.key).push({
-        text: questionName,
-        creator: client.currentUser,
-        score : 0,
-        dateCreate: time,
-        anom: anom,
-        approve: approveVar,
-        block: false,
-        new: newVar,
-        answered: false,
-        pin: false,
-        lastEdit: time, 
-        session: this.state.session.key,
-        sessionName: this.state.session.sessionName
-      })
-      .then(() => {
-        this.setState({question: '', anom: false, showError: "white"})
-        setTimeout(() => {
-          this.hideModal()
-          this.setState({questionAsk: this.state.moderator[0].approve})
-          }
-          ,250)
-      })
-      .catch(error => this.setState({questionError: "Retry"}))
-    }
-  }
 
-  newVote = (question) => {
-    if (question.myVote === true) {
-      fbc.database.public.allRef("votes").child(question.key).child(client.currentUser.id).remove()
+    newVote = (question) => {
+      if (question.myVote === true) {
+        fbc.database.public.allRef("votes").child(question.key).child(client.currentUser.id).remove()
+      }
+      else {
+        fbc.database.public.allRef('votes').child(question.key).child(client.currentUser.id).set(1)
+        .then(() => this.setState({vote: ''}))
+        .catch(x => console.error(x))
+      }
     }
-    else {
-      fbc.database.public.allRef('votes').child(question.key).child(client.currentUser.id).set(1)
-      .then(() => this.setState({vote: ''}))
-      .catch(x => console.error(x))
-    }
-  }
 }
 
 export default HomeView
@@ -431,15 +427,12 @@ const s = ReactNative.StyleSheet.create({
     height: 82
   },
 
-
-
   textBox: {
     flexDirection: 'row',
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: '#EFEFEF'
   },
-
 
   modal: {
     marginTop: 65,
