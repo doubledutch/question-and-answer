@@ -313,30 +313,32 @@ export default class App extends Component {
   renderBlocked = (questions, time) => {
     return(
     <span className="questionBox2">
-      {this.renderMessage(questions.filter(task => task.new === false && task.block === true), "Blocked Questions Will Display Here", "Blocked questions will not be visible to", "attendees")}
-      <ul className="listBox">
-        { questions.filter(task => task.block).map(task => {
-          var block = true
-          var difference = this.doDateMath(task.dateCreate, time)
-          return (
-            <li className='cellBox' key={task.key}>
-              <CustomCell
-                task = {task}
-                difference = {difference}
-              />
-              <CustomButtons
-                task = {task}
-                block = {block}
-                makeApprove = {this.makeApprove}
-                blockQuestion = {this.blockQuestion}
-                canPin = {this.canPin}
-                makePin = {this.makePin}
-                makeAnswer = {this.makeAnswer}
-              />
-            </li>
-          )
-        }) }
-      </ul>
+      { questions.filter(task => task.new === false && task.block === true).length
+        ? <ul className="listBox">
+            { questions.filter(task => task.block).map(task => {
+              var block = true
+              var difference = this.doDateMath(task.dateCreate, time)
+              return (
+                <li className='cellBox' key={task.key}>
+                  <CustomCell
+                    task = {task}
+                    difference = {difference}
+                  />
+                  <CustomButtons
+                    task = {task}
+                    block = {block}
+                    makeApprove = {this.makeApprove}
+                    blockQuestion = {this.blockQuestion}
+                    canPin = {this.canPin}
+                    makePin = {this.makePin}
+                    makeAnswer = {this.makeAnswer}
+                  />
+                </li>
+              )
+            }) }
+          </ul>
+        : this.renderMessage("Blocked Questions Will Display Here", "Blocked questions will not be visible to", "attendees")
+      }
     </span>
     )
   }
@@ -348,21 +350,23 @@ export default class App extends Component {
     })
     return (
       <span className="questionBox2">
-        {this.renderMessage(questions.filter(task => task.answered === true), "Answered Questions Will Display Here", "Click Check next to any approved question", "to mark it as answered")}
-        <ul className="listBox">
-          { questions.filter(task => task.answered).map(task => {
-            var difference = this.doDateMath(task.dateCreate, time)
-            return (
-              <li className='cellBox' key={task.key}>
-                <CustomCell
-                  task = {task}
-                  difference = {difference}
-                />
-                <span className='cellBoxRight'></span>
-              </li>
-            )
-          }) }
-        </ul>
+      { questions.filter(task => task.answered === true).length
+        ? <ul className="listBox">
+            { questions.filter(task => task.answered).map(task => {
+              var difference = this.doDateMath(task.dateCreate, time)
+              return (
+                <li className='cellBox' key={task.key}>
+                  <CustomCell
+                    task = {task}
+                    difference = {difference}
+                  />
+                  <span className='cellBoxRight'></span>
+                </li>
+              )
+            }) }
+          </ul>
+        : this.renderMessage("Answered Questions Will Display Here", "Click Check next to any approved question", "to mark it as answered")
+      }
       </span>
     )
   }
@@ -398,17 +402,13 @@ export default class App extends Component {
     )
   }
 
-  renderMessage = (questions, m1, m2, m3) => {
-    if (questions.length === 0) {
-      return (
-        <div className="modTextBox">
-          <p className="bigModText">{m1}</p>
-          <p className="smallModText">{m2}</p>
-          <p className="smallModText">{m3}</p>
-        </div>
-      )
-    }
-  }
+  renderMessage = (m1, m2, m3) => (
+    <div className="modTextBox">
+      <p className="bigModText">{m1}</p>
+      <p className="smallModText">{m2}</p>
+      <p className="smallModText">{m3}</p>
+    </div>
+  )
 
   renderRight = (questions, time) => {
     if (this.state.moderator.length > 0) {
@@ -427,30 +427,31 @@ export default class App extends Component {
                 handleApproved = {this.handleApproved}
               />
               <span className="questionBox2">
-                {this.renderMessage(questions.filter(task => task.block === false && task.answered === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
-                <ul className="listBox">
-                  {this.renderPinned(questions, time)}
-                  { questions.filter(t => !t.block && !t.pin && !t.answered).map(task => {
-                    var difference = this.doDateMath(task.dateCreate, time)
-                    return (
-                      <li className='cellBox' key={task.key}>
-                        <CustomCell
-                        task = {task}
-                        difference = {difference}
-                        />
-                        <CustomButtons
-                        task = {task}
-                        approve = {approve}
-                        makeApprove = {this.makeApprove}
-                        blockQuestion = {this.blockQuestion}
-                        canPin = {this.canPin}
-                        makePin = {this.makePin}
-                        makeAnswer = {this.makeAnswer}
-                        />
-                      </li>
-                    )
-                  }) }
-                </ul>
+                { questions.filter(task => task.block === false && task.answered === false).length
+                  ? <ul className="listBox">
+                      {this.renderPinned(questions, time)}
+                      { questions.filter(t => !t.block && !t.pin && !t.answered).map(task => {
+                        var difference = this.doDateMath(task.dateCreate, time)
+                        return (
+                          <li className='cellBox' key={task.key}>
+                            <CustomCell
+                              task = {task}
+                              difference = {difference}
+                            />
+                            <CustomButtons
+                              task = {task}
+                              approve = {approve}
+                              makeApprove = {this.makeApprove}
+                              blockQuestion = {this.blockQuestion}
+                              canPin = {this.canPin}
+                              makePin = {this.makePin}
+                              makeAnswer = {this.makeAnswer}
+                            />
+                          </li>
+                        )
+                      }) }
+                    </ul>
+                  : this.renderMessage("Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
               </span>
             </div>
           )
@@ -504,27 +505,29 @@ export default class App extends Component {
               showAnswer = {this.state.showAnswer}
               />
               <span className="questionBox2">
-                {this.renderMessage(questions.filter(task => task.block === false && task.answered === false && task.approve === true && task.new === false), "Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
-                <ul className="listBox">
-                {this.renderPinned(questions, time)}
-                  { questions.filter(t => t.approve && !t.block && !t.pin && !t.answered).map(task => (
-                    <li className='cellBox' key={task.key}>
-                      <CustomCell
-                      task = {task}
-                      difference = {this.doDateMath(task.dateCreate, time)}
-                      />
-                      <CustomButtons
-                      task = {task}
-                      approve = {true}
-                      makeApprove = {this.makeApprove}
-                      blockQuestion = {this.blockQuestion}
-                      canPin = {this.canPin}
-                      makePin = {this.makePin}
-                      makeAnswer = {this.makeAnswer}
-                      />
-                    </li> )
-                  ) }
-                </ul>
+                { questions.filter(task => task.block === false && task.answered === false && task.approve === true && task.new === false).length
+                  ? <ul className="listBox">
+                      { this.renderPinned(questions, time) }
+                      { questions.filter(t => t.approve && !t.block && !t.pin && !t.answered).map(task => (
+                        <li className='cellBox' key={task.key}>
+                          <CustomCell
+                            task = {task}
+                            difference = {this.doDateMath(task.dateCreate, time)}
+                          />
+                          <CustomButtons
+                            task = {task}
+                            approve = {true}
+                            makeApprove = {this.makeApprove}
+                            blockQuestion = {this.blockQuestion}
+                            canPin = {this.canPin}
+                            makePin = {this.makePin}
+                            makeAnswer = {this.makeAnswer}
+                          />
+                        </li> )
+                      ) }
+                    </ul>
+                  : this.renderMessage("Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")
+                }
               </span>
             </div>
           )
