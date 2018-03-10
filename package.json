@@ -6,6 +6,7 @@
   "scripts": {
     "start": "pushd mobile && npm run ios && popd && pushd web/admin && npm start && popd"
   },
+  "license": "apache-2.0",
   "dependencies": {
     "react": "15.6.1",
     "react-native": "0.46.4",
