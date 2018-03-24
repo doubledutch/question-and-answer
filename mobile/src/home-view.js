@@ -60,7 +60,8 @@ class HomeView extends Component {
     }
     this.signin = fbc.signin()
       .then(user => this.user = user)
-      .catch(err => console.error(err))
+
+    this.signin.catch(err => console.error(err))
   }
 
   componentDidMount() {
