@@ -19,7 +19,7 @@ import './App.css'
 
 export default class CustomButtons extends Component {
   render() {
-    const { task, header, approve, block, pin, canPin, makeApprove, blockQuestion, makeAnswer, makePin } = this.props
+    const { task, header, approve, block, makeApprove, blockQuestion, makeAnswer, makePin } = this.props
     
     if (header) {
       return(
@@ -33,27 +33,15 @@ export default class CustomButtons extends Component {
     }
     
     if (approve) {
-      if (pin) {
-        return (
-          <span style={{marginTop: 25}}>
-            <span className='cellBoxRight'>
-              <img className='button1' onClick={() => makeAnswer(task)} src={require('./icons/check.svg')} alt="answered"/>
-              <img className='button1' onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
-            </span>
+      return (
+        <span>
+    {((this.props.session !== 'All') ? <button className="pinButton" onClick={() => makePin(task)}><img className="pinImage" src={require('./icons/thumbtack.svg')} alt="" />Move to Top</button> : <div style={{height: 25}}/>)}
+          <span className='cellBoxRight'>
+            <img className='button1' onClick={() => makeAnswer(task)} src={require('./icons/check.svg')} alt="answered"/>
+            <img className='button1' onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
           </span>
-        )
-      }
-      else {
-        return (
-          <span>
-            <button className="pinButton" disabled={!canPin()} style={{opacity: canPin() ? 1 : 0.3}} onClick={() => makePin(task)}><img className="pinImage" src={require('./icons/thumbtack.svg')} alt="" />Pin to Top</button>
-            <span className='cellBoxRight'>
-              <img className='button1' onClick={() => makeAnswer(task)} src={require('./icons/check.svg')} alt="answered"/>
-              <img className='button1' onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
-            </span>
-          </span>
-        )
-      }
+        </span>
+      )
     }
 
     if (block) {

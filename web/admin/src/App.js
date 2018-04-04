@@ -152,6 +152,9 @@ export default class App extends Component {
     })
     var newQuestions = questions
     if (this.state.session !== 'All'){
+      questions.sort(function (a,b){
+        return a.order - b.order
+      })
       newQuestions = questions.filter(question => question.session === this.state.session)
     }
 
@@ -234,6 +237,7 @@ export default class App extends Component {
                       canPin = {this.canPin}
                       makePin = {this.makePin}
                       makeAnswer = {this.makeAnswer}
+                      session = {this.state.session}
                     />
                   </li>
                 )
@@ -348,6 +352,7 @@ export default class App extends Component {
                     canPin = {this.canPin}
                     makePin = {this.makePin}
                     makeAnswer = {this.makeAnswer}
+                    session = {this.state.session}
                   />
                 </li>
               )
@@ -410,6 +415,7 @@ export default class App extends Component {
               canPin = {this.canPin}
               makePin = {this.makePin}
               makeAnswer = {this.makeAnswer}
+              session = {this.state.session}
               />
             </li>
           )
@@ -462,6 +468,7 @@ export default class App extends Component {
                               canPin = {this.canPin}
                               makePin = {this.makePin}
                               makeAnswer = {this.makeAnswer}
+                              session = {this.state.session}
                             />
                           </li>
                         )
@@ -538,6 +545,7 @@ export default class App extends Component {
                             canPin = {this.canPin}
                             makePin = {this.makePin}
                             makeAnswer = {this.makeAnswer}
+                            session = {this.state.session}
                           />
                         </li> )
                       ) }
@@ -709,13 +717,38 @@ export default class App extends Component {
     fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
   }
 
-  canPin = () => this.state.questions.filter(task => task.pin === true).length < 3
+ 
 
   makePin = (question) => {
-    if (this.canPin()) {
-      fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"pin": true, "approve": true, 'block': false, 'new': false})
-    }
+    // if (this.canPin()) {
+      fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"order": 0, "approve": true, 'block': false, 'new': false})
+    // }
+    this.newOrder(question)
   }
+
+  newOrder = (question) => {
+    const newQuestions = this.state.questions.filter(question => question.session === this.state.session)
+    newQuestions.map((c, index) => {
+      if (c.key !== question.key) {
+        fbc.database.public.allRef('questions').child(c.session).child(c.key).update({"order": c.order + 1})
+      }
+    })
+  }
+
+  // checkOrder = () => {
+  //   const updates = this.state.questions.map((c, index) => {
+  //     if (c.order !== index) {
+  //       this.onUpdate(c, "order", index) // update pending content
+  //       if (this.state.publishedContent[c.key]) {
+  //         return publishedContentRef().child(c.key).child('order').set(index) // update published content
+  //       }
+  //     }
+  //     return Promise.resolve()
+  //   })
+
+  //   // Publish the order changes only
+  //   Promise.all(updates).then(() => this.doPublish({} /* no content updated */))
+  // }
 
   makeAnswer = (question) => {
     const time = new Date().getTime()
