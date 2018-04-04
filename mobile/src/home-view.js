@@ -31,14 +31,12 @@ class HomeView extends Component {
   constructor() {
     super()
     this.state = {
-      question: '', 
-      vote: '', 
+      question: '',
       launch: true, 
       disable: true, 
       session: '', 
       sessions: [], 
       questions: [], 
-      sharedVotes: [], 
       moderator: [], 
       characterCount: 0, 
       showRecent: false, 
@@ -158,12 +156,9 @@ class HomeView extends Component {
       textAlignVertical: 'center'
     }
 
-    const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state
-    var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
-    var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session.key)
-    this.originalOrder(pinnedQuestions)
-    this.originalOrder(otherQuestions)
-    let newQuestions = pinnedQuestions.concat(otherQuestions)
+    const { questions, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state
+    var newQuestions = this.state.questions.filter(item => item.block === false && item.session === session.key)
+    this.orderSort(newQuestions)
     if (this.state.modalVisible === false){
       return(
       <View style={{flex:1}}>
@@ -177,7 +172,7 @@ class HomeView extends Component {
             placeholderTextColor="#9B9B9B"
             />
         </View>
-        <View style={{flex:1}}>
+        <View style={{flex:1, marginTop: 10}}>
           <MyList 
           questions={newQuestions}
           showModal = {this.showModal}
@@ -188,7 +183,6 @@ class HomeView extends Component {
           findOrder = {this.findOrder}
           findOrderDate = {this.findOrderDate}
           originalOrder = {this.originalOrder}
-          newVote = {this.newVote}
           />
         </View>
         {this.renderModal()}
@@ -221,15 +215,6 @@ class HomeView extends Component {
     this.setState({showAnswer: true})
   }
 
-  renderIcon = (question) => {
-    if (question.myVote === true){
-      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Active.png"}}/></TouchableOpacity>
-    }
-    else {
-      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Inactive.png"}}/></TouchableOpacity>
-    }
-  }
-
   showModal = () => {
     this.setState({modalVisible: true, animation: "none"})
   }
@@ -247,37 +232,15 @@ class HomeView extends Component {
     this.setState({session, disable: false})
       fbc.database.public.allRef('questions').child(session.key).on('child_added', data => {
         this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
-        fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
-          const isThisMyVote = vote.key === client.currentUser.id
-          this.setState(prevState => ({
-            questions: prevState.questions.map(question => 
-              question.key === data.key
-                ? { ...question, myVote: question.myVote || isThisMyVote, score: question.score + 1}
-                : question
-            )
-          }))
-        })
-        fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
-          const wasThisMyVote = vote.key === client.currentUser.id
-          this.setState(prevState => ({
-            questions: prevState.questions.map(question => 
-              question.key === data.key
-                ? { ...question, myVote: question.myVote && !wasThisMyVote, score: question.score - 1}
-                : question
-            )
-          }))
-        })
       })
       fbc.database.public.allRef('questions').child(session.key).on('child_changed', data => {
         var questions = this.state.questions
         for (var i in questions) {
           if (questions[i].key === data.key) {
             var score = questions[i].score
-            var myVote = questions[i].myVote
             var oldState = questions[i].approve
             questions[i] = data.val()
             questions[i].score = score
-            questions[i].myVote = myVote
             questions[i].key = data.key
             if (data.val().creator.id === client.currentUser.id && oldState !== data.val().approve){
               this.setState({questions, approve: true, questionAsk: true})
@@ -306,18 +269,6 @@ class HomeView extends Component {
           modOn = this.state.moderator[0].approve
         }
       }
-      if (this.state.questionAsk && modOn && this.state.approve) {
-        setTimeout(() => {
-          this.closeConfirm()
-          }
-          ,5000)
-        return (
-          <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
-            <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
-            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>Your question has been approved!</Text>
-          </TouchableOpacity>
-        )
-      }
 
       if (this.state.questionAsk && modOn && this.state.approve === false) {
         setTimeout(() => {
@@ -327,7 +278,7 @@ class HomeView extends Component {
         return (
           <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
             <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
-            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>Your question has been submitted for approval!</Text>
+            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>Your question has been submitted</Text>
           </TouchableOpacity>
         )
       }
@@ -340,21 +291,9 @@ class HomeView extends Component {
       this.setState({questionAsk: false, approve: false})
     }
 
-    originalOrder = (questions) => {
-      if (this.state.showRecent === false) {
-        this.dateSort(questions)
-        questions.sort(function (a,b){ 
-          return b.score - a.score
-        })
-      }
-      if (this.state.showRecent === true) {
-        this.dateSort(questions)
-      }
-    }
-
-    dateSort = (questions) => {
+    orderSort = (questions) => {
       questions.sort(function (a,b){
-        return b.dateCreate - a.dateCreate
+        return b.order - a.order
       })
     }
 
@@ -394,7 +333,8 @@ class HomeView extends Component {
           pin: false,
           lastEdit: time, 
           session: this.state.session.key,
-          sessionName: this.state.session.sessionName
+          sessionName: this.state.session.sessionName,
+          order: this.state.questions.length || 0
         })
         .then(() => {
           this.setState({question: '', anom: false, showError: "white"})
@@ -408,16 +348,6 @@ class HomeView extends Component {
       }
     }
 
-    newVote = (question) => {
-      if (question.myVote === true) {
-        fbc.database.public.allRef("votes").child(question.key).child(client.currentUser.id).remove()
-      }
-      else {
-        fbc.database.public.allRef('votes').child(question.key).child(client.currentUser.id).set(1)
-        .then(() => this.setState({vote: ''}))
-        .catch(x => console.error(x))
-      }
-    }
 }
 
 export default HomeView
