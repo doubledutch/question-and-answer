@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@doubledutch/base-client@^3.0.0":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@doubledutch/base-client/-/base-client-3.0.1.tgz#eba32a9f0730890eddc2575f0ac4dde0be4eb6cf"
+"@doubledutch/base-client@^3.0.3":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@doubledutch/base-client/-/base-client-3.0.5.tgz#3b0cc61b59e488ed90ee8e712982c0a3903bfda2"
 
 "@doubledutch/firebase-connector@^3.2.3":
   version "3.2.3"
@@ -13,12 +13,12 @@
     babel-runtime "^6.26.0"
     firebase "^4.6.0"
 
-"@doubledutch/rn-client@^3.0.6":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@doubledutch/rn-client/-/rn-client-3.0.6.tgz#51a770645fdb4cc044446c93a33d8fb6fe813a47"
+"@doubledutch/rn-client@^3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@doubledutch/rn-client/-/rn-client-3.1.5.tgz#32984feea81552b5d44503d6f43bc45a40f9545f"
   dependencies:
-    "@doubledutch/base-client" "^3.0.0"
-    react "~16.0.0-alpha.12"
+    "@doubledutch/base-client" "^3.0.3"
+    react "16.0.0-alpha.12"
     react-native "0.46.4"
 
 "@firebase/app@^0.1.2":
@@ -2976,6 +2976,14 @@ prop-types@^15.5.0, prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
+prop-types@^15.5.6:
+  version "15.6.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
+  dependencies:
+    fbjs "^0.8.16"
+    loose-envify "^1.3.1"
+    object-assign "^4.1.1"
+
 prr@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/prr/-/prr-0.0.0.tgz#1a84b85908325501411853d0081ee3fa86e2926a"
@@ -3205,6 +3213,16 @@ react-transform-hmr@^1.0.4:
   dependencies:
     global "^4.3.0"
     react-proxy "^1.1.7"
+
+react@16.0.0-alpha.12:
+  version "16.0.0-alpha.12"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.0.0-alpha.12.tgz#8c59485281485df319b6f77682d8dd0621c08194"
+  dependencies:
+    create-react-class "^15.5.2"
+    fbjs "^0.8.9"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.0"
+    prop-types "^15.5.6"
 
 react@~16.0.0-alpha.12:
   version "16.0.0"

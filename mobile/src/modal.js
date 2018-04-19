@@ -20,6 +20,7 @@ import ReactNative, {
   Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
 } from 'react-native'
 import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
+const primaryColor = new Color(client.primaryColor).limitLightness(0.9).rgbString()
 
 export default class CustomModal extends Component {
   constructor(props){
@@ -71,7 +72,7 @@ export default class CustomModal extends Component {
     
     var newColor = "#9B9B9B"
     if (this.props.session){
-      newColor = client.primaryColor
+      newColor = primaryColor
     }
 
     const colorStyle = {
@@ -88,17 +89,17 @@ export default class CustomModal extends Component {
           ListFooterComponent={<View style={{height: 100}}></View>}
           renderItem={({item}) => (
             <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
-                <View style={s.leftContainer}>
-                    {this.renderModIcon(item)}
-                </View>
-                <View style={s.rightContainer}>
-                    <Text style={{fontSize: 16}}>{item.sessionName}</Text>
-                </View>
+              <View style={s.leftContainer}>
+                <SessionRadio selected={this.props.session === item} />
+              </View>
+              <View style={s.rightContainer}>
+                <Text style={{fontSize: 16}}>{item.sessionName}</Text>
+              </View>
             </TouchableOpacity>
           )} />
           <View style={{borderTopColor:"#b7b7b7", borderTopWidth: 1, backgroundColor: '#EFEFEF'}}>
             <TouchableOpacity disabled={this.props.disable} onPress={this.props.closeSessionModal} style={[s.bigButton, colorStyle]}>
-              <Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>Join Q&A</Text>
+              <Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>Join Q&amp;A</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -165,15 +166,6 @@ export default class CustomModal extends Component {
     }
   }
   
-  renderModIcon = item => {
-    if (this.props.session === item) {
-      return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_active.png"}}/>
-    }
-    else {
-      return <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/radio_inactive.png"}}/>
-    }
-  }
-
   renderModalHeader = () => {
     if (this.props.sessions.length > 0) {
       return ( 
@@ -194,6 +186,12 @@ export default class CustomModal extends Component {
     }
   }
 }
+
+const SessionRadio = ({selected}) => (
+  <View style={[s.radio, selected ? {borderColor: primaryColor} : null]}>
+    {selected ? <View style={[s.radioDot, {backgroundColor: primaryColor}]} /> : null}
+  </View>
+)
 
 const s = ReactNative.StyleSheet.create({
   container: {
@@ -262,7 +260,7 @@ const s = ReactNative.StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'center',
     borderBottomWidth: 2,
-    borderBottomColor: client.primaryColor
+    borderBottomColor: primaryColor,
   },
 
   button2: {
@@ -368,7 +366,7 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 20,
     marginRight: 10,
     width: 124,
-    backgroundColor: client.primaryColor,
+    backgroundColor: primaryColor,
     height: 42,
     borderRadius: 4,
   },
@@ -396,5 +394,19 @@ const s = ReactNative.StyleSheet.create({
   whiteText: {
     fontSize: 18,
     color: 'white',
+  },
+  radio: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderColor: '#c4c4c4',
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  radioDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   }
 })
