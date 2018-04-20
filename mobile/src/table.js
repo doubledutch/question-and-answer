@@ -19,9 +19,10 @@ import React, { Component } from 'react'
 import ReactNative, {
   Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
 } from 'react-native'
-import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
+import client, {Color} from '@doubledutch/rn-client'
+import {thumbsup} from './images'
 
-export class MyList extends Component {
+export default class MyList extends Component {
     constructor(props){
         super(props)
         this.newVotes = this.newVotes.bind(this)
@@ -54,7 +55,7 @@ export class MyList extends Component {
     }
   }
 
-    return (
+  return (
     <View>
       {this.renderHeader(testQuestions)}
       <FlatList
@@ -65,10 +66,7 @@ export class MyList extends Component {
           if (moderator[0].approve !== true && item.answered === false) {
             return(
               <View style={s.listContainer}>
-                <View style={s.leftContainer}>
-                  {this.renderIcon(item)}
-                  <Text style={s.subText}>{item.score}</Text>
-                </View>
+                {this.renderVoteButton(item)}
                 <View style={s.rightContainer}>
                   <Text style={s.questionText}>{item.text}</Text>
                   {item.anom === false &&
@@ -88,10 +86,7 @@ export class MyList extends Component {
           if (moderator[0].approve === true && item.approve === true && item.answered === false){
               return(
                 <View style={s.listContainer}>
-                  <View style={s.leftContainer}>
-                    {this.renderIcon(item)}
-                    <Text style={s.subText}>{item.score}</Text>
-                  </View>
+                  {this.renderVoteButton(item)}
                   <View style={s.rightContainer}>
                     <Text style={s.questionText}>{item.text}</Text>
                     {item.anom === false &&
@@ -112,10 +107,7 @@ export class MyList extends Component {
             if (item.answered === true){
               return (
               <View style={s.listContainer}>
-                <View style={s.leftContainer}>
-                  {this.renderIcon(item)}
-                  <Text style={s.subText}>{item.score}</Text>
-                </View>
+                {this.renderVoteButton(item)}
                 <View style={s.rightContainer}>
                   <Text style={s.questionText}>{item.text}</Text>
                   {item.anom === false &&
@@ -137,10 +129,7 @@ export class MyList extends Component {
         else {
           return (
             <View style={s.listContainer}>
-              <View style={s.leftContainer}>
-                {this.renderIcon(item)}
-                <Text style={s.subText}>{item.score}</Text>
-              </View>
+              {this.renderVoteButton(item)}
               <View style={s.rightContainer}>
                 <Text style={s.questionText}>{item.text}</Text>
                 {item.anom === false &&
@@ -234,23 +223,17 @@ export class MyList extends Component {
     }
   }
 
-  renderIcon = (question) => {
-    if (question.myVote === true){
-      return <TouchableOpacity onPress={() => this.newVotes(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Active.png"}}/></TouchableOpacity>
-    }
-    else {
-       return <TouchableOpacity onPress={() => this.newVotes(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Inactive.png"}}/></TouchableOpacity>
-    }
-  }
+  renderVoteButton = question => (
+    <TouchableOpacity style={s.leftContainer} onPress={() => this.newVotes(question)}>
+      <Image style={[s.checkmark, question.myVote ? s.checkmarkSelected : null]} source={thumbsup}/>
+      <Text style={s.subText}>{question.score}</Text>
+    </TouchableOpacity>
+  )
 
   newVotes(question){
     this.props.newVote(question)
   }
-
 }
-
-export default MyList
-
 
 const fontSize = 18
 const s = ReactNative.StyleSheet.create({
@@ -385,6 +368,9 @@ const s = ReactNative.StyleSheet.create({
     height: 16,
     width: 16,
     marginTop: 4
+  },
+  checkmarkSelected: {
+    backgroundColor: new Color(client.primaryColor).limitSaturation(0.5).minLightness(0.9).limitLightness(0.9).rgbString()
   },
   compose: {
     flexDirection: 'row',
