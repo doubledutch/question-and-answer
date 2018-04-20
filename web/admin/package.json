@@ -7,6 +7,7 @@
     "@doubledutch/admin-client": "^1.0.2",
     "@doubledutch/firebase-connector": "^3.2.3",
     "react": "^16.0.0",
+    "react-csv": "^1.0.14",
     "react-dom": "^16.0.0",
     "react-modal": "^3.1.2",
     "react-scripts": "1.0.14"

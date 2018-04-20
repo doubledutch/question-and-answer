@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import './App.css'
+import { CSVLink } from 'react-csv'
 import client from '@doubledutch/admin-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import CustomModal from './modal'
@@ -144,16 +145,19 @@ export default class App extends Component {
     })
   }
 
+  questionsInCurrentSession = () => {
+    const {questions, session} = this.state
+    if (session === 'All') return questions
+    return questions.filter(question => question.session === session)
+  }
+
   render() {
     const { questions, sessions } = this.state 
     const time = new Date().getTime()
     questions.sort(function (a,b){
       return b.dateCreate - a.dateCreate
     })
-    var newQuestions = questions
-    if (this.state.session !== 'All'){
-      newQuestions = questions.filter(question => question.session === this.state.session)
-    }
+    const newQuestions = this.questionsInCurrentSession()
 
     return (
     <div className="App">
@@ -168,8 +172,9 @@ export default class App extends Component {
       message = {this.state.message}
       />
       <div className="topBox">
-        <p className='bigBoxTitle'>{'Q & A'}</p>
-        <button className="qaButton" onClick={this.openModal}>Add Q&A Session</button>
+        <div className='bigBoxTitle'>Q &amp; A</div>
+        <button className="qaButton" onClick={this.openModal}>Add Q&amp;A Session</button>
+        <CSVLink className="csvButton" data={this.questionsInCurrentSession().map(questionForCsv)} filename={"questions.csv"}>Export Questions to CSV</CSVLink>
       </div>
       <div className="container">
         {this.renderLeft(newQuestions, time, sessions)}
@@ -748,5 +753,20 @@ export default class App extends Component {
         }
       })
     }
+  }
+}
+
+function questionForCsv(q) {
+  const boolText = x => x ? 'true' : 'false'
+  const creator = q.creator || {}
+  return {
+    text: q.text,
+    answered: boolText(q.answered),
+    approved: boolText(q.approve),
+    blocked: boolText(q.block),
+    sessionName: q.sessionName,
+    firstName: creator.firstName,
+    lastName: creator.lastName,
+    email: creator.email
   }
 }

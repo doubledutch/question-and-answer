@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
  .App-intro {
   font-size: large;
   text-align: center;
@@ -41,8 +45,7 @@
   display: flex;
   flex-flow: row wrap;
   flex-grow: 1;
-  margin-Top: 32px;
-  padding-Left: 11px;
+  padding-right: 11px;
   width: 50%;
 }
 
@@ -114,7 +117,6 @@
   margin-Top: 10px;
   border: none;
   padding-right: 10px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   margin-Left: 0px;
   color:#898989;
   background-color: #ffffff;
@@ -122,7 +124,6 @@
 
 .closeButton{
   border: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 13px;
   background-color: #9b9b9b;
   height: 28px;
@@ -133,7 +134,6 @@
 
 .smallCloseButton{
   border: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 13px;
   background-color: #D8D8D8;
   height: 28px;
@@ -146,19 +146,15 @@
 .qaButton{
   background-color: #009DCD;
   border: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   color: white;
   font-size: 13px;
-  height: 121px;
-  height: 28px;
-  margin-top: 10px;
+  padding: 8px;
   border-radius: 2px;
 }
 
 .modalButton{
   background-color: #009DCD;
   border: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   color: white;
   font-size: 13px;
   height: 28px;
@@ -172,7 +168,6 @@
   width: 100%;
   display: flex;
   flex-flow: row wrap;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .Modal {
@@ -219,7 +214,6 @@
 }
 
 .sessionTitle {
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 13px;
   margin-left: 10px;
   display: flex;
@@ -247,7 +241,6 @@
 .dropdownTitle{
   margin-top: 20px;
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   color: #393939;
 }
 
@@ -255,7 +248,6 @@
   font-size: 14px;
   height: 30px;
   width: 115px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   color: #393939;
   border: solid;
   border-width: 1px;
@@ -302,7 +294,6 @@
   border: none;
   border-radius: 0;
   font-size: 14px;
-  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
   color: #009DCD;
   margin-right: 0px;
   text-align: right;
@@ -314,7 +305,6 @@
   border: none;
   border-radius: 0;
   font-size: 14px;
-  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
   color: white;
   margin-right: 0px;
   text-align: right;
@@ -347,7 +337,6 @@
   margin-top: 0px;
   text-align: center;
   color: #898989;
-  font-family: 'Roboto', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .test {
@@ -357,7 +346,6 @@
 .questionText{
   font-size: 16px;
   color: #364347;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   margin-Top: 8px;
   margin-Bottom: 5px;
   margin-right: 5px;
@@ -371,7 +359,6 @@
   margin-top: 0px;
   margin-bottom: 0px;
   color: #8A8A8A;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .cellBoxRight{
@@ -455,7 +442,6 @@
   border-radius: 0;
   font-size: 14px;
   height: 25px;
-  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
   color: #393939;
   margin-top: 0px;
   white-space: nowrap;
@@ -474,7 +460,6 @@
   border: none;
   border-radius: 0;
   font-size: 14px;
-  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
   color: #393939;
   border-bottom-color: #009DCD;
   height: 25px;
@@ -487,7 +472,6 @@
   font-size: 12px;
   color: #898989;
   margin: 0px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   font-weight: bold;
   margin-right: 10px
 }
@@ -495,7 +479,6 @@
 .timeText {
   font-size: 12px;
   color: #898989;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   font-weight: thin;
   margin-right: 10px;
   margin-top: 0px;
@@ -506,7 +489,6 @@
 .boxTitle{
   font-size: 14px;
   height: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   margin-bottom: 5px;
   color: #393939;
   white-space: nowrap;
@@ -517,7 +499,6 @@
 .modalTitle {
   font-size: 16px;
   height: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   margin-bottom: 5px;
   color: #393939;
   white-space: nowrap;
@@ -554,7 +535,6 @@
 .box {
   border: none;
   margin: 0px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 13px;
   display: flex;
   width: 90%;
@@ -578,10 +558,17 @@
   height: 24px;
   display: flex;
   margin-bottom: 16px;
-  font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
   color: #393939;
 }
 
-.topBox{
-  margin-left: 11px;
+.csvButton{
+  display: inline-block;
+  text-decoration: none;
+  background-color: #F0F0F0;
+  border: 1px solid #979797;
+  border-radius: 2px;
+  color: #4A4A4A;
+  font-size: 13px;
+  margin-left: 10px;
+  padding: 8px;
 }
