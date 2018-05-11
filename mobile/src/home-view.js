@@ -39,7 +39,8 @@ class HomeView extends Component {
       sessions: [], 
       questions: [], 
       sharedVotes: [], 
-      moderator: [], 
+      moderator: [],
+      anom: [],
       characterCount: 0, 
       showRecent: false, 
       showAnswer: false, 
@@ -68,6 +69,7 @@ class HomeView extends Component {
     this.signin.then(() => {
       const modRef = fbc.database.public.adminRef('moderators')
       const sessRef = fbc.database.public.adminRef('sessions')
+      const anomRef = fbc.database.public.adminRef('askAnom') 
 
       sessRef.on('child_added', data => {
         this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
@@ -114,6 +116,20 @@ class HomeView extends Component {
           }
         }
       })
+      anomRef.on('child_added', data => {
+        this.setState({ anom: [...this.state.anom, {...data.val(), key: data.key }] })
+      })
+
+      anomRef.on('child_changed', data => {
+        var anom = this.state.anom
+        for (var i in anom) {
+          if (anom[i].key === data.key) {
+            anom[i] = data.val()
+            anom[i].key = data.key
+            this.setState({anom})
+          }
+        }
+      }) 
     })
   }
 
@@ -202,6 +218,7 @@ class HomeView extends Component {
           showModal = {this.showModal}
           closeSessionModal = {this.closeSessionModal}
           makeTrue = {this.makeTrue}
+          anom = {this.state.anom}
           createSharedTask = {this.createSharedTask}
           selectSession = {this.selectSession}
           disable = {this.state.disable}

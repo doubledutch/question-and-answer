@@ -22,6 +22,7 @@ import FirebaseConnector from '@doubledutch/firebase-connector'
 import CustomModal from './modal'
 import CustomCell from './cell'
 import ModIcon from './modicon'
+import AnomIcon from './anomicon'
 import CustomHeader from './header';
 import CustomHeaderOff from './headeroff';
 import CustomButtons from './buttons';
@@ -40,10 +41,10 @@ export default class App extends Component {
       sessions: [], 
       showRecent: false,
       modalVisible: false, 
-      anom: false, 
       color: 'white',
       marginTop: 18, 
-      moderator: [], 
+      moderator: [],
+      anom: [], 
       showBlock: false, 
       showAnswer: false, 
       newQuestions: 0, 
@@ -59,6 +60,7 @@ export default class App extends Component {
     this.signin.then(() => {
       const modRef = fbc.database.public.adminRef('moderators')
       const sessRef = fbc.database.public.adminRef('sessions')
+      const anomRef = fbc.database.public.adminRef('askAnom') 
 
       sessRef.on('child_added', data => {
         this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
@@ -141,6 +143,20 @@ export default class App extends Component {
             this.setState({moderator})
           }
         }
+      })
+      anomRef.on('child_added', data => {
+        this.setState({ anom: [...this.state.anom, {...data.val(), key: data.key }] })
+      })
+
+      anomRef.on('child_changed', data => {
+        var anom = this.state.anom
+        for (var i in anom) {
+          if (anom[i].key === data.key) {
+            anom[i] = data.val()
+            anom[i].key = data.key
+            this.setState({anom})
+          }
+        }
       })    
     })
   }
@@ -175,6 +191,12 @@ export default class App extends Component {
         <div className='bigBoxTitle'>Q &amp; A</div>
         <button className="qaButton" onClick={this.openModal}>Add Q&amp;A Session</button>
         <CSVLink className="csvButton" data={this.questionsInCurrentSession().map(questionForCsv)} filename={"questions.csv"}>Export Questions to CSV</CSVLink>
+        <p className='boxTitle'>Allow Anom Questions:   </p>
+            <AnomIcon
+            anom = {this.state.anom}
+            offApprove = {this.offAnom}
+            onApprove = {this.onAnom}
+            />
       </div>
       <div className="container">
         {this.renderLeft(newQuestions, time, sessions)}
@@ -705,8 +727,24 @@ export default class App extends Component {
   }
 
   offApprove = () => {
-    const mod = this.state.moderator[0]
-    fbc.database.public.adminRef('moderators').child(mod.key).update({"approve": false})
+    const anom = this.state.moderator[0]
+    fbc.database.public.adminRef('moderators').child(anom.key).update({"approve": false})
+  }
+
+  onAnom = () => {
+    if (this.state.anom.length === 0) {
+      fbc.database.public.adminRef('askAnom').push({"allow": true})
+    }
+    else {
+      const anom = this.state.anom[0]
+      fbc.database.public.adminRef('askAnom').child(anom.key).update({"allow": true})
+    }
+  }
+
+  offAnom = () => {
+    const anom = this.state.anom[0]
+    fbc.database.public.adminRef('askAnom').child(anom.key).update({"allow": false})
+
   }
 
   makeApprove = (question) => {

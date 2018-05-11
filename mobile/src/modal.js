@@ -108,6 +108,9 @@ export default class CustomModal extends Component {
       var borderColor = this.state.borderColor
       if (this.props.showError === "red"){borderColor = "red"}
       const borderStyle = {borderColor: borderColor}
+      const allow = this.props.anom[0] ? this.props.anom[0].allow : true
+      console.log(allow)
+      console.log(this.props.anom)
       return (
         <View style={{flex: 1}}>
           <View style={[s.modal, borderStyle]}>
@@ -126,10 +129,12 @@ export default class CustomModal extends Component {
           <View style={s.bottomButtons}>
             <View style={s.rightBox}>
               <Text style={{color: this.props.showError, paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a question</Text>
-              <View style={s.anomBox}>
+              {allow ? <View style={s.anomBox}>
                 {this.renderAnomIcon()}
                 <Text style={s.anomText}>Ask anonymously</Text>
-              </View>
+              </View> : null
+              }
+
             </View>
             <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anom)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
           </View>
