@@ -37,7 +37,8 @@ class HomeView extends Component {
       disable: true, 
       session: '', 
       sessions: [], 
-      questions: [], 
+      questions: [],
+      pinnedQuestions: [], 
       sharedVotes: [], 
       moderator: [],
       anom: [],
@@ -177,7 +178,9 @@ class HomeView extends Component {
     const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state
     var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
     var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session.key)
-    this.originalOrder(pinnedQuestions)
+    pinnedQuestions.sort(function (a,b){ 
+      return a.order - b.order
+    })
     this.originalOrder(otherQuestions)
     let newQuestions = pinnedQuestions.concat(otherQuestions)
     if (this.state.modalVisible === false){
@@ -263,7 +266,10 @@ class HomeView extends Component {
   selectSession = (session) => {
     this.setState({session, disable: false})
       fbc.database.public.allRef('questions').child(session.key).on('child_added', data => {
-        this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
+        if (data.val().pin) { pinnedQuestions = [...this.state.pinnedQuestions, {...data.val(), key: data.key }] }
+        var pinnedQuestions = this.state.pinnedQuestions
+        pinnedQuestions.sort(function (a,b){ return a.order - b.order })
+        this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }], pinnedQuestions })
         fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
           const isThisMyVote = vote.key === client.currentUser.id
           this.setState(prevState => ({
@@ -307,7 +313,7 @@ class HomeView extends Component {
         }
       })
       fbc.database.public.allRef('questions').child(session.key).on('child_removed', data => {
-        this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
+        this.setState({ questions: this.state.questions.filter(x => x.key !== data.key), pinnedQuestions: this.state.pinnedQuestions.filter(x => x.key !== data.key) })
       })
     }
 

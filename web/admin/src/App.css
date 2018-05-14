@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+ :root {
+  font: 400 14px -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #4A4A4A;
+}
+
+html, body, input, button, select {
+  font: inherit;
 }
 
  .App-intro {
@@ -26,6 +31,7 @@ body {
 .App {
   padding: 0px;
   margin: 0px;
+  background-color: #FAFAFA;
 }
 
 .avatar {
@@ -33,17 +39,21 @@ body {
 }
 
 .container {
-  display: flex;
+  height: 750px;
   box-sizing: border-box;
-  height: 600px;
   font-size: 14; 
   margin-left: 0px;
   margin-right: 0px;
+  border-radius: 5px;
+  border: 1px solid #E3ECF8;
+  background-color: #FFFFFF;
+  padding: 20px 0px 0px 20px;
 }
 
 .questionContainer {
   display: flex;
   flex-flow: row wrap;
+  height: 600px;
   flex-grow: 1;
   padding-right: 11px;
   width: 50%;
@@ -140,11 +150,11 @@ body {
   width: 68px;
   margin-top: 6px;
   border-radius: 2px;
-  color: #393939;
+  color: #4A4A4A;
 }
 
 .qaButton{
-  background-color: #009DCD;
+  background-color: #4A90E2;
   border: none;
   color: white;
   font-size: 13px;
@@ -153,7 +163,7 @@ body {
 }
 
 .modalButton{
-  background-color: #009DCD;
+  background-color: #4A90E2;
   border: none;
   color: white;
   font-size: 13px;
@@ -217,7 +227,6 @@ body {
   font-size: 13px;
   margin-left: 10px;
   display: flex;
-  color: #393939;
   border: none;
   width: 100%;
   min-height: 34px;
@@ -234,21 +243,18 @@ body {
 }
 
 .dropdownMenu{
-  margin-left: 5px;
+  margin: 0px 30px 0px 15px;
   margin-top: 15px; 
 }
 
 .dropdownTitle{
   margin-top: 20px;
-  font-size: 14px;
-  color: #393939;
 }
 
 .dropdownText{
   font-size: 14px;
   height: 30px;
   width: 115px;
-  color: #393939;
   border: solid;
   border-width: 1px;
   border-color: #CDCDCD;	
@@ -258,6 +264,10 @@ body {
   -webkit-appearance:none; 
   text-align: center;
   padding-right: 20px;
+}
+
+h3 {
+  font-weight: 300;
 }
 
 .topText{
@@ -272,6 +282,7 @@ body {
   flex-grow: 1;
   margin-right: 40px;
   margin-bottom: 5px;
+  background-color: white;
 }
 
 .buttonSpan2{
@@ -294,7 +305,7 @@ body {
   border: none;
   border-radius: 0;
   font-size: 14px;
-  color: #009DCD;
+  background-color: #4A90E2;
   margin-right: 0px;
   text-align: right;
   white-space: nowrap;
@@ -326,7 +337,6 @@ body {
   line-height: 24px;
   color: #898989;
   text-align: center;
-  font-family: 'Roboto', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .smallModText{
@@ -345,7 +355,6 @@ body {
 
 .questionText{
   font-size: 16px;
-  color: #364347;
   margin-Top: 8px;
   margin-Bottom: 5px;
   margin-right: 5px;
@@ -365,10 +374,11 @@ body {
   flex-grow: 1;
   padding-right: 15px;
   padding-left: 5px;
-  max-width: 100px;
+  width: 100px;
   display: flex;
   flex-flow: nowrap;
   background-color: white;
+  justify-content: center;
 }
 
 .modIcons{
@@ -393,6 +403,13 @@ body {
   margin-Left: 5px;
   margin-Right: 5px;
   border-radius: 50%;
+}
+
+.sortIcon {
+  height: 20px;
+  width: 20px;
+  margin-left: 20px;
+  align-self: center;
 }
 
 .pinImage{
@@ -420,16 +437,16 @@ body {
 }
 .modButton{
   border: none;
-  background-color: #009DCD;
+  background-color: #4A90E2;
   color: white;
   height: 30px;
   width: 40px;
   border-radius: 6px;
 }
 .modButton2{
-  background-color: #D8D8D8;
-  border: none;
-  color: white;
+  background-color: rgba(74,144,226, 0.3);
+  border: 1px solid #4A90E2;
+  color: #4A90E2;
   height: 30px;
   width: 40px;
   border-radius: 6px;
@@ -438,11 +455,10 @@ body {
 .listButton{
   border: none;
   border-bottom: solid;
-  border-bottom-color: #009DCD;
+  border-bottom-color: #4A90E2;
   border-radius: 0;
   font-size: 14px;
   height: 25px;
-  color: #393939;
   margin-top: 0px;
   white-space: nowrap;
   background-color: #ffffff
@@ -460,8 +476,8 @@ body {
   border: none;
   border-radius: 0;
   font-size: 14px;
-  color: #393939;
-  border-bottom-color: #009DCD;
+  color: #4A4A4A;
+  border-bottom-color: #4A90E2;
   height: 25px;
   margin-top: 0px;
   white-space: nowrap;
@@ -490,17 +506,16 @@ body {
   font-size: 14px;
   height: 20px;
   margin-bottom: 5px;
-  color: #393939;
   white-space: nowrap;
   padding-top: 5px;
   margin-right: 5px;
+  font-weight: bold;
 }
 
 .modalTitle {
   font-size: 16px;
   height: 20px;
   margin-bottom: 5px;
-  color: #393939;
   white-space: nowrap;
   padding-top: 0px;
   margin-right: 5px;  
@@ -558,7 +573,6 @@ body {
   height: 24px;
   display: flex;
   margin-bottom: 16px;
-  color: #393939;
 }
 
 .csvButton{
