@@ -42,12 +42,13 @@ export class CellEdit extends Component {
         )
     }
 
+
     renderIcons = (task) => {
         if (this.state.action === "state") {
             return (
             <div className="rightButtons">
-                <img style={{height: 16, width: 16, marginTop: 12, marginRight: 10}} value="edit" onClick={this.handleEdit} src={require('./icons/Pencil.png')} alt="edit" />
-                <img style={{height: 16, width: 12, marginTop: 12}} value="delete" onClick={this.handleDelete} src={require('./icons/trashcan.svg')} alt="delete" />
+                <button className="borderlessButtonSmall" onClick={this.handleEdit} value="false">Edit</button>
+                <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? "Display in App" : "Hide in App"}</button>
             </div>
             )
         }

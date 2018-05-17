@@ -19,8 +19,9 @@
   color: #4A4A4A;
 }
 
-html, body, input, button, select {
+html, body, input, button, select, form{
   font: inherit;
+  color: inherit;
 }
 
  .App-intro {
@@ -39,7 +40,7 @@ html, body, input, button, select {
 }
 
 .container {
-  height: 750px;
+  height: 850px;
   box-sizing: border-box;
   font-size: 14; 
   margin-left: 0px;
@@ -50,6 +51,118 @@ html, body, input, button, select {
   padding: 20px 0px 0px 20px;
 }
 
+.containerSmall {
+  box-sizing: border-box;
+  font-size: 14;
+  border-radius: 5px;
+  border: 1px solid #E3ECF8;
+  background-color: #FFFFFF;
+  padding: 20px;
+  margin: 20px 0px;
+}
+
+/* form label {
+  flex: 1;
+  font-size: 18px;
+  margin-right: 30px;
+}
+
+form input radio {
+  color: red;
+}
+
+form {
+  flex: 1;
+} */
+
+/* Customize the label (the container) */
+.radioContainer {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  margin-right: 30px;
+  cursor: pointer;
+  font-size: 18px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: white;
+}
+
+/* Hide the browser's default radio button */
+.radioContainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: white;
+  border-radius: 50%;
+  border: 1px solid #4A90E2;
+}
+
+/* On mouse-over, add a grey background color */
+.radioContainer:hover input ~ .checkmark {
+  background-color:#EFEFEF;
+}
+
+/* When the radio button is checked, add a blue background */
+.radioContainer input:checked ~ .checkmark {
+}
+  /* background-color: #4A90E2;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.radioContainer input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.radioContainer .checkmark:after {
+  top: 2px;
+  left: 3px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #4A90E2;
+}
+
+
+
+
+
+.containerSmallRow {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  font-size: 14;
+  border-radius: 5px;
+  border: 1px solid #E3ECF8;
+  background-color: #FFFFFF;
+  padding: 20px;
+  margin: 20px 0px;
+}
+
+.topBox {
+  background-color: white;
+  width: 50%;
+  margin-bottom: 20px;
+}
 .questionContainer {
   display: flex;
   flex-flow: row wrap;
@@ -89,7 +202,7 @@ html, body, input, button, select {
   margin: 0px;
   padding: 0px;
   list-style-type: none;
-  overflow:hidden; 
+  overflow-x:hidden; 
   overflow-y:scroll;
 }
 
@@ -109,6 +222,7 @@ html, body, input, button, select {
   width: 100%;
   flex-flow: row wrap;
   display: flex;
+  align-items: center;
 }
 
 .cellBoxLeft{
@@ -128,13 +242,13 @@ html, body, input, button, select {
   border: none;
   padding-right: 10px;
   margin-Left: 0px;
-  color:#898989;
+  color: #4A90E2;
   background-color: #ffffff;
 }
 
 .closeButton{
   border: none;
-  font-size: 13px;
+  font-size: 14px;
   background-color: #9b9b9b;
   height: 28px;
   width: 121px;
@@ -142,15 +256,23 @@ html, body, input, button, select {
   color: white;
 }
 
+.hideButton{
+  color: #4A90E2;
+  border: none;
+  background-color: white;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 2px;
+  float: right;
+}
+
 .smallCloseButton{
   border: none;
-  font-size: 13px;
-  background-color: #D8D8D8;
+  font-size: 14px;
+  background-color: white;
   height: 28px;
   width: 68px;
-  margin-top: 6px;
-  border-radius: 2px;
-  color: #4A4A4A;
+  color: #4A90E2;
 }
 
 .qaButton{
@@ -162,6 +284,42 @@ html, body, input, button, select {
   border-radius: 2px;
 }
 
+.searchBar {
+  margin: 5px;
+  margin-left: 30px;
+  background-color: white;
+}
+
+.searchBar--gray {
+  margin: 5px;
+  margin-left: 30px;
+}
+
+.searchBar input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.searchBar input {
+  height: 32px;
+  padding: 0px;
+  padding-left: 10px;
+  border-radius: 4px;
+  border: 1px solid #AEAEAE;
+  font-size: 16px;
+  width: 200px;
+}
+
+.searchBar--gray input {
+  height: 32px;
+  padding: 0px;
+  padding-left: 10px;
+  border-radius: 5px;
+  border: 1px solid #AEAEAE;
+  font-size: 16px;
+  width: 200px;
+  background-color: #AEAEAE;
+}
+
 .modalButton{
   background-color: #4A90E2;
   border: none;
@@ -170,6 +328,17 @@ html, body, input, button, select {
   height: 28px;
   border-radius: 2px;
   float: right;
+}
+
+.addSessionButton{
+  color: #4A90E2;
+  border: 1px solid #4A90E2;
+  background-color: white;
+  width: 115px;
+  font-size: 14px;
+  height: 37px;
+  border-radius: 5px;
+  margin: 2px 20px;
 }
 
 .cellBoxText{
@@ -196,19 +365,26 @@ html, body, input, button, select {
 }
 
 .sessionList {
-  border: 1px solid #CDCDCD;
   padding: 0px;
   background-color: #ffffff;
   list-style: none;
-  overflow:hidden; 
-  overflow-y:scroll;
-  max-height: 200px;
   min-height: 40px;
-  margin-left: 5px;
   box-sizing: border-box;
   list-style-type: none;
   margin-bottom: 0px;
   margin-top: 0px;
+}
+
+.sessionListBox {
+  border-radius: 5px;
+  border: 1px solid #E3ECF8;
+  padding: 0px;
+  background-color: #ffffff;
+  overflow:hidden; 
+  overflow-y:scroll;
+  height: 200px;
+  box-sizing: border-box;
+  margin: 5px 0 0 0;
 }
 
 .sessionCellTop{
@@ -231,6 +407,7 @@ html, body, input, button, select {
   width: 100%;
   min-height: 34px;
   margin-top: 2px;
+  color: #4A4A4A
 }
 
 
@@ -266,7 +443,7 @@ html, body, input, button, select {
   padding-right: 20px;
 }
 
-h3 {
+h2 {
   font-weight: 300;
 }
 
@@ -277,10 +454,11 @@ h3 {
 }
 
 .buttonSpan{
+  width: 100%;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: nowrap;
   flex-grow: 1;
-  margin-right: 40px;
+  margin-right: 15px;
   margin-bottom: 5px;
   background-color: white;
 }
@@ -305,7 +483,7 @@ h3 {
   border: none;
   border-radius: 0;
   font-size: 14px;
-  background-color: #4A90E2;
+  color: #4A90E2;
   margin-right: 0px;
   text-align: right;
   white-space: nowrap;
@@ -384,7 +562,7 @@ h3 {
 .modIcons{
   display: flex;
   flex-flow: nowrap;
-  margin-top:15px;
+  margin-top:17px;
 }
 
 .button{
@@ -429,11 +607,14 @@ h3 {
   padding-right: 5px;
 }
 
-.rightButtons{
+.rightButtons {
   margin-left: 20px;
   margin-right: 20px;
+  width: 160px;
   display: flex;
-  flex-direction: row
+  flex-direction: nowrap;
+  align-items: center;
+  justify-content: center;
 }
 .modButton{
   border: none;
@@ -443,6 +624,8 @@ h3 {
   width: 40px;
   border-radius: 6px;
 }
+
+
 .modButton2{
   background-color: rgba(74,144,226, 0.3);
   border: 1px solid #4A90E2;
@@ -509,6 +692,24 @@ h3 {
   white-space: nowrap;
   padding-top: 5px;
   margin-right: 5px;
+  font-weight: normal;
+}
+
+.boxTitleBold{
+  font-size: 14px;
+  white-space: nowrap;
+  margin-right: 5px;
+  font-weight: bold;
+  margin: 0px;
+  margin-top: 5px;
+}
+
+.boxTitleBoldMargin{
+  font-size: 14px;
+  height: 20px;
+  white-space: nowrap;
+  padding-top: 8px;
+  margin-right: 5px;
   font-weight: bold;
 }
 
@@ -532,19 +733,18 @@ h3 {
   margin-left: 10px;
 }
 
-.inputBox {
-  margin-left: 5px;
-}
-
 .textInputBox {
   flex-direction: row;
   display: flex;
   margin: 0px;
   padding: 0px;
-  border: 1px;
-  border-style: solid;
-  border-color:#CDCDCD;
+  border: none;
+  border-bottom: 1px;
+  border-bottom-style: solid;
+  border-bottom-color:#CDCDCD;
   background-color: #ffffff;
+  height: 40px;
+  color: #4A4A4A
 }
 
 .box {
@@ -554,6 +754,25 @@ h3 {
   display: flex;
   width: 90%;
   padding-left: 10px;
+  color: #4A4A4A
+}
+
+.borderlessButton {
+  border: none;
+  background-color: white;
+  width: 110px;
+}
+
+.borderlessButtonSmall {
+  border: none;
+  background-color: white;
+  width: 40px;
+}
+
+.borderlessButtonMed {
+  border: none;
+  background-color: white;
+  width: 60px;
 }
 
 .counter {
@@ -576,13 +795,81 @@ h3 {
 }
 
 .csvButton{
-  display: inline-block;
   text-decoration: none;
-  background-color: #F0F0F0;
-  border: 1px solid #979797;
-  border-radius: 2px;
-  color: #4A4A4A;
-  font-size: 13px;
-  margin-left: 10px;
-  padding: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #4A90E2;
+  border-radius: 5px;
+  text-align: center;
+  color: #4A90E2;
+  font-size: 14px;
+  margin: 0px 25px;
+  padding: 10px;
+  float: right;
+  width: 140px;
+}
+
+.background-url {
+  flex: 1;
+  width: 90%;
+  height: 40px;
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 1px solid #AEAEAE;
+  padding-left: 10px;
+}
+
+.presentation-container {
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  width: 800px;
+  height: 400px;
+  display: flex;
+  position: relative;
+}
+@media screen and (min-width: 1230px) {
+  .presentation-container {
+    width: 400px;
+    height: 800px;
+    flex-direction: column;
+  }
+}
+
+.presentation-side {
+  width: 400px;
+  height: 400px;
+  position: relative;
+  flex: 1
+}
+
+iframe.big-screen-container {
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+.presentation-overlays {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  background-color: rgba(255,255,255,0.5);
+  display: flex;
+  padding: 0.5em 0;
+}
+.presentation-overlays > * {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.overlay-button {
+  width: 171px;
+  height: 39px;
+  border: 1px solid #4A90E2;
+  font-size: 14px;
+  background-color: white;
+  color: #4A90E2;
+  border-radius: 5px;
+  margin: 0px 0px 0px 20px;
+  align-self: center;
 }

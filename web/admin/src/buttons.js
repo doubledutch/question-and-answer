@@ -26,8 +26,8 @@ export default class CustomButtons extends Component {
       return(
         <span style={{marginTop: 25}}>
           <span className='cellBoxRight'>
-            <img className='button1' data-tip="Approve Question" onClick={() => makeApprove(task)} src={require('./icons/checkocircle.svg')} alt="approve"/>
-            <img className='button1' data-tip="Block Question" onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
+            <img className='button1' data-tip="Move to Approved" onClick={() => makeApprove(task)} src={require('./icons/checkocircle.svg')} alt="approve"/>
+            <img className='button1' data-tip="Move to Blocked" onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
           </span>
           <ReactTooltip />
         </span>
@@ -39,8 +39,8 @@ export default class CustomButtons extends Component {
         return (
           <span style={{marginTop: 25}}>
             <span className='cellBoxRight'>
-              <img className='button1' data-tip="Answer Question" onClick={() => makeAnswer(task)} src={require('./icons/check.svg')} alt="answered"/>
-              <img className='button1' data-tip="Block Question" onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
+              <img className='button1' data-tip="Move to Answered" onClick={() => makeAnswer(task)} src={require('./icons/check.svg')} alt="answered"/>
+              <img className='button1' data-tip="Move to Blocked" onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
             </span>
             <ReactTooltip />
           </span>
@@ -51,8 +51,8 @@ export default class CustomButtons extends Component {
           <span>
             <button className="pinButton" disabled={!canPin()} style={{opacity: canPin() ? 1 : 0.3}} onClick={() => makePin(task)}><img className="pinImage" src={require('./icons/thumbtack.svg')} alt="" />Pin to Top</button>
             <span className='cellBoxRight'>
-              <img className='button1' data-tip="Answer Question" onClick={() => makeAnswer(task)} src={require('./icons/check.svg')} alt="answered"/>
-              <img className='button1' data-tip="Block Question" onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
+              <img className='button1' data-tip="Move to Answered" onClick={() => makeAnswer(task)} src={require('./icons/check.svg')} alt="answered"/>
+              <img className='button1' data-tip="Move to Blocked" onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
             </span>
             <ReactTooltip />
           </span>
@@ -64,7 +64,7 @@ export default class CustomButtons extends Component {
       return (
         <span style={{marginTop: 25}}>
           <span className='cellBoxRight'>
-            <img className='button1' data-tip="Approve Question" onClick={() => makeApprove(task)} src={require('./icons/checkocircle.svg')} alt="approve" />
+            <img className='button1' data-tip="Move to Approved" onClick={() => makeApprove(task)} src={require('./icons/checkocircle.svg')} alt="approve" />
           </span>
           <ReactTooltip />
         </span>
@@ -74,7 +74,7 @@ export default class CustomButtons extends Component {
       return (
         <span style={{marginTop: 25}}>
           <span className='cellBoxRight'>
-            <img className='button1' data-tip="Block Question" onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
+            <img className='button1' data-tip="Move to Blocked" onClick={() => blockQuestion(task)} src={require('./icons/deleteocircle.svg')} alt="block"/>
           </span>
           <ReactTooltip />
         </span>

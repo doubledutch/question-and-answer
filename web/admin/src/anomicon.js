@@ -21,29 +21,35 @@ export default class AnomIcon extends Component {
   render() {
     const anom = this.props.anom
     if (anom.length > 0) {
-      if (anom[0].allow === true){
-        return ( 
-          <span className="modIcons">
-            <button className="modButton" style={{position:"absolute"}}>Yes</button>
-            <button className="modButton2"  style={{marginLeft:"35px", width:"45px"}}onClick={this.props.offApprove}>No</button>
-          </span>
-        )
-      }
-      else {
-        return (
-          <span className="modIcons">
-            <button className="modButton2" style={{width:"45px"}} onClick={this.props.onApprove}>Yes</button>
-            <button className="modButton" style={{marginLeft:"-5px"}}>No</button>
-          </span>
-        )
-      }
+      return (
+        <form style={{marginTop: 20}}>
+          <label className="radioContainer">
+              <input type="radio" name="radio" value="anom" checked={anom[0].allow} onChange={this.props.onApprove}/>
+              Yes
+              <span className="checkmark"/>
+            </label>        
+            <label className="radioContainer">
+              <input type="radio" name="radio" value="anom" checked={!anom[0].allow} onChange={this.props.offApprove}/>
+              No
+              <span className="checkmark"/>
+            </label>
+        </form>
+      )
     }
     else {
       return (
-        <span className="modIcons">
-          <button className="modButton2" style={{width:"45px"}} onClick={this.props.onApprove}>Yes</button>
-          <button className="modButton" style={{marginLeft:"-5px"}}>No</button>
-        </span>
+        <form style={{marginTop: 20}}>
+          <label className="radioContainer">
+              <input type="radio" value="anom" checked={true} onChange={this.props.onApprove}/>
+              Yes
+              <span className="checkmark"/>
+            </label>
+            <label className="radioContainer">
+              <input type="radio" value="anom" checked={false} onChange={this.props.offApprove}/>
+              No
+              <span className="checkmark"/>
+            </label>
+        </form>
       )
     } 
   }

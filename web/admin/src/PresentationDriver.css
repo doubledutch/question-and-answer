@@ -1,0 +1,85 @@
+/*
+ * Copyright 2018 DoubleDutch, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.presentation-driver {
+  height: 100%;
+  width: 100%;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.presentation-driver .box {
+  background-color: #fff;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.presentation-driver .box-content {
+  padding: 1em 1.5em;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.presentation-driver .question-title {
+  color: #9b9b9b;
+}
+
+.presentation-driver .timer-bar {
+  height: 5px;
+  width: 100%;
+  background-color: #f3f3f3;
+  position: relative;
+}
+.presentation-driver .timer-bar-remaining {
+  height: 100%;
+  right: 0;
+  position: absolute;
+  background-color: #2daaa0;
+}
+.presentation-driver .question-title {
+  display: flex;
+  justify-content: space-between;
+}
+.presentation-driver .question-title :last-child {
+  color: #2daaa0;
+}
+.presentation-driver h2 {
+  color: #442564;
+  font-size: 1.2em;
+  text-align: center;
+  margin: 1em 0;
+}
+
+.presentation-driver .buttons {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+}
+
+.presentation-driver button {
+  border: 1px solid #4A90E2;
+  padding: 10px;
+  font-size: 14px;
+  background-color: white;
+  color: #4A90E2;
+  border-radius: 5px;
+}
