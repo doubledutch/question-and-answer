@@ -8,9 +8,11 @@
   },
   "license": "apache-2.0",
   "dependencies": {
+    "lodash.debounce": "^4.0.8",
     "react": "15.6.1",
     "react-native": "0.46.4",
-    "react-native-cli": "^2.0.1"
+    "react-native-cli": "^2.0.1",
+    "react-select": "^1.2.1"
   },
   "doubledutch": {
     "extension": true

@@ -41,7 +41,7 @@ export class SessionBox extends Component {
         <div>
           <div className="cellBoxTop">
             <h2>Sessions</h2>
-            <button className="addSessionButton" onClick={this.handleNewSession} value="false">Add Session</button>
+            <button className="addSessionButton" onClick={this.handleNewSession} value="false">{this.state.showNewSession ? "Cancel" : "Add Session"}</button>
             <SearchBar updateList={this.updateList}/>
             <div style={{flex:1}}/>
             <button className="hideButton" onClick={() => this.props.hideSection("Sessions")}>{this.props.hideSessions ? "Show" : "Hide" } Section</button>
@@ -77,7 +77,7 @@ export class SessionBox extends Component {
       return (
         <div>
           <span className="textInputBox">
-            <input className="box" name="value" maxLength="250" type="text" style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
+            <input className="box" name="value" maxLength="250" type="text" autoFocus style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
             <div className="rightButtons">
               <button className="borderlessButtonMed" onClick={this.handleSubmit} value="false">Save</button>
               <button className="borderlessButton" onClick={this.handleClose} value="false">Cancel</button>

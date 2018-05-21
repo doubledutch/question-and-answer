@@ -29,6 +29,9 @@ import CustomButtons from './buttons'
 import SortableTable from './sortableTable'
 import PresentationDriver from './PresentationDriver'
 import SessionBox from './SessionBox'
+import AllAttendees from './AllAttendees'
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 import {openTab} from './utils'
 
 const reorder = (fbc, list, startIndex, endIndex) => {
@@ -51,7 +54,8 @@ export default class Admin extends Component {
       vote: '', 
       questions: [],
       pinnedQuestions: [],
-      sessions: [], 
+      admins: [],
+      sessions: [],
       showRecent: false,
       modalVisible: false, 
       color: 'white',
@@ -65,6 +69,7 @@ export default class Admin extends Component {
       modalColor: "#FAFAFA",
       hideSessions: false,
       hideSettings: false,
+      hideAdmins: false,
       message: "* Please enter a valid session name" 
     }
   }
@@ -77,10 +82,20 @@ export default class Admin extends Component {
       const modRef = fbc.database.public.adminRef('moderators')
       const sessRef = fbc.database.public.adminRef('sessions')
       const anomRef = fbc.database.public.adminRef('askAnom')
-      this.backgroundUrlRef = () => fbc.database.public.adminRef('backgroundUrl') 
+      const adminableUsersRef = () => fbc.database.private.adminableUsersRef()
 
+      this.backgroundUrlRef = () => fbc.database.public.adminRef('backgroundUrl') 
       this.backgroundUrlRef().on('value', data => this.setState({backgroundUrl: data.val()}))
       fbc.getLongLivedAdminToken().then(longLivedToken => this.setState({longLivedToken}))
+
+      adminableUsersRef().on('value', data => {
+        const users = data.val() || {}
+        this.setState(state => {
+          return {
+            admins: Object.keys(users).filter(id => users[id].adminToken)
+          }
+        })
+      })
 
       sessRef.on('child_added', data => {
         this.setState({ sessions: [{...data.val(), key: data.key }, ...this.state.sessions] })
@@ -250,9 +265,21 @@ export default class Admin extends Component {
           <input type="text" value={backgroundUrl} onChange={this.onBackgroundUrlChange} placeholder="Custom background image URL. Suggested at least 700px high and wide." className="background-url" />
         </div>
       </div> }
+      <div className="container">
+        <AllAttendees
+          setAdmin={this.setAdmin}
+          admins={this.state.admins}
+          getAttendees={this.getAttendees}
+          allUsers={this.props.allUsers}
+          fbc={this.props.fbc} 
+          hidden={this.state.hideAdmins}
+          hideSection={this.hideSection} />
+      </div>
     </div>
     )
   }
+
+  getAttendees = query => client.getAttendees(query)
 
   renderPresentation = () => {
     const { launchDisabled } = this.state
@@ -332,27 +359,21 @@ export default class Admin extends Component {
   }
 
   renderLeftHeader = () => {
-    const sessions = this.state.sessions
+    const sample = {value: "All", label: "All", className: "dropdownText"}
+    const sessions = []
+    sessions.push(sample)
+    this.state.sessions.forEach(session => sessions.push(Object.assign({}, {value: session.key, label: session.sessionName, className: "dropdownText"})))
     return (
       <span className="buttonSpan">
         <h2>Moderation</h2>
-        <form className="dropdownMenu">
-          <select className="dropdownText" value={this.state.session} name="session" onChange={this.handleChange}>
-          <p>Test</p>
-          <option style={{textAlign: "center"}}value="All">{'\xa0\xa0'}All Sessions</option>
-          { sessions.map(task => {
-              var title = task.sessionName
-              if (title.length > 75){
-                var newTitle = task.sessionName.slice(0, 75)
-                title = newTitle + "..."
-              }
-            return (
-            <option key={task.key} value={task.key}>{'\xa0\xa0' + title}</option>  
-            )      
-          })
-          }    
-          </select>
-        </form>
+        <Select
+          className="dropdownMenu" 
+          name="session"
+          value={this.state.currentSession}
+          onChange={this.handleSessionChange}
+          clearable={false}
+          options={sessions}
+        />
         <p className='boxTitleBoldMargin'>Moderation:   </p>
         <ModIcon moderator = {this.state.moderator} offApprove = {this.offApprove} onApprove = {this.onApprove} />
         {this.state.session === "All" ? null : <div className="buttonSpan">
@@ -438,6 +459,15 @@ export default class Admin extends Component {
     )
   })
     )
+  }
+
+  setAdmin(userId, isAdmin, fbc) {
+    const tokenRef = fbc.database.private.adminableUsersRef(userId).child('adminToken')
+    if (isAdmin) {
+      fbc.getLongLivedAdminToken().then(token => tokenRef.set(token))
+    } else {
+      tokenRef.remove()
+    }
   }
 
   onDragEnd = (result) =>{
@@ -649,6 +679,15 @@ export default class Admin extends Component {
     this.setState({[event.target.name]: event.target.value});
   }
 
+  handleSessionChange = (selected) => {
+    if (selected) this.setState({session: selected.value, currentSession: selected});
+  }
+
+  clearValue = (e) => {
+    this.select.setInputValue('');
+    this.setState({session: "All"})
+	}
+
   hideSection = (section) => {
     const currentSection = "hide" + section
     const currentState = this.state[currentSection]
@@ -664,7 +703,6 @@ export default class Admin extends Component {
   }
 
   onApprove = () => {
-    console.log("here")
     if (this.state.moderator.length === 0) {
       this.propsfbc.database.public.adminRef('moderators').push({"approve": true})
     }

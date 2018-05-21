@@ -20,7 +20,7 @@ import ReactNative, {
   Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
 } from 'react-native'
 import client, {Color} from '@doubledutch/rn-client'
-import {thumbsup} from './images'
+import {thumbsup, checkcircle, deletecircle} from './images'
 
 export default class MyList extends Component {
     constructor(props){
@@ -28,14 +28,13 @@ export default class MyList extends Component {
         this.newVotes = this.newVotes.bind(this)
         this.state = {
           anom: false,
-          showMessage: false
+          showMessage: false,
+          openAdminHeader: false
         }
     }
 
   render() {
-    const showAnswer = this.props.showAnswer
-    const showRecent = this.props.showRecent
-    const moderator = this.props.moderator
+    const { showAnswer, showRecent, moderator, isAdmin } = this.props
     let newQuestions = this.props.questions
 
     if (showAnswer === true){
@@ -64,110 +63,57 @@ export default class MyList extends Component {
       renderItem={({item}) => {
         if (moderator.length > 0){
           if (moderator[0].approve !== true && item.answered === false) {
-            return(
-              <View style={s.listContainer}>
-                {this.renderVoteButton(item)}
-                <View style={s.rightContainer}>
-                  <Text style={s.questionText}>{item.text}</Text>
-                  {item.anom === false &&
-                  <Text style={s.nameText}>
-                    -{item.creator.firstName} {item.creator.lastName}
-                  </Text>
-                  }
-                  {item.anom === true &&
-                  <Text style={s.nameText}>
-                    -Anonymous
-                  </Text>
-                  }
-                </View>
-              </View>
-            )
+            return this.renderCell(item)
           }
           if (moderator[0].approve === true && item.approve === true && item.answered === false){
-              return(
-                <View style={s.listContainer}>
-                  {this.renderVoteButton(item)}
-                  <View style={s.rightContainer}>
-                    <Text style={s.questionText}>{item.text}</Text>
-                    {item.anom === false &&
-                    <Text style={s.nameText}>
-                      -{item.creator.firstName} {item.creator.lastName}
-                    </Text>
-                    }
-                    {item.anom === true &&
-                    <Text style={s.nameText}>
-                      -Anonymous
-                    </Text>
-                    }
-                  </View>
-                </View>
-              )
+            return this.renderCell(item)
           }
           else {
             if (item.answered === true){
-              return (
-              <View style={s.listContainer}>
-                {this.renderVoteButton(item)}
-                <View style={s.rightContainer}>
-                  <Text style={s.questionText}>{item.text}</Text>
-                  {item.anom === false &&
-                  <Text style={s.nameText}>
-                    -{item.creator.firstName} {item.creator.lastName}
-                  </Text>
-                  }
-                  {item.anom === true &&
-                  <Text style={s.nameText}>
-                    -Anonymous
-                  </Text>
-                  }
-                </View>
-              </View>
-              )
+               return this.renderCell(item)
             }
           }
         }
         else {
-          return (
-            <View style={s.listContainer}>
-              {this.renderVoteButton(item)}
-              <View style={s.rightContainer}>
-                <Text style={s.questionText}>{item.text}</Text>
-                {item.anom === false &&
-                <Text style={s.nameText}>
-                  -{item.creator.firstName} {item.creator.lastName}
-                </Text>
-                }
-                {item.anom === true &&
-                  <Text style={s.nameText}>
-                    -Anonymous
-                  </Text>
-                }
-              </View>
-            </View>
-          )
+          return this.renderCell(item)
         }
       }
-    }
-    />
-  </View>
+      }
+      />
+    </View>
   )
+ }
+
+ renderCell = (item) => {
+   const { isAdmin } = this.props
+   return (
+    <View>
+      <View style={s.listContainer}>
+        {this.state.openAdminHeader ? null : this.renderVoteButton(item)}
+        <View style={s.rightContainer}>
+          <Text style={s.questionText}>{item.text}</Text>
+          {item.anom === false &&
+          <Text style={s.nameText}>
+            -{item.creator.firstName} {item.creator.lastName}
+          </Text>
+          }
+          {item.anom === true &&
+            <Text style={s.nameText}>
+              -Anonymous
+            </Text>
+          }
+        </View>
+      </View>
+      {this.state.openAdminHeader ? this.renderAdminButtons(item) : null}
+    </View>
+   )
  }
 
   renderHeader = (questions) => {
     if (questions.length === 0) {
       return (
         <View>
-          <View style={{height:60}}>
-            <View style={s.buttonContainer}>
-              <View style={s.divider}/>
-              <TouchableOpacity style={s.button1}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
-              <View style={s.dividerSm}/>
-              <TouchableOpacity style={s.button2} onPress={this.props.findOrderDate}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
-              <View style={s.dividerSm}/>
-              <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
-              <View style={s.divider}/>
-            </View>
-          </View>
+          {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
           <View style={{marginTop: 96}}b>
             <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>Be the First to Ask a Question!</Text>
             <TouchableOpacity style={{marginTop: 5, height: 25}} onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 18, color: client.primaryColor}}>Tap here to get started</Text></TouchableOpacity>
@@ -175,60 +121,70 @@ export default class MyList extends Component {
         </View>
       )
     }
-
     if (this.props.showAnswer === true) {
       return (
-      <View style={{height: 60}}>
-        <View style={s.buttonContainer}>
-          <View style={s.divider}/>
-          <TouchableOpacity style={s.button2} onPress={this.props.findOrder}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
-          <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={this.props.findOrderDate}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
-          <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button1}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
-          <View style={s.divider}/>
-        </View> 
-      </View>
+        this.renderHeaderButtons(s.button2, s.button2, s.button1)
       )
     }
     if (this.props.showRecent === false) {
       return (
-      <View style={{height: 60}}>
-        <View style={s.buttonContainer}>
-          <View style={s.divider}/>
-          <TouchableOpacity style={s.button1} ><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
-          <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={this.props.findOrderDate}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
-          <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
-          <View style={s.divider}/>
-        </View>
-      </View>
+        this.renderHeaderButtons(s.button1, s.button2, s.button2)
       )
     }
     if (this.props.showRecent === true) {
       return (
-      <View style={{height: 60}}>
-        <View style={s.buttonContainer}>
-          <View style={s.divider}/>
-          <TouchableOpacity style={s.button2} onPress={this.props.findOrder}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
-          <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button1}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
-          <View style={s.dividerSm}/>
-          <TouchableOpacity style={s.button2} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
-          <View style={s.divider}/>
-        </View>
-      </View>
+        this.renderHeaderButtons(s.button2, s.button1, s.button2)
       )
     }
   }
 
-  renderVoteButton = question => (
-    <TouchableOpacity style={s.leftContainer} onPress={() => this.newVotes(question)}>
-      <Image style={[s.checkmark, question.myVote ? s.checkmarkSelected : null]} source={thumbsup}/>
-      <Text style={s.subText}>{question.score}</Text>
-    </TouchableOpacity>
-  )
+  showAdminPanel = () => {
+    const current = this.state.openAdminHeader
+    this.setState({openAdminHeader: !current})
+  }
+
+  renderHeaderButtons = (x,y,z) => {
+    const {isAdmin} = this.props
+    if (isAdmin) return (
+      <View style={{height: 60}}>
+        <View style={s.buttonContainer}>
+          <TouchableOpacity style={s.squareHeaderButton1} onPress={this.showAdminPanel}><Text style={s.adminDashboardButton}>{this.state.openAdminHeader ? "Hide" : "Show"} Admin Panel</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton2} onPress={this.props.renderFilterSelect}><Text style={s.adminDashboardButtonTitle}>Filters:</Text><Text style={s.adminDashboardButton}></Text></TouchableOpacity>
+        </View>
+      </View>
+    )
+    else return (
+      <View style={{height: 60}}>
+        <View style={s.buttonContainer}>
+          <View style={s.divider}/>
+          <TouchableOpacity style={x} onPress={this.props.findOrder}><Text style={s.dashboardButton}>Popular</Text></TouchableOpacity>
+          <View style={s.dividerSm}/>
+          <TouchableOpacity style={y} onPress={this.props.findOrderDate}><Text style={s.dashboardButton}>Recent</Text></TouchableOpacity>
+          <View style={s.dividerSm}/>
+          <TouchableOpacity style={z} onPress={this.props.showAnswered}><Text style={s.dashboardButton}>Answered</Text></TouchableOpacity>
+          <View style={s.divider}/>
+        </View>
+      </View>
+    )
+  }
+
+  renderAdminButtons = (question) => {
+    return (
+    <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
+      <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> Block</Text></TouchableOpacity>
+      <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20, color:"red"}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> Approve</Text></TouchableOpacity>
+    </View>
+    )
+  }
+
+  renderVoteButton = question => {
+    return (
+      <TouchableOpacity style={s.leftContainer} onPress={() => this.newVotes(question)}>
+        <Image style={[s.checkmark, question.myVote ? s.checkmarkSelected : null]} source={thumbsup}/>
+        <Text style={s.subText}>{question.score}</Text>
+      </TouchableOpacity>
+    )
+  }
 
   newVotes(question){
     this.props.newVote(question)
@@ -241,10 +197,51 @@ const s = ReactNative.StyleSheet.create({
     flex: 1,
     backgroundColor: '#EFEFEF',
   },
+  adminDashboardButton: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: client.primaryColor
+  },
+  adminDashboardButtonRed: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "red"
+  },
+  adminDashboardButtonGreen: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "green"
+  },
+  adminDashboardButtonTitle: {
+    fontSize: 16,
+    color: '#9B9B9B'
+  },
+  // buttonContainer: {
+  //   flex: 1,
+  //   flexDirection: 'row',
+    
+  // },
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
-    
+    backgroundColor: "white",
+    justifyContent: "center"
+  },
+  squareHeaderButton1: {
+    justifyContent: 'center',
+    alignItems: "center",
+    flexDirection: 'row',
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#EFEFEF'
+  },
+  squareHeaderButton2: {
+    justifyContent: 'center',
+    alignItems: "center",
+    flexDirection: 'row',
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#EFEFEF'
   },
 
   modHeader: {
@@ -331,7 +328,7 @@ const s = ReactNative.StyleSheet.create({
     flexDirection: 'row',
     alignItems:'center',
     backgroundColor: 'white',
-    marginBottom: 2,
+    marginTop: 2,
   },
   leftContainer: {
     flexDirection: 'column',

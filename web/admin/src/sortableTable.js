@@ -32,7 +32,7 @@ const reorder = (list, startIndex, endIndex) => {
 const getItemStyle = (draggableStyle, isDragging) => ({
   userSelect: 'none',
   display: 'flex',
-  flexFlow: "row wrap",
+  flexFlow: "nowrap",
   margin: `0px`,
   width: '100%',
   background: isDragging ? 'white' : 'white',

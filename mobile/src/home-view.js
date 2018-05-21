@@ -21,8 +21,10 @@ import ReactNative, {
 } from 'react-native'
 import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
+import firebase from 'firebase'
 import MyList  from './table'
 import CustomModal from './modal'
+import FilterSelect from "./filtersModal"
 Text.defaultProps.allowFontScaling=false
 const fbc = FirebaseConnector(client, 'questionanswer')
 fbc.initializeAppWithSimpleBackend()
@@ -57,7 +59,10 @@ class HomeView extends Component {
       questionAsk: false,
       questionError: "Ask Question",
       topBorder: "#EFEFEF",
-      approve: false
+      approve: false,
+      isAdmin: false,
+      showFilterSelect: false,
+      currentSort: "New",
     }
     this.signin = fbc.signin()
       .then(user => this.user = user)
@@ -71,65 +76,79 @@ class HomeView extends Component {
       const sessRef = fbc.database.public.adminRef('sessions')
       const anomRef = fbc.database.public.adminRef('askAnom') 
 
-      sessRef.on('child_added', data => {
-        this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
-      })
+      const wireListeners = () => {
+        sessRef.on('child_added', data => {
+          this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
+        })
 
-      sessRef.on('child_removed', data => {
-        if (data.key === this.state.session.key) {
-          this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key), session: '', launch: true, modalVisible: true})
-        }
-        else {
-          this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key) })
-        }
-      })
+        sessRef.on('child_removed', data => {
+          if (data.key === this.state.session.key) {
+            this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key), session: '', launch: true, modalVisible: true})
+          }
+          else {
+            this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key) })
+          }
+        })
 
-      sessRef.on('child_changed', data => {
-        var sessions = this.state.sessions
-        for (var i in sessions) {
-          if (sessions[i].key === data.key) {
-            sessions[i].sessionName = data.val().sessionName
-            if (this.state.session.key === data.key) {
-              var newSession = this.state.session
-              newSession.sessionName = data.val().sessionName
-              this.setState({sessions, session: newSession })
+        sessRef.on('child_changed', data => {
+          var sessions = this.state.sessions
+          for (var i in sessions) {
+            if (sessions[i].key === data.key) {
+              sessions[i].sessionName = data.val().sessionName
+              if (this.state.session.key === data.key) {
+                var newSession = this.state.session
+                newSession.sessionName = data.val().sessionName
+                this.setState({sessions, session: newSession })
+              }
+              else {
+                this.setState({sessions})
+              }
+              break;
             }
-            else {
-              this.setState({sessions})
+          }
+        })
+
+        modRef.on('child_added', data => {
+          this.setState({ moderator: [...this.state.moderator, {...data.val(), key: data.key }] })
+        })
+
+        modRef.on('child_changed', data => {
+          var moderator = this.state.moderator
+          for (var i in moderator) {
+            if (moderator[i].key === data.key) {
+              moderator[i].approve = data.val().approve
+              this.setState({moderator})
+              break;
             }
-            break;
           }
-        }
-      })
+        })
+        anomRef.on('child_added', data => {
+          this.setState({ anom: [...this.state.anom, {...data.val(), key: data.key }] })
+        })
 
-      modRef.on('child_added', data => {
-        this.setState({ moderator: [...this.state.moderator, {...data.val(), key: data.key }] })
-      })
-
-      modRef.on('child_changed', data => {
-        var moderator = this.state.moderator
-        for (var i in moderator) {
-          if (moderator[i].key === data.key) {
-            moderator[i].approve = data.val().approve
-            this.setState({moderator})
-            break;
+        anomRef.on('child_changed', data => {
+          var anom = this.state.anom
+          for (var i in anom) {
+            if (anom[i].key === data.key) {
+              anom[i] = data.val()
+              anom[i].key = data.key
+              this.setState({anom})
+            }
           }
+        })
+      }
+      fbc.database.private.adminableUserRef('adminToken').once('value', async data => {
+        const longLivedToken = data.val()
+        if (longLivedToken) {
+          console.log('Attendee appears to be admin.  Logging out and logging in w/ admin token.')
+          await firebase.auth().signOut()
+          client.longLivedToken = longLivedToken
+          await fbc.signinAdmin()
+          console.log('Re-logged in as admin')
+          this.setState({isAdmin: true})
         }
+        wireListeners()
       })
-      anomRef.on('child_added', data => {
-        this.setState({ anom: [...this.state.anom, {...data.val(), key: data.key }] })
-      })
-
-      anomRef.on('child_changed', data => {
-        var anom = this.state.anom
-        for (var i in anom) {
-          if (anom[i].key === data.key) {
-            anom[i] = data.val()
-            anom[i].key = data.key
-            this.setState({anom})
-          }
-        }
-      }) 
     })
   }
 
@@ -149,7 +168,7 @@ class HomeView extends Component {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
         <TitleBar title={titleText} client={client} signin={this.signin} />
-        {this.renderHome()}
+        {this.state.showFilterSelect ? <FilterSelect currentSort={this.state.currentSort}/> : this.renderHome()}
       </KeyboardAvoidingView> 
     )
   }
@@ -208,6 +227,9 @@ class HomeView extends Component {
           findOrderDate = {this.findOrderDate}
           originalOrder = {this.originalOrder}
           newVote = {this.newVote}
+          isAdmin={this.state.isAdmin}
+          changeQuestionStatus={this.changeQuestionStatus}
+          renderFilterSelect={this.renderFilterSelect}
           />
         </View>
         {this.renderModal()}
@@ -360,6 +382,13 @@ class HomeView extends Component {
       this.setState({questionAsk: false, approve: false})
     }
 
+    changeQuestionStatus = (question, variable) => {
+      const time = new Date().getTime()
+      if (variable === "approve" ) fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
+      if (variable === "answer" ) fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
+      if (variable === "block") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true, 'approve': false, 'new': false, 'pin': false})
+    }
+
     originalOrder = (questions) => {
       if (this.state.showRecent === false) {
         this.dateSort(questions)
@@ -376,6 +405,11 @@ class HomeView extends Component {
       questions.sort(function (a,b){
         return b.dateCreate - a.dateCreate
       })
+    }
+
+    renderFilterSelect = () => {
+      const current = this.state.showFilterSelect
+      this.setState({showFilterSelect : !current})
     }
 
     findOrder = () => {

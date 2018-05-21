@@ -17,7 +17,11 @@ export default class App extends PureComponent {
   }
 
   componentDidMount() {
-    fbc.signinAdmin().then(() => this.setState({isSignedIn: true}))
+    fbc.signinAdmin().then(() => {
+      client.getUsers().then(users => {
+        this.setState({allUsers: users, isSignedIn: true})
+      })
+    })
   }
 
   render() {
@@ -25,7 +29,7 @@ export default class App extends PureComponent {
     const qs = parseQueryString()
     switch (qs.page) {
       case 'bigScreen':
-        return <BigScreen fbc={fbc} session={qs.session} sessionName={qs.sessionName}client={client}/>
+        return <BigScreen fbc={fbc} session={qs.session} sessionName={qs.sessionName} client={client} users={this.state.allUsers}/>
       default:
         return <Admin fbc={fbc} />
     }
