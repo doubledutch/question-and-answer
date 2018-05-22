@@ -1,6 +1,6 @@
 {
   "name": "questionanswer",
-  "version": "1.1.0",
+  "version": "0.2.0",
   "baseBundleVersion": "0.46.4",
   "private": true,
   "scripts": {
