@@ -63,6 +63,7 @@ class HomeView extends Component {
       isAdmin: false,
       showFilterSelect: false,
       currentSort: "New",
+      openAdminHeader: false
     }
     this.signin = fbc.signin()
       .then(user => this.user = user)
@@ -168,7 +169,8 @@ class HomeView extends Component {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
         <TitleBar title={titleText} client={client} signin={this.signin} />
-        {this.state.showFilterSelect ? <FilterSelect currentSort={this.state.currentSort}/> : this.renderHome()}
+        {this.state.showFilterSelect ? <FilterSelect currentSort={this.state.currentSort} handleChange={this.handleChange}
+        /> : this.renderHome()}
       </KeyboardAvoidingView> 
     )
   }
@@ -193,15 +195,10 @@ class HomeView extends Component {
       textAlignVertical: 'center'
     }
 
-    const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, launch, showAnswer, session} = this.state
-    var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
-    var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session.key)
-    pinnedQuestions.sort(function (a,b){ 
-      return a.order - b.order
-    })
+    const { sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, launch, showAnswer, session, isAdmin} = this.state
     const sessions = this.state.sessions.filter(item => item.archive !== true)
-    this.originalOrder(otherQuestions)
-    let newQuestions = pinnedQuestions.concat(otherQuestions)
+    var newQuestions = []
+    if (session) newQuestions = this.sortFilter()
     if (this.state.modalVisible === false){
       return(
       <View style={{flex:1}}>
@@ -230,6 +227,9 @@ class HomeView extends Component {
           isAdmin={this.state.isAdmin}
           changeQuestionStatus={this.changeQuestionStatus}
           renderFilterSelect={this.renderFilterSelect}
+          currentSort={this.state.currentSort}
+          showAdminPanel = {this.showAdminPanel}
+          openAdminHeader = {this.state.openAdminHeader}
           />
         </View>
         {this.renderModal()}
@@ -257,6 +257,35 @@ class HomeView extends Component {
         />
       )
     }
+  }
+
+  sortFilter = () => {
+      if (this.state.isAdmin) {
+        const { currentSort, questions, session } = this.state
+        const pinnedQuestions = questions.filter(item => item.pin === true)
+        const otherQuestions = questions.filter(item => item.pin === false)
+        pinnedQuestions.sort(function (a,b){ 
+          return a.order - b.order
+        })
+        this.originalOrder(otherQuestions)
+        var orderedQuestions = pinnedQuestions.concat(otherQuestions)
+        if (currentSort === "Approved" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.block === false && item.answered === false && item.session === session.key)
+        if (currentSort === "Answered" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.answered === true && item.session === session.key)
+        if (currentSort === "Blocked" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.block === true && item.new === false && item.session === session.key)
+        if (currentSort === "New" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.approve === false && item.new === true && item.session === session.key)
+        return orderedQuestions
+      }
+      else {
+        var questions = this.state.questions
+        var pinnedQuestions = questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
+        var otherQuestions = questions.filter(item => item.pin === false && item.block === false && item.session === session.key)
+        pinnedQuestions.sort(function (a,b){ 
+          return a.order - b.order
+        })
+        this.originalOrder(otherQuestions)
+        var newQuestions = pinnedQuestions.concat(otherQuestions)
+        return newQuestions
+      }
   }
 
   showAnswered = () => {
@@ -336,6 +365,10 @@ class HomeView extends Component {
       })
     }
 
+    handleChange = (prop, value) => {
+      this.setState({[prop]: value})
+    }
+
     closeSessionModal = () => {
       this.setState({launch: false})
       this.hideModal()
@@ -348,7 +381,7 @@ class HomeView extends Component {
           modOn = this.state.moderator[0].approve
         }
       }
-      if (this.state.questionAsk && modOn && this.state.approve) {
+      if (this.state.questionAsk && modOn && this.state.approve && this.state.isAdmin === false) {
         setTimeout(() => {
           this.closeConfirm()
           }
@@ -361,7 +394,7 @@ class HomeView extends Component {
         )
       }
 
-      if (this.state.questionAsk && modOn && this.state.approve === false) {
+      if (this.state.questionAsk && modOn && this.state.approve === false && this.state.isAdmin === false) {
         setTimeout(() => {
           this.closeConfirm()
           }
@@ -384,9 +417,14 @@ class HomeView extends Component {
 
     changeQuestionStatus = (question, variable) => {
       const time = new Date().getTime()
-      if (variable === "approve" ) fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
-      if (variable === "answer" ) fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
-      if (variable === "block") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true, 'approve': false, 'new': false, 'pin': false})
+      if (variable === "approve") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
+      if (variable === "answer") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'block': false, 'new': false, 'pin': false, 'lastEdit': time})
+      if (variable === "block") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true,  "answered": false, 'approve': false, 'new': false, 'pin': false, 'lastEdit': time})
+    }
+
+    showAdminPanel = () => {
+      const current = this.state.openAdminHeader
+      this.setState({openAdminHeader: !current})
     }
 
     originalOrder = (questions) => {
@@ -451,7 +489,7 @@ class HomeView extends Component {
           sessionName: this.state.session.sessionName
         })
         .then(() => {
-          this.setState({question: '', anom: false, showError: "white"})
+          this.setState({question: '', showError: "white"})
           setTimeout(() => {
             this.hideModal()
             this.setState({questionAsk: this.state.moderator[0].approve})

@@ -32,7 +32,6 @@ export default class BigScreen extends PureComponent {
     const {backgroundUrl, session} = this.state
     const { client } = this.props
     const color = client
-    console.log(color)
     if (!session) return this.renderNonexistent()
     return (
       <div className="big-screen" style={backgroundUrl ? {backgroundImage: `url(${backgroundUrl})`} : null}>
@@ -68,7 +67,7 @@ export default class BigScreen extends PureComponent {
         })
       })
       fbc.database.public.allRef('questions').child(session).on('child_changed', data => {
-        var questions = this.state.questions
+        const questions = this.state.questions
         for (var i in questions) {
           if (questions[i].key === data.key) {
             var score = questions[i].score

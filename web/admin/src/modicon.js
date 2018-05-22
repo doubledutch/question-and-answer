@@ -24,16 +24,16 @@ export default class ModIcon extends Component {
       if (moderator[0].approve === true){
         return ( 
           <span className="modIcons">
-            <button className="modButton" style={{position:"absolute"}}>ON</button>
-            <button className="modButton2"  style={{marginLeft:"30px", width:"50px"}}onClick={this.props.offApprove}>OFF</button>
+            <button className="modButtonAbs">ON</button>
+            <button className="modButton50Left" onClick={this.props.offApprove}>OFF</button>
           </span>
         )
       }
       else {
         return (
           <span className="modIcons">
-            <button className="modButton2" style={{width:"50px"}} onClick={this.props.onApprove}>ON</button>
-            <button className="modButton" style={{marginLeft:"-10px"}}>OFF</button>
+            <button className="modButton50" onClick={this.props.onApprove}>ON</button>
+            <button className="modButtonLeft">OFF</button>
           </span>
         )
       }
@@ -41,8 +41,8 @@ export default class ModIcon extends Component {
     else {
       return (
         <span className="modIcons">
-          <button className="modButton2" style={{width:"50px"}} onClick={this.props.onApprove}>ON</button>
-          <button className="modButton" style={{marginLeft:"-10px"}}>OFF</button>
+          <button className="modButton50" onClick={this.props.onApprove}>ON</button>
+          <button className="modButtonLeft">OFF</button>
         </span>
       )
     } 

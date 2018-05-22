@@ -20,7 +20,7 @@ import ReactNative, {
   Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
 } from 'react-native'
 import client, {Color} from '@doubledutch/rn-client'
-import {thumbsup, checkcircle, deletecircle} from './images'
+import {thumbsup, checkcircle, deletecircle, checkmark} from './images'
 
 export default class MyList extends Component {
     constructor(props){
@@ -29,13 +29,14 @@ export default class MyList extends Component {
         this.state = {
           anom: false,
           showMessage: false,
-          openAdminHeader: false
         }
     }
 
   render() {
-    const { showAnswer, showRecent, moderator, isAdmin } = this.props
+    const {showRecent, moderator, isAdmin, currentSort } = this.props
+    var showAnswer = this.props.showAnswer
     let newQuestions = this.props.questions
+    if (isAdmin && currentSort === "Answered") showAnswer = true
 
     if (showAnswer === true){
       newQuestions = newQuestions.filter(item => item.answered === true)
@@ -47,8 +48,8 @@ export default class MyList extends Component {
       newQuestions = newQuestions.filter(item => item.answered === false)
     }
 
-    let testQuestions = this.props.questions
-    if (moderator.length > 0){    
+    let testQuestions = newQuestions
+    if (moderator.length > 0 && isAdmin === false){    
       if (moderator[0].approve === true){
         testQuestions = testQuestions.filter(item => item.approve === true)
     }
@@ -57,31 +58,67 @@ export default class MyList extends Component {
   return (
     <View>
       {this.renderHeader(testQuestions)}
-      <FlatList
-      data={newQuestions}
-      ListFooterComponent={<View style={{height: 100}}></View>}
-      renderItem={({item}) => {
-        if (moderator.length > 0){
-          if (moderator[0].approve !== true && item.answered === false) {
-            return this.renderCell(item)
-          }
-          if (moderator[0].approve === true && item.approve === true && item.answered === false){
-            return this.renderCell(item)
-          }
-          else {
-            if (item.answered === true){
-               return this.renderCell(item)
-            }
-          }
-        }
-        else {
-          return this.renderCell(item)
-        }
-      }
-      }
-      />
+      {(isAdmin) ? this.renderAdminList(newQuestions) : this.renderAttendeeList(newQuestions)}
     </View>
   )
+ }
+
+ renderAdminList = (newQuestions) => {
+  const { moderator, currentSort } = this.props
+  return (
+    <FlatList
+    data={newQuestions}
+    ListFooterComponent={<View style={{height: 100}}></View>}
+    renderItem={({item}) => {
+      if (moderator.length > 0 && currentSort === "New"){
+        if (moderator[0].approve !== true && item.answered === false) {
+          return this.renderCell(item)
+        }
+        if (moderator[0].approve === true && item.approve === true && item.answered === false){
+          return this.renderCell(item)
+        }
+        else {
+          if (item.answered === true){
+             return this.renderCell(item)
+          }
+        }
+      }
+      else {
+        return this.renderCell(item)
+      }
+    }
+    }
+    />
+   )
+ }
+
+ renderAttendeeList = (newQuestions) => {
+   const { moderator } = this.props
+   return (
+    <FlatList
+    data={newQuestions}
+    ListFooterComponent={<View style={{height: 100}}></View>}
+    renderItem={({item}) => {
+      if (moderator.length > 0){
+        if (moderator[0].approve !== true && item.answered === false) {
+          return this.renderCell(item)
+        }
+        if (moderator[0].approve === true && item.approve === true && item.answered === false){
+          return this.renderCell(item)
+        }
+        else {
+          if (item.answered === true){
+             return this.renderCell(item)
+          }
+        }
+      }
+      else {
+        return this.renderCell(item)
+      }
+    }
+    }
+    />
+   )
  }
 
  renderCell = (item) => {
@@ -89,7 +126,7 @@ export default class MyList extends Component {
    return (
     <View>
       <View style={s.listContainer}>
-        {this.state.openAdminHeader ? null : this.renderVoteButton(item)}
+        {this.props.openAdminHeader ? null : this.renderVoteButton(item)}
         <View style={s.rightContainer}>
           <Text style={s.questionText}>{item.text}</Text>
           {item.anom === false &&
@@ -104,22 +141,35 @@ export default class MyList extends Component {
           }
         </View>
       </View>
-      {this.state.openAdminHeader ? this.renderAdminButtons(item) : null}
+      {this.props.openAdminHeader ? this.renderAdminButtons(item) : null}
     </View>
    )
  }
 
   renderHeader = (questions) => {
+    const { isAdmin } = this.props
     if (questions.length === 0) {
-      return (
-        <View>
-          {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
-          <View style={{marginTop: 96}}b>
-            <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>Be the First to Ask a Question!</Text>
-            <TouchableOpacity style={{marginTop: 5, height: 25}} onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 18, color: client.primaryColor}}>Tap here to get started</Text></TouchableOpacity>
+      if (isAdmin) {
+        return (
+          <View>
+            {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
+            <View style={{marginTop: 96}}b>
+              <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>No Matching Questions</Text>
+            </View>
           </View>
-        </View>
-      )
+        )
+      }
+      else {
+        return (
+          <View>
+            {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
+            <View style={{marginTop: 96}}b>
+              <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>Be the First to Ask a Question!</Text>
+              <TouchableOpacity style={{marginTop: 5, height: 25}} onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 18, color: client.primaryColor}}>Tap here to get started</Text></TouchableOpacity>
+            </View>
+          </View>
+        )
+      }
     }
     if (this.props.showAnswer === true) {
       return (
@@ -138,18 +188,13 @@ export default class MyList extends Component {
     }
   }
 
-  showAdminPanel = () => {
-    const current = this.state.openAdminHeader
-    this.setState({openAdminHeader: !current})
-  }
-
   renderHeaderButtons = (x,y,z) => {
     const {isAdmin} = this.props
     if (isAdmin) return (
       <View style={{height: 60}}>
         <View style={s.buttonContainer}>
-          <TouchableOpacity style={s.squareHeaderButton1} onPress={this.showAdminPanel}><Text style={s.adminDashboardButton}>{this.state.openAdminHeader ? "Hide" : "Show"} Admin Panel</Text></TouchableOpacity>
-          <TouchableOpacity style={s.squareHeaderButton2} onPress={this.props.renderFilterSelect}><Text style={s.adminDashboardButtonTitle}>Filters:</Text><Text style={s.adminDashboardButton}></Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton1} onPress={this.props.showAdminPanel}><Text style={s.adminDashboardButton}>{this.props.openAdminHeader ? "Hide" : "Show"} Admin Panel</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton2} onPress={this.props.renderFilterSelect}><Text style={s.adminDashboardButtonTitle}>Filters: </Text><Text style={s.adminDashboardButton}> {this.props.currentSort}</Text></TouchableOpacity>
         </View>
       </View>
     )
@@ -169,12 +214,31 @@ export default class MyList extends Component {
   }
 
   renderAdminButtons = (question) => {
-    return (
-    <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
-      <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> Block</Text></TouchableOpacity>
-      <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20, color:"red"}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> Approve</Text></TouchableOpacity>
-    </View>
-    )
+    const { currentSort } = this.props
+    switch(currentSort) {
+      case "New": return (
+      <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
+        <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> Block</Text></TouchableOpacity>
+        <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> Approve</Text></TouchableOpacity>
+      </View>
+      )
+      case "Answered": return (
+        <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
+          <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> Block</Text></TouchableOpacity>
+        </View>
+      )
+      case "Blocked": return (
+        <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
+          <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> UnBlock</Text></TouchableOpacity>
+        </View>
+      )
+      case "Approved": return (
+        <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
+          <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> Block</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "answer")}><Image style={{height: 20, width: 20}} source={checkmark}/><Text style={s.adminDashboardButtonBlue}> Answer</Text></TouchableOpacity>
+        </View>
+      )
+    }
   }
 
   renderVoteButton = question => {
@@ -205,22 +269,22 @@ const s = ReactNative.StyleSheet.create({
   adminDashboardButtonRed: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "red"
+    color: "#CC6060"
   },
   adminDashboardButtonGreen: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "green"
+    color: "#8AB952"
+  },
+  adminDashboardButtonBlue: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#4A90E2"
   },
   adminDashboardButtonTitle: {
     fontSize: 16,
     color: '#9B9B9B'
   },
-  // buttonContainer: {
-  //   flex: 1,
-  //   flexDirection: 'row',
-    
-  // },
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',

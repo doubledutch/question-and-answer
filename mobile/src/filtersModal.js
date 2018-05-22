@@ -29,7 +29,7 @@ export default class FilterSelect extends Component {
       <View style={s.table}>
         {this.state.sortList.map((item, i) => {
           return (
-            <TouchableOpacity style={s.row} key={i} onPress={((item === this.props.currentSort) ? null : () => this.props.sortTopics(item))}><Text style={((item === this.props.currentSort) ? s.rowTextHighlight: s.rowText)}>{item}</Text></TouchableOpacity>
+            <TouchableOpacity style={s.row} key={i} onPress={((item === this.props.currentSort) ? null : () => this.props.handleChange("currentSort", item))}><Text style={((item === this.props.currentSort) ? s.rowTextHighlight: s.rowText)}>{item}</Text></TouchableOpacity>
           )
         })}
       </View>
@@ -39,7 +39,7 @@ export default class FilterSelect extends Component {
   topicsHeader = () => {
     return (
       <View style={s.buttonContainer}>
-        <TouchableOpacity onPress={() => this.props.handleChange("showSort", false)}><Text style={s.closeButton}>X</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.handleChange("showFilterSelect", false)}><Text style={s.closeButton}>X</Text></TouchableOpacity>
         <Text style={s.title}>Sort</Text>
         <Text style={{width: 25}}></Text>
       </View>

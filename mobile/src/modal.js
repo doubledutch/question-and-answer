@@ -27,7 +27,7 @@ export default class CustomModal extends Component {
     super(props)
     this.state = {
       question: '', 
-      anom: false,
+      anomStatus: false,
       color: 'white', 
       borderColor: '#EFEFEF',
       inputHeight: 0,
@@ -46,9 +46,9 @@ export default class CustomModal extends Component {
     this.props.selectSession(session)
   }
 
-  makeQuestion = (question, anom) => {
-    this.props.createSharedTask(question, anom)
-    this.setState({question: '', anom: false})
+  makeQuestion = (question, anomStatus) => {
+    this.props.createSharedTask(question, anomStatus)
+    this.setState({question: ''})
   }
 
   render() {
@@ -139,7 +139,7 @@ export default class CustomModal extends Component {
               }
 
             </View>
-            <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anom)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
+            <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anomStatus)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
           </View>
           <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
         </View>
@@ -148,7 +148,7 @@ export default class CustomModal extends Component {
   }
 
   renderAnomIcon = () => {
-    if (this.state.anom) {
+    if (this.state.anomStatus) {
       return (
         <TouchableOpacity onPress={() => this.makeTrue()}><Image style={s.checkButton} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_active.png"}}/></TouchableOpacity>
       )
@@ -166,18 +166,18 @@ export default class CustomModal extends Component {
   };
 
   makeTrue() {
-    if (this.state.anom === false){
-      this.setState({anom: true, color: 'black'})
+    if (this.state.anomStatus === false){
+      this.setState({anomStatus: true, color: 'black'})
     }
-    if (this.state.anom === true){
-      this.setState({anom: false, color: 'white'})
+    if (this.state.anomStatus === true){
+      this.setState({anomStatus: false, color: 'white'})
     }
   }
 
   updateList = (value) => {
-    var queryText = value.toLowerCase()
+    const queryText = value.toLowerCase()
     if (queryText.length > 0){
-      var queryResult=[];
+      var queryResult = [];
       this.props.sessions.forEach(function(content){
         var title = content.sessionName
         if (title) {
@@ -217,15 +217,15 @@ export default class CustomModal extends Component {
         <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
           <Text style={s.modHeader}> Please confirm your session</Text>
           <View style={{backgroundColor: '#9B9B9B', padding: 10}}>
-          <View style={{flexDirection: "row", backgroundColor: "#FFFFFF", borderBottomColor: "#b7b7b7", borderBottomWidth: 1, borderRadius: 5, height: 40}}>
-            <TouchableOpacity style={s.circleBoxMargin}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-            <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Search"
-              value={this.state.session}
-              onChangeText={session => this.updateList(session)} 
-              maxLength={25}
-              placeholderTextColor="#9B9B9B"
-            />
-          </View>
+            <View style={{flexDirection: "row", backgroundColor: "#FFFFFF", borderBottomColor: "#b7b7b7", borderBottomWidth: 1, borderRadius: 5, height: 40}}>
+              <TouchableOpacity style={s.circleBoxMargin}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+              <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Search"
+                value={this.state.session}
+                onChangeText={session => this.updateList(session)} 
+                maxLength={25}
+                placeholderTextColor="#9B9B9B"
+              />
+            </View>
           </View>
         </View >
       )

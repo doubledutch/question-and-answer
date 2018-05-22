@@ -31,16 +31,7 @@ export default class AllAttendees extends PureComponent {
 
   componentDidMount() {
     this.searchAttendees(this.state.search)
-    // this.downloadUserData(this.state.id, this.props.content)
-    // this.setState({content: this.props.content})
   }
-
-  // componentWillReceiveProps(nextProps){
-  //   if (this.props.content !== nextProps.content){
-  //     // this.downloadUserData(this.state.id, nextProps.content)
-  //     this.setState({content: nextProps.content})
-  //   }
-  // }
 
   searchAttendees = debounce(query => {
     this.lastSearch = query

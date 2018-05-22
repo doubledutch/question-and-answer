@@ -19,7 +19,6 @@ import './App.css'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import CustomCell from './cell'
 import CustomButtons from './buttons';
-import ReactTooltip from 'react-tooltip'
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {

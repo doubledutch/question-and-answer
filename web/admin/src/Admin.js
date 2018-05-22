@@ -236,7 +236,7 @@ export default class Admin extends Component {
       </div>
       <div className="container">
         {this.renderLeftHeader()}
-        <div style={{display: "flex", flex: 1, height: 700}}>
+        <div className="questionsContainer">
           {this.renderLeft(newQuestions, time, sessions)}
           {this.renderRight(newQuestions, time, pinnedQuestions)}
         </div>
@@ -361,6 +361,7 @@ export default class Admin extends Component {
   renderLeftHeader = () => {
     const sample = {value: "All", label: "All", className: "dropdownText"}
     const sessions = []
+    const sessionName = this.state.currentSession ? this.state.currentSession.sessionName : ""
     sessions.push(sample)
     this.state.sessions.forEach(session => sessions.push(Object.assign({}, {value: session.key, label: session.sessionName, className: "dropdownText"})))
     return (
@@ -369,7 +370,7 @@ export default class Admin extends Component {
         <Select
           className="dropdownMenu" 
           name="session"
-          value={this.state.currentSession}
+          value={sessionName}
           onChange={this.handleSessionChange}
           clearable={false}
           options={sessions}
@@ -421,7 +422,7 @@ export default class Admin extends Component {
               return (
                 <li className='cellBox' key={task.key}>
                   <CustomCell task = {task} difference = {difference} />
-                  <CustomButtons answered = {true} blockQuestion = {this.blockQuestion} />
+                  <CustomButtons task = {task} answered = {true} blockQuestion = {this.blockQuestion} />
                 </li>
               )
             }) }
@@ -680,7 +681,8 @@ export default class Admin extends Component {
   }
 
   handleSessionChange = (selected) => {
-    if (selected) this.setState({session: selected.value, currentSession: selected});
+    const currentSession = this.state.sessions.find(session => session.key === selected.value)
+    if (selected) this.setState({session: selected.value, currentSession});
   }
 
   clearValue = (e) => {
@@ -759,7 +761,7 @@ export default class Admin extends Component {
   }
 
   blockQuestion = (question) => {
-    this.props.fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true, 'approve': false, 'new': false, 'pin': false})
+    this.props.fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true, "answered": false, 'approve': false, 'new': false, 'pin': false})
   }
 
   answerAll = () => {

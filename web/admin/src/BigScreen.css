@@ -1,5 +1,4 @@
 .big-screen {
-  font-size: 3vh;
   height: 100vh;
   width: 100vw;
   background: url(./background.png);
@@ -8,14 +7,7 @@
   flex-flow: column wrap;
   justify-content: center;
   align-items: center;
-  font: 400 14px -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-.bigScreenCell{
-  background-color: white;
-  padding: 20px;
-  margin: 20px 50px;
-  border-radius: 5px;
+  font: 400 2vh -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .cellName {
@@ -37,7 +29,7 @@
   overflow: auto;
 }
 .big-screen .box-content {
-  padding: 2vh 3vw;
+  padding: 2vh 4vh;
   margin: 2vh 1vh;
   display: flex;
   flex-direction: column;
