@@ -339,13 +339,6 @@ class HomeView extends Component {
           }))
         })
       })
-
-      // const score = questions[i].score
-      // var newObject = questions[i]
-      // const newQuestions = questions.filter(x => x.key !== data.key)
-      // newObject = data.val()
-      // newObject.score = score
-      // this.setState({ questions: [...newQuestions, {...newObject, key: data.key }] }) 
       
       fbc.database.public.allRef('questions').child(session.key).on('child_changed', data => {
         var questions = this.state.questions
