@@ -70,12 +70,11 @@ export default class BigScreen extends PureComponent {
         const questions = this.state.questions
         for (var i in questions) {
           if (questions[i].key === data.key) {
-            var score = questions[i].score
-            var oldState = questions[i].approve
-            questions[i] = data.val()
-            questions[i].score = score
-            questions[i].key = data.key
-            this.setState({questions})
+            const score = questions[i].score
+            const newQuestions = questions.filter(x => x.key !== data.key)
+            var newObject = data.val()
+            newObject.score = score
+            this.setState({ questions: [...newQuestions, {...newObject, key: data.key }] })   
             break
           }
         }
@@ -93,8 +92,8 @@ export default class BigScreen extends PureComponent {
   }
 
   renderTable = (session) => {
-    var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === this.props.session)
-    var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === this.props.session)
+    var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.approve && item.block === false && item.answered === false && item.session === this.props.session)
+    var otherQuestions = this.state.questions.filter(item => item.pin === false && item.approve && item.block === false && item.answered === false && item.session === this.props.session)
     pinnedQuestions.sort(function (a,b){ 
       return a.order - b.order
     })
@@ -125,6 +124,12 @@ export default class BigScreen extends PureComponent {
     if (this.state.showRecent === true) {
       this.dateSort(questions)
     }
+  }
+
+  dateSort = (questions) => {
+    questions.sort(function (a,b){
+      return b.dateCreate - a.dateCreate
+    })
   }
 
   renderNonexistent = () => <div className="big-screen"><div className="box box-content">This session has not been initialized for viewing</div></div>

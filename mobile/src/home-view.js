@@ -339,22 +339,30 @@ class HomeView extends Component {
           }))
         })
       })
+
+      // const score = questions[i].score
+      // var newObject = questions[i]
+      // const newQuestions = questions.filter(x => x.key !== data.key)
+      // newObject = data.val()
+      // newObject.score = score
+      // this.setState({ questions: [...newQuestions, {...newObject, key: data.key }] }) 
+      
       fbc.database.public.allRef('questions').child(session.key).on('child_changed', data => {
         var questions = this.state.questions
         for (var i in questions) {
           if (questions[i].key === data.key) {
-            var score = questions[i].score
-            var myVote = questions[i].myVote
-            var oldState = questions[i].approve
-            questions[i] = data.val()
-            questions[i].score = score
-            questions[i].myVote = myVote
-            questions[i].key = data.key
+            const score = questions[i].score
+            const myVote = questions[i].myVote
+            const oldState = questions[i].approve
+            const newQuestions = questions.filter(x => x.key !== data.key)
+            var newObject = data.val()
+            newObject.score = score
+            newObject.myVote = myVote
             if (data.val().creator.id === client.currentUser.id && oldState !== data.val().approve){
-              this.setState({questions, approve: true, questionAsk: true})
+              this.setState({questions: [...newQuestions, {...newObject, key: data.key }], approve: true, questionAsk: true})
             }
             else {
-              this.setState({questions})
+              this.setState({questions: [...newQuestions, {...newObject, key: data.key }]})
             }
             break
           }
