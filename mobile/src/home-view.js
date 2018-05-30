@@ -259,8 +259,8 @@ class HomeView extends Component {
   }
 
   sortFilter = () => {
+    const { currentSort, questions, session } = this.state
       if (this.state.isAdmin) {
-        const { currentSort, questions, session } = this.state
         const pinnedQuestions = questions.filter(item => item.pin === true)
         const otherQuestions = questions.filter(item => item.pin === false)
         pinnedQuestions.sort(function (a,b){ 
@@ -275,7 +275,6 @@ class HomeView extends Component {
         return orderedQuestions
       }
       else {
-        var questions = this.state.questions
         var pinnedQuestions = questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
         var otherQuestions = questions.filter(item => item.pin === false && item.block === false && item.session === session.key)
         pinnedQuestions.sort(function (a,b){ 
