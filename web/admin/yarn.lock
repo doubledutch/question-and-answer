@@ -30,10 +30,14 @@
     firebase "^4.10.0"
     jest "^22.4.3"
 
-"@doubledutch/react-components@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@doubledutch/react-components/-/react-components-0.0.8.tgz#48e0b1607ae142d55125e237a141d9c7d9d0c920"
+"@doubledutch/react-components@0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@doubledutch/react-components/-/react-components-0.0.10.tgz#ae2d3e0385ae2cc0a4e9ee786d7caaf4f513fc9c"
   dependencies:
+    "@fortawesome/fontawesome" "^1.1.8"
+    "@fortawesome/fontawesome-free-solid" "^5.0.13"
+    "@fortawesome/react-fontawesome" "^0.0.20"
+    lodash.debounce "^4.0.8"
     react "^16.4.0"
     react-dom "^16.3.2"
 
@@ -5021,6 +5025,10 @@ lodash.cond@^4.3.0:
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/lodash.cond/-/lodash.cond-4.5.2.tgz#f471a1da486be60f6ab955d17115523dd1d255d5"
 
+lodash.debounce@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
+
 lodash.defaults@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/lodash.defaults/-/lodash.defaults-4.2.0.tgz#d09178716ffea4dde9e5fb7b37f6f0802274580c"
@@ -6296,17 +6304,9 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.5.8:
+prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.6.0:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
-  dependencies:
-    fbjs "^0.8.16"
-    loose-envify "^1.3.1"
-    object-assign "^4.1.1"
-
-prop-types@^15.6.0:
-  version "15.6.0"
-  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.3.1"

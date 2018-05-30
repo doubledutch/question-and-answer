@@ -6,7 +6,7 @@
   "dependencies": {
     "@doubledutch/admin-client": "^1.2.0",
     "@doubledutch/firebase-connector": "^3.4.3",
-    "@doubledutch/react-components": "^0.0.8",
+    "@doubledutch/react-components": "0.0.10",
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "@fortawesome/react-fontawesome": "^0.0.20",
