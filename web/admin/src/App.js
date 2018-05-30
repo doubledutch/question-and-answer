@@ -31,7 +31,7 @@ export default class App extends PureComponent {
       case 'bigScreen':
         return <BigScreen fbc={fbc} session={qs.session} sessionName={qs.sessionName} client={client} users={this.state.allUsers}/>
       default:
-        return <Admin fbc={fbc} />
+        return <Admin fbc={fbc} attendees={this.state.allUsers}/>
     }
   }
 }

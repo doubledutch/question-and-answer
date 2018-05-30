@@ -29,8 +29,8 @@ import CustomButtons from './buttons'
 import SortableTable from './sortableTable'
 import PresentationDriver from './PresentationDriver'
 import SessionBox from './SessionBox'
-import AllAttendees from './AllAttendees'
 import Select from 'react-select';
+import {AttendeeSelector, TextInput} from '@doubledutch/react-components'
 import 'react-select/dist/react-select.css';
 import {openTab} from './utils'
 
@@ -265,18 +265,35 @@ export default class Admin extends Component {
           <input type="text" value={backgroundUrl} onChange={this.onBackgroundUrlChange} placeholder="Custom background image URL. Suggested at least 700px high and wide." className="background-url" />
         </div>
       </div> }
-      <div className="container">
-        <AllAttendees
-          setAdmin={this.setAdmin}
-          admins={this.state.admins}
-          getAttendees={this.getAttendees}
-          allUsers={this.props.allUsers}
-          fbc={this.props.fbc} 
-          hidden={this.state.hideAdmins}
-          hideSection={this.hideSection} />
+      <div className="containerSmall">
+        {this.renderAdminSelect()}
       </div>
     </div>
     )
+  }
+
+
+  renderAdminSelect = () => {
+    return (
+      <div style={{marginRight: 20, marginBottom: 20}}>
+          <div className="cellBoxTop">
+            <h2>Settings</h2>
+            <div style={{flex:1}}/>
+            <button className="hideButton" onClick={() => this.hideSection("Admins")}>Hide Section</button>
+          </div>
+          { this.state.hideAdmins ? null : <AttendeeSelector 
+            client={client}
+            searchTitle="Select Admins"
+            selectedTitle="Current Admins"
+            onSelected={this.onAdminSelected}
+            onDeselected={this.onAdminDeselected}
+            selected={this.props.attendees.filter(a => this.isAdmin(a.id))} /> }
+      </div>
+    )
+  }
+
+  isAdmin(id) {
+    return this.state.admins.includes(id)
   }
 
   getAttendees = query => client.getAttendees(query)
@@ -469,6 +486,17 @@ export default class Admin extends Component {
     } else {
       tokenRef.remove()
     }
+  }
+
+  onAdminSelected = attendee => {
+    const tokenRef = this.props.fbc.database.private.adminableUsersRef(attendee.id).child('adminToken')
+    this.setState()
+    this.props.fbc.getLongLivedAdminToken().then(token => tokenRef.set(token))
+  }
+
+  onAdminDeselected = attendee => {
+    const tokenRef = this.props.fbc.database.private.adminableUsersRef(attendee.id).child('adminToken')
+    tokenRef.remove()
   }
 
   onDragEnd = (result) =>{
