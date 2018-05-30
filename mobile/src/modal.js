@@ -38,7 +38,7 @@ export default class CustomModal extends Component {
   }
 
   modalClose() {
-    this.setState({anom: false, color: 'white'})
+    this.setState({anomStatus: false, color: 'white'})
     this.props.hideModal()
   }
 

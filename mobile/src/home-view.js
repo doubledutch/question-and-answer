@@ -49,7 +49,6 @@ class HomeView extends Component {
       showError: "white", 
       newUpdate: false, 
       modalVisible: true, 
-      anom: false, 
       color: 'white', 
       height: 20, 
       newValue: '', 
