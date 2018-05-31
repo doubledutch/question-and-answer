@@ -466,10 +466,6 @@ const s = ReactNative.StyleSheet.create({
     fontSize: 18,
     color: '#9B9B9B',
   },
-  whiteText: {
-    fontSize: 18,
-    color: 'white',
-  },
   radio: {
     height: 20,
     width: 20,
