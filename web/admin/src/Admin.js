@@ -378,7 +378,7 @@ export default class Admin extends Component {
   renderLeftHeader = () => {
     const sample = {value: "All", label: "All", className: "dropdownText"}
     const sessions = []
-    const sessionName = this.state.currentSession ? this.state.currentSession.sessionName : ""
+    const sessionName = this.state.currentSession ? {value: "", label: this.state.currentSession.sessionName || "", className: "dropdownText"} : sample
     console.log(sessionName)
     sessions.push(sample)
     this.state.sessions.forEach(session => sessions.push(Object.assign({}, {value: session.key, label: session.sessionName, className: "dropdownText"})))
@@ -388,10 +388,13 @@ export default class Admin extends Component {
         <Select
           className="dropdownMenu" 
           name="session"
-          value={"here"}
+          value={sessionName}
+          onSelectResetsInput={false}
+          onBlurResetsInput={false}
           onChange={this.handleSessionChange}
-          // clearable={false}
+          clearable={false}
           options={sessions}
+          disabled={this.state.disabled}
         />
         <p className='boxTitleBoldMargin'>Moderation:   </p>
         <ModIcon moderator = {this.state.moderator} offApprove = {this.offApprove} onApprove = {this.onApprove} />
@@ -679,10 +682,10 @@ export default class Admin extends Component {
   }
 
   handleSessionChange = (selected) => {
-    console.log(selected.value)
-    const currentSession = this.state.sessions.find(session => session.key === selected.value)
-    console.log(currentSession)
-    if (selected) this.setState({session: selected.value, currentSession});
+    if (selected) {
+      const currentSession = this.state.sessions.find(session => session.key === selected.value)
+      this.setState({session: selected.value, currentSession})
+    }
   }
 
   clearValue = (e) => {

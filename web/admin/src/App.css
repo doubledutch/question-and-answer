@@ -406,6 +406,10 @@ html, body, input, button, select, form{
   width: 200px;
 }
 
+/* .dropdownMenu input {
+  color: black;
+} */
+
 .Select-control {
   background-color: red;
 }
