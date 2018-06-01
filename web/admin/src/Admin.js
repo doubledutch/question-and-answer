@@ -19,6 +19,7 @@ import './App.css'
 import { CSVLink } from 'react-csv'
 import client from '@doubledutch/admin-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
+import moment from 'moment'
 import CustomModal from './modal'
 import CustomCell from './cell'
 import ModIcon from './modicon'
@@ -221,7 +222,6 @@ export default class Admin extends Component {
 
   render() {
     const { questions, sessions, backgroundUrl, launchDisabled } = this.state 
-    const time = new Date().getTime()
     questions.sort(function (a,b){
       return b.dateCreate - a.dateCreate
     })
@@ -237,8 +237,8 @@ export default class Admin extends Component {
       <div className="container">
         {this.renderLeftHeader()}
         <div className="questionsContainer">
-          {this.renderLeft(newQuestions, time, sessions)}
-          {this.renderRight(newQuestions, time, pinnedQuestions)}
+          {this.renderLeft(newQuestions, sessions)}
+          {this.renderRight(newQuestions, pinnedQuestions)}
         </div>
         <div>
         <CSVLink className="csvButton" data={this.questionsInCurrentSession(questions).map(questionForCsv)} filename={"questions.csv"}>Export Questions</CSVLink>
@@ -315,7 +315,7 @@ export default class Admin extends Component {
     )
   }
 
-  renderLeft = (questions, time, sessions) => {
+  renderLeft = (questions, sessions) => {
     var totalQuestions = questions.filter(item => item.approve === false && item.new === true)
     if (totalQuestions === undefined){
       totalQuestions = ['']
@@ -329,7 +329,7 @@ export default class Admin extends Component {
         <span className="questionBox">
           <ul className='listBox'>
             { questions.filter(task => task.new).map(task => {
-              var difference = this.doDateMath(task.dateCreate, time)
+              var difference = doDateMath(task.dateCreate)
               return (
                 <li className='cellBox' key={task.key}>
                   <CustomCell task = {task} difference = {difference}
@@ -379,6 +379,7 @@ export default class Admin extends Component {
     const sample = {value: "All", label: "All", className: "dropdownText"}
     const sessions = []
     const sessionName = this.state.currentSession ? this.state.currentSession.sessionName : ""
+    console.log(sessionName)
     sessions.push(sample)
     this.state.sessions.forEach(session => sessions.push(Object.assign({}, {value: session.key, label: session.sessionName, className: "dropdownText"})))
     return (
@@ -387,9 +388,9 @@ export default class Admin extends Component {
         <Select
           className="dropdownMenu" 
           name="session"
-          value={sessionName}
+          value={"here"}
           onChange={this.handleSessionChange}
-          clearable={false}
+          // clearable={false}
           options={sessions}
         />
         <p className='boxTitleBoldMargin'>Moderation:   </p>
@@ -402,14 +403,14 @@ export default class Admin extends Component {
     )
   }
 
-  renderBlocked = (questions, time) => {
+  renderBlocked = (questions) => {
     return(
     <span className="questionBox2">
       { questions.filter(task => task.new === false && task.block === true).length
         ? <ul className="listBox">
             { questions.filter(task => task.block).map(task => {
               var block = true
-              var difference = this.doDateMath(task.dateCreate, time)
+              var difference = doDateMath(task.dateCreate)
               return (
                 <li className='cellBox' key={task.key}>
                   <CustomCell task = {task} difference = {difference} />
@@ -426,7 +427,7 @@ export default class Admin extends Component {
   }
 
 
-  renderAnswered = (questions, time) => {
+  renderAnswered = (questions) => {
     questions.sort(function (a,b){
       return b.lastEdit - a.lastEdit
     })
@@ -435,7 +436,7 @@ export default class Admin extends Component {
       { questions.filter(task => task.answered === true).length
         ? <ul className="listBox">
             { questions.filter(task => task.answered).map(task => {
-              var difference = this.doDateMath(task.dateCreate, time)
+              var difference = doDateMath(task.dateCreate)
               return (
                 <li className='cellBox' key={task.key}>
                   <CustomCell task = {task} difference = {difference} />
@@ -451,12 +452,12 @@ export default class Admin extends Component {
   }
   
 
-  renderPinned = (questions, time) => {
+  renderPinned = (questions) => {
     var questions = questions.filter(question => question.answered === false && question.block === false)
     if (this.state.session !== "All"){
       return (
         <span>
-          <SortableTable items={questions} origItems = {this.state.questions} time={time} onDragEnd = {this.onDragEnd} 
+          <SortableTable items={questions} origItems = {this.state.questions} onDragEnd = {this.onDragEnd} 
             makeApprove = {this.makeApprove} blockQuestion = {this.blockQuestion} canPin = {this.canPin} makePin = {this.makePin} makeAnswer = {this.makeAnswer}/>
         </span>
       )
@@ -465,7 +466,7 @@ export default class Admin extends Component {
    questions.map(task => {
     var pin = true
     var approve = true
-    var difference = this.doDateMath(task.dateCreate, time)
+    var difference = doDateMath(task.dateCreate)
     var origQuestion = this.state.questions.find(question => question.key === task.key)
     task.score = origQuestion.score || 0
     return (
@@ -523,7 +524,7 @@ export default class Admin extends Component {
     </div>
   )
 
-  renderRight = (questions, time, pinnedQuestions) => {
+  renderRight = (questions, pinnedQuestions) => {
     if (this.state.moderator.length > 0) {
       if (this.state.moderator[0].approve === false) {
         if (this.state.showBlock === false && this.state.showAnswer === false) {
@@ -535,9 +536,9 @@ export default class Admin extends Component {
               <span className="questionBox2">
                 { questions.filter(task => task.block === false && task.answered === false).length
                   ? <ul className="listBox">
-                      {this.renderPinned(pinnedQuestions, time)}
+                      {this.renderPinned(pinnedQuestions)}
                       { questions.filter(t => !t.block && !t.pin && !t.answered).map(task => {
-                        var difference = this.doDateMath(task.dateCreate, time)
+                        var difference = doDateMath(task.dateCreate)
                         return (
                           <li className='cellBox' key={task.key}>
                             <CustomCell task = {task} difference = {difference} />
@@ -558,7 +559,7 @@ export default class Admin extends Component {
           <div className="questionContainer">
             <CustomHeaderOff questions = {questions} handleClick = {this.handleClick} handleAnswer = {this.handleAnswer}
             answerAll = {this.answerAll} showBlock = {this.state.showBlock} showAnswer = {this.state.showAnswer} handleApproved = {this.handleApproved} />
-            {this.renderAnswered(questions, time)}
+            {this.renderAnswered(questions)}
           </div>
           )
         }
@@ -568,7 +569,7 @@ export default class Admin extends Component {
           <div className="questionContainer">
             <CustomHeaderOff questions = {questions} handleClick = {this.handleClick} handleAnswer = {this.handleAnswer}
             answerAll = {this.answerAll} showBlock = {this.state.showBlock} showAnswer = {this.state.showAnswer} handleApproved = {this.handleApproved} />
-            {this.renderBlocked(questions, time)}
+            {this.renderBlocked(questions)}
           </div>
           )
         }
@@ -583,10 +584,10 @@ export default class Admin extends Component {
               <span className="questionBox2">
                 { questions.filter(task => task.block === false && task.answered === false && task.approve === true && task.new === false).length
                   ? <ul className="listBox">
-                      { this.renderPinned(pinnedQuestions, time) }
+                      { this.renderPinned(pinnedQuestions) }
                       { questions.filter(t => t.approve && !t.block && !t.pin && !t.answered).map(task => (
                         <li className='cellBox' key={task.key}>
-                          <CustomCell task = {task} difference = {this.doDateMath(task.dateCreate, time)} />
+                          <CustomCell task = {task} difference = {doDateMath(task.dateCreate)} />
                           <CustomButtons task = {task} approve = {true} makeApprove = {this.makeApprove} blockQuestion = {this.blockQuestion}
                           canPin = {this.canPin} makePin = {this.makePin} makeAnswer = {this.makeAnswer} />
                         </li> )
@@ -604,7 +605,7 @@ export default class Admin extends Component {
           <div className="questionContainer">
             <CustomHeader questions = {questions} handleClick = {this.handleClick} handleAnswer = {this.handleAnswer}
             answerAll = {this.answerAll} showBlock = {this.state.showBlock} showAnswer = {this.state.showAnswer} handleApproved = {this.handleApproved}/>
-            {this.renderAnswered(questions, time)}
+            {this.renderAnswered(questions)}
           </div>
           )
         }
@@ -613,7 +614,7 @@ export default class Admin extends Component {
           <div className="questionContainer">
             <CustomHeader questions = {questions} handleClick = {this.handleClick} handleAnswer = {this.handleAnswer} answerAll = {this.answerAll}
             showBlock = {this.state.showBlock} showAnswer = {this.state.showAnswer} handleApproved = {this.handleApproved} />
-            {this.renderBlocked(questions, time)}
+            {this.renderBlocked(questions)}
           </div>
           )
         }
@@ -625,40 +626,9 @@ export default class Admin extends Component {
         <div className="questionContainer">
           <CustomHeader questions = {questions} handleClick = {this.handleClick} handleAnswer = {this.handleAnswer}
           answerAll = {this.answerAll} showBlock = {this.state.showBlock} showAnswer = {this.state.showAnswer} handleApproved = {this.handleApproved} />
-          {this.renderBlocked(questions, time)}
+          {this.renderBlocked(questions)}
         </div>
       )
-    }
-  }
-
-  doDateMath = (date, time) => {
-    const minutesAgo = Math.floor((time - date) / (1000*60))
-    if (minutesAgo < 60) {
-      if (minutesAgo === 1) {
-        return minutesAgo + " minute ago"
-      }
-      if (minutesAgo > 1) {
-        return minutesAgo + " minutes ago"
-      }
-      else {
-        return "0 minutes ago"
-      }
-    } else if (minutesAgo > 60 && minutesAgo < 1440) {
-      const hoursAgo = Math.floor(minutesAgo / 60) 
-      if (hoursAgo === 1) {
-        return hoursAgo + " hour ago"
-      }
-      if (hoursAgo > 1) {
-        return hoursAgo + " hours ago"
-      }
-    } else if (minutesAgo >= 1440) {
-      const daysAgo = Math.floor(minutesAgo / 1440) 
-      if (daysAgo === 1) {
-        return daysAgo + " day ago"
-      }
-      if (daysAgo > 1) {
-        return daysAgo + " days ago"
-      }
     }
   }
 
@@ -709,7 +679,9 @@ export default class Admin extends Component {
   }
 
   handleSessionChange = (selected) => {
+    console.log(selected.value)
     const currentSession = this.state.sessions.find(session => session.key === selected.value)
+    console.log(currentSession)
     if (selected) this.setState({session: selected.value, currentSession});
   }
 
@@ -853,3 +825,4 @@ function findStatus(item){
   else return "Pending"
 }
 
+const doDateMath = date => ' ' + moment(date).fromNow()

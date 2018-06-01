@@ -4,6 +4,8 @@ import FirebaseConnector from '@doubledutch/firebase-connector'
 import Admin from './Admin'
 import BigScreen from './BigScreen'
 import {parseQueryString} from './utils'
+import '@doubledutch/react-components/lib/base.css'
+
 const fbc = FirebaseConnector(client, 'questionanswer')
 
 fbc.initializeAppWithSimpleBackend()

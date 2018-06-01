@@ -17,6 +17,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import moment from 'moment'
 import CustomCell from './cell'
 import CustomButtons from './buttons';
 
@@ -112,7 +113,7 @@ class SortableTable extends Component {
                 task.score = origQuestion.score || 0
                 var pin = true
                 var approve = true
-                var difference = this.doDateMath(task.dateCreate, this.props.time)
+                var difference = doDateMath(task.dateCreate)
                 return (
                   <li className='cellBox' key={task.key}>
                     {this.renderCell(provided, snapshot, task, i, pin, approve, difference)}
@@ -137,39 +138,9 @@ class SortableTable extends Component {
       </div>
     )
   }
-
-  doDateMath = (date, time) => {
-    const minutesAgo = Math.floor((time - date) / (1000*60))
-    if (minutesAgo < 60) {
-      if (minutesAgo === 1) {
-        return minutesAgo + " minute ago"
-      }
-      if (minutesAgo > 1) {
-        return minutesAgo + " minutes ago"
-      }
-      else {
-        return "0 minutes ago"
-      }
-    } else if (minutesAgo > 60 && minutesAgo < 1440) {
-      const hoursAgo = Math.floor(minutesAgo / 60) 
-      if (hoursAgo === 1) {
-        return hoursAgo + " hour ago"
-      }
-      if (hoursAgo > 1) {
-        return hoursAgo + " hours ago"
-      }
-    } else if (minutesAgo >= 1440) {
-      const daysAgo = Math.floor(minutesAgo / 1440) 
-      if (daysAgo === 1) {
-        return daysAgo + " day ago"
-      }
-      if (daysAgo > 1) {
-        return daysAgo + " days ago"
-      }
-    }
-  }
-
 }
+
+const doDateMath = date => ' ' + moment(date).fromNow()
 
 
 export default SortableTable

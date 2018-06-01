@@ -234,7 +234,7 @@ html, body, input, button, select, form{
 }
 
 .pinButton{
-  margin-Top: 10px;
+  /* margin-Top: 10px; */
   border: none;
   padding-right: 10px;
   margin-Left: 0px;
@@ -266,8 +266,6 @@ html, body, input, button, select, form{
   border: none;
   font-size: 14px;
   background-color: white;
-  height: 28px;
-  width: 68px;
   color: #4A90E2;
 }
 
@@ -296,22 +294,10 @@ html, body, input, button, select, form{
 }
 
 .searchBar input {
-  height: 32px;
-  padding: 0px;
-  padding-left: 10px;
-  border-radius: 4px;
-  border: 1px solid #AEAEAE;
-  font-size: 16px;
   width: 200px;
 }
 
 .searchBar--gray input {
-  height: 32px;
-  padding: 0px;
-  padding-left: 10px;
-  border-radius: 5px;
-  border: 1px solid #AEAEAE;
-  font-size: 16px;
   width: 200px;
   background-color: #AEAEAE;
 }
@@ -330,10 +316,6 @@ html, body, input, button, select, form{
   color: #4A90E2;
   border: 1px solid #4A90E2;
   background-color: white;
-  width: 115px;
-  font-size: 14px;
-  height: 37px;
-  border-radius: 5px;
   margin: 2px 20px;
 }
 
@@ -386,7 +368,8 @@ html, body, input, button, select, form{
 .sessionCellTop{
   display: flex;
   flex-direction: row;
-  flex-grow: 1
+  flex-grow: 1;
+  align-items: center;
 }
 
 .sessionCell{
@@ -396,14 +379,11 @@ html, body, input, button, select, form{
 }
 
 .sessionTitle {
-  font-size: 13px;
-  margin-left: 10px;
   display: flex;
   border: none;
-  width: 100%;
-  min-height: 34px;
-  margin-top: 2px;
-  color: #4A4A4A
+  flex: 1;
+  height: 20px;
+  margin: 0px 10px;
 }
 
 
@@ -434,11 +414,11 @@ html, body, input, button, select, form{
   margin-top: 20px;
 }
 
-.dropdownText {
+/* .dropdownText {
   font-size: 14px;
   width: 200px;
   border-color: #CDCDCD;
-}
+} */
 
 h2 {
   font-weight: 300;
@@ -618,17 +598,19 @@ h2 {
   border: none;
   background-color: #4A90E2;
   color: white;
-  height: 30px;
-  width: 40px;
+  height: 40px;
+  width: 60px;
   border-radius: 6px;
+  /* padding: 0px; */
 }
 
 .modButtonAbs{
   border: none;
   background-color: #4A90E2;
   color: white;
-  height: 30px;
-  width: 40px;
+  height: 40px;
+  width: 60px;
+  /* padding: 0px; */
   border-radius: 6px;
   position: absolute;
 }
@@ -637,29 +619,33 @@ h2 {
   border: none;
   background-color: #4A90E2;
   color: white;
-  height: 30px;
-  width: 40px;
+  height: 40px;
+  width: 60px;
   border-radius: 6px;
   margin-left: -10px;
+  /* padding: 0px; */
 }
 
 .modButton50Left{
   background-color: rgba(74,144,226, 0.3);
   border: 1px solid #4A90E2;
   color: #4A90E2;
-  height: 30px;
+  height: 40px;
   border-radius: 6px;
-  margin-left: 30px;
-  width: 50px;
+  margin-left: 50px;
+  width: 60px;
+  /* padding: 0px; */
 }
+
 
 .modButton50{
   background-color: rgba(74,144,226, 0.3);
   border: 1px solid #4A90E2;
   color: #4A90E2;
-  height: 30px;
+  height: 40px;
   border-radius: 6px;
-  width: 50px;
+  width: 60px;
+  /* padding: 0px; */
 }
 
 .listButton{
@@ -668,8 +654,8 @@ h2 {
   border-bottom-color: #4A90E2;
   border-radius: 0;
   font-size: 14px;
-  height: 25px;
-  margin-top: 0px;
+  color: #4A4A4A;
+  height: 30px;
   white-space: nowrap;
   background-color: #ffffff
 }
@@ -688,7 +674,7 @@ h2 {
   font-size: 14px;
   color: #4A4A4A;
   border-bottom-color: #4A90E2;
-  height: 25px;
+  height: 30px;
   margin-top: 0px;
   white-space: nowrap;
   background-color: #ffffff
@@ -714,7 +700,7 @@ h2 {
 
 .boxTitle{
   font-size: 14px;
-  height: 20px;
+  height: 30px;
   margin-bottom: 5px;
   white-space: nowrap;
   padding-top: 5px;
@@ -737,6 +723,7 @@ h2 {
   white-space: nowrap;
   padding-top: 8px;
   margin-right: 5px;
+  margin-top: 20px;
   font-weight: bold;
 }
 
@@ -787,19 +774,20 @@ h2 {
 .borderlessButton {
   border: none;
   background-color: white;
-  width: 110px;
+  color: #4A90E2;
+  width: 200px;
+  white-space:nowrap
 }
 
 .borderlessButtonSmall {
   border: none;
   background-color: white;
-  width: 40px;
+  color: #4A90E2;
 }
 
 .borderlessButtonMed {
   border: none;
   background-color: white;
-  width: 60px;
 }
 
 .counter {
@@ -838,7 +826,6 @@ h2 {
 .background-url {
   flex: 1;
   width: 90%;
-  height: 40px;
   margin-top: 10px;
   border-radius: 4px;
   border: 1px solid #AEAEAE;
@@ -890,15 +877,15 @@ iframe.big-screen-container {
 }
 
 button.overlay-button {
-  width: 171px;
-  height: 39px;
   border: 1px solid #4A90E2;
-  font-size: 14px;
   background-color: white;
   color: #4A90E2;
+  font-size: 14px;
+  height: 38px;
   border-radius: 5px;
   margin: 0px 0px 0px 20px;
   align-self: center;
+  white-space: nowrap;
 }
 
 .attendee-selector {
