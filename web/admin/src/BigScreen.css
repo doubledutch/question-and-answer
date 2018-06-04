@@ -1,0 +1,147 @@
+.big-screen {
+  height: 100vh;
+  width: 100vw;
+  background: url(./background.png);
+  background-size: cover;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  font: 400 2vh -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.cellName {
+  flex-flow: row wrap;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin: 0em 0em;
+}
+
+.name {
+  padding: 0 1em;
+}
+
+.big-screen .box {
+  display: block;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
+}
+.big-screen .box-content {
+  padding: 2vh 4vh;
+  margin: 2vh 1vh;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 1em;
+  min-height: 5em;
+}
+
+.big-screen .box-icon {
+  height: 1em;
+  width: 1em;
+  padding: 0 0.3em;
+  margin: 0;
+}
+
+.vote {
+  margin: 0;
+  padding: 0;
+}
+
+.big-screen-bottom {
+  background-color: #FAFAFA;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.big-screen h1 {
+  color: #1aaaa0;
+  font-size: 5em;
+  padding: 0;
+  margin: 0 0 0.2em 0;
+  text-align: center;
+}
+
+.question-title {
+  justify-content: space-between;
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 0.4em 0 0 0;
+}
+
+.big-screen .timer-bar {
+  height: 1.5vh;
+  width: 100%;
+  background-color: #f3f3f3;
+  position: relative;
+}
+.big-screen .timer-bar-remaining {
+  height: 100%;
+  right: 0;
+  position: absolute;
+  background-color: #2daaa0;
+}
+.big-screen h2 {
+  font-size: 1.4em;
+  text-align: center;
+  padding: 0.5em 0em;
+  margin: 0;
+}
+
+.big-screen .option {
+  margin-bottom: 2vh;
+  position: relative;
+  font-size: 1.3em;
+  width: 75vh;
+}
+.big-screen .option .option-text-back {
+  border: 0.5vh solid #9b9b9b;
+  height: 10vh;
+  border-radius: 5.5vh;
+  color: #9b9b9b;
+  line-height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+}
+.big-screen .option-text-front {
+  width: 75vh;
+  display: flex;
+  justify-content: space-between;
+}
+.big-screen .option-text-back span {
+  padding: 0 4vh;
+}
+.big-screen .option-text-front span {
+  padding: 0 4.5vh;
+}
+
+.big-screen .option.correct .option-text-back {
+  border-color: #2daaa0;
+  color: #2daaa0;
+}
+
+.big-screen .option-overlay {
+  position: absolute;
+  border-radius: 5.5vh;
+  overflow: hidden;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.big-screen .option .option-overlay > * {
+  border-radius: 5.5vh;
+  height: 11vh;
+  line-height: 11vh;
+  overflow: hidden;
+  background-color: #9b9b9b;
+  color: #fff;
+}
+.big-screen .option.correct .option-overlay > * {
+  background-color: #2daaa0;
+}

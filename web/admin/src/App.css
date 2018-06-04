@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+ :root {
+  font: 400 14px -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #4A4A4A;
+}
+
+html, body, input, button, select, form{
+  font: inherit;
+  color: inherit;
 }
 
  .App-intro {
@@ -26,26 +32,133 @@ body {
 .App {
   padding: 0px;
   margin: 0px;
+  background-color: #FAFAFA;
 }
 
 .avatar {
   width: 40px;
 }
 
-.container {
+.questionsContainer {
   display: flex;
+  flex: 1;
+  height: 700;
+}
+
+.container {
+  height: 850px;
   box-sizing: border-box;
-  height: 600px;
   font-size: 14; 
   margin-left: 0px;
   margin-right: 0px;
+  border-radius: 5px;
+  border: 1px solid #E3ECF8;
+  background-color: #FFFFFF;
+  padding: 20px 0px 0px 20px;
 }
 
+.containerSmall {
+  box-sizing: border-box;
+  font-size: 14;
+  border-radius: 5px;
+  border: 1px solid #E3ECF8;
+  background-color: #FFFFFF;
+  padding: 20px;
+  margin: 20px 0px;
+}
+
+/* Customize the label (the container) */
+.radioContainer {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  margin-right: 30px;
+  cursor: pointer;
+  font-size: 18px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: white;
+}
+
+/* Hide the browser's default radio button */
+.radioContainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: white;
+  border-radius: 50%;
+  border: 1px solid #4A90E2;
+}
+
+/* On mouse-over, add a grey background color */
+.radioContainer:hover input ~ .checkmark {
+  background-color:#EFEFEF;
+}
+
+/* When the radio button is checked, add a blue background */
+.radioContainer input:checked ~ .checkmark {
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.radioContainer input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.radioContainer .checkmark:after {
+  top: 2px;
+  left: 3px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #4A90E2;
+}
+
+
+
+
+
+.containerSmallRow {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  font-size: 14;
+  border-radius: 5px;
+  border: 1px solid #E3ECF8;
+  background-color: #FFFFFF;
+  padding: 20px;
+  margin: 20px 0px;
+}
+
+.topBox {
+  background-color: white;
+  width: 50%;
+  margin-bottom: 20px;
+}
 .questionContainer {
   display: flex;
   flex-flow: row wrap;
+  height: 600px;
   flex-grow: 1;
-  padding-right: 11px;
+  padding-right: 0px;
   width: 50%;
 }
 
@@ -79,8 +192,14 @@ body {
   margin: 0px;
   padding: 0px;
   list-style-type: none;
-  overflow:hidden; 
+  overflow-x:hidden; 
   overflow-y:scroll;
+}
+
+.all-attendees__table {
+  width: 600px;
+  margin-right: 60px;
+  background-color: white;
 }
 
 .cellBox {
@@ -99,6 +218,7 @@ body {
   width: 100%;
   flex-flow: row wrap;
   display: flex;
+  align-items: center;
 }
 
 .cellBoxLeft{
@@ -114,17 +234,16 @@ body {
 }
 
 .pinButton{
-  margin-Top: 10px;
   border: none;
   padding-right: 10px;
   margin-Left: 0px;
-  color:#898989;
+  color: #4A90E2;
   background-color: #ffffff;
 }
 
 .closeButton{
   border: none;
-  font-size: 13px;
+  font-size: 14px;
   background-color: #9b9b9b;
   height: 28px;
   width: 121px;
@@ -132,19 +251,25 @@ body {
   color: white;
 }
 
+.hideButton{
+  color: #4A90E2;
+  border: none;
+  background-color: white;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 2px;
+  float: right;
+}
+
 .smallCloseButton{
   border: none;
-  font-size: 13px;
-  background-color: #D8D8D8;
-  height: 28px;
-  width: 68px;
-  margin-top: 6px;
-  border-radius: 2px;
-  color: #393939;
+  font-size: 14px;
+  background-color: white;
+  color: #4A90E2;
 }
 
 .qaButton{
-  background-color: #009DCD;
+  background-color: #4A90E2;
   border: none;
   color: white;
   font-size: 13px;
@@ -152,14 +277,45 @@ body {
   border-radius: 2px;
 }
 
+.searchBar {
+  margin: 5px;
+  margin-left: 30px;
+  background-color: white;
+}
+
+.searchBar--gray {
+  margin: 5px;
+  margin-left: 30px;
+}
+
+.searchBar input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.searchBar input {
+  width: 200px;
+}
+
+.searchBar--gray input {
+  width: 200px;
+  background-color: #AEAEAE;
+}
+
 .modalButton{
-  background-color: #009DCD;
+  background-color: #4A90E2;
   border: none;
   color: white;
   font-size: 13px;
   height: 28px;
   border-radius: 2px;
   float: right;
+}
+
+.addSessionButton{
+  color: #4A90E2;
+  border: 1px solid #4A90E2;
+  background-color: white;
+  margin: 2px 20px;
 }
 
 .cellBoxText{
@@ -186,25 +342,33 @@ body {
 }
 
 .sessionList {
-  border: 1px solid #CDCDCD;
   padding: 0px;
   background-color: #ffffff;
   list-style: none;
-  overflow:hidden; 
-  overflow-y:scroll;
-  max-height: 200px;
   min-height: 40px;
-  margin-left: 5px;
   box-sizing: border-box;
   list-style-type: none;
   margin-bottom: 0px;
   margin-top: 0px;
 }
 
+.sessionListBox {
+  border-radius: 5px;
+  border: 1px solid #E3ECF8;
+  padding: 0px;
+  background-color: #ffffff;
+  overflow:hidden; 
+  overflow-y:scroll;
+  height: 200px;
+  box-sizing: border-box;
+  margin: 5px 0 0 0;
+}
+
 .sessionCellTop{
   display: flex;
   flex-direction: row;
-  flex-grow: 1
+  flex-grow: 1;
+  align-items: center;
 }
 
 .sessionCell{
@@ -214,14 +378,11 @@ body {
 }
 
 .sessionTitle {
-  font-size: 13px;
-  margin-left: 10px;
   display: flex;
-  color: #393939;
   border: none;
-  width: 100%;
-  min-height: 34px;
-  margin-top: 2px;
+  flex: 1;
+  height: 20px;
+  margin: 0px 10px;
 }
 
 
@@ -234,30 +395,21 @@ body {
 }
 
 .dropdownMenu{
-  margin-left: 5px;
-  margin-top: 15px; 
+  margin: 15px 20px 0px 15px;
+  width: 200px;
 }
+
+.dropdownMenu div {
+  width: 150px;
+}
+
 
 .dropdownTitle{
   margin-top: 20px;
-  font-size: 14px;
-  color: #393939;
 }
 
-.dropdownText{
-  font-size: 14px;
-  height: 30px;
-  width: 115px;
-  color: #393939;
-  border: solid;
-  border-width: 1px;
-  border-color: #CDCDCD;	
-  background: url("icons/session.png");
-  appearance:none;
-  -moz-appearance:none; /* Firefox */
-  -webkit-appearance:none; 
-  text-align: center;
-  padding-right: 20px;
+h2 {
+  font-weight: 300;
 }
 
 .topText{
@@ -266,12 +418,20 @@ body {
   flex-flow: nowrap;
 }
 
+.noPadding {
+  padding: 0px;
+  margin: 10px 0px 0px 0px;
+}
+
 .buttonSpan{
+  width: 100%;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: nowrap;
   flex-grow: 1;
-  margin-right: 40px;
+  margin-right: 15px;
   margin-bottom: 5px;
+  background-color: white;
+  align-items: center;
 }
 
 .buttonSpan2{
@@ -280,8 +440,20 @@ body {
   flex-grow: 1;
   padding: 0px;
   margin-right: 10px;
-  margin-top: 15px;
+  margin-top: 13px;
   margin-bottom: 10px;
+}
+
+.buttonSpanMargin{
+  width: 100%;
+  display: flex;
+  flex-flow: nowrap;
+  flex-grow: 1;
+  margin-right: 20px;
+  margin-bottom: 5px;
+  background-color: white;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .spacer{
@@ -290,11 +462,25 @@ body {
   min-width: 0px;
 }
 
+.approveButton{
+  border: none;
+  border-radius: 0;
+  font-size: 14px;
+  color: #85B650;
+  text-align: right;
+  white-space: nowrap;
+  background-color: #ffffff;
+  margin-right: 40px;
+  padding: 0px;
+  height: 37px;
+  margin-top: 10px;
+}
+
 .answerButton{
   border: none;
   border-radius: 0;
   font-size: 14px;
-  color: #009DCD;
+  color: #4A90E2;
   margin-right: 0px;
   text-align: right;
   white-space: nowrap;
@@ -326,7 +512,6 @@ body {
   line-height: 24px;
   color: #898989;
   text-align: center;
-  font-family: 'Roboto', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .smallModText{
@@ -345,7 +530,6 @@ body {
 
 .questionText{
   font-size: 16px;
-  color: #364347;
   margin-Top: 8px;
   margin-Bottom: 5px;
   margin-right: 5px;
@@ -365,16 +549,17 @@ body {
   flex-grow: 1;
   padding-right: 15px;
   padding-left: 5px;
-  max-width: 100px;
+  width: 100px;
   display: flex;
   flex-flow: nowrap;
   background-color: white;
+  justify-content: center;
 }
 
 .modIcons{
   display: flex;
   flex-flow: nowrap;
-  margin-top:15px;
+  margin-top:17px;
 }
 
 .button{
@@ -395,6 +580,13 @@ body {
   border-radius: 50%;
 }
 
+.sortIcon {
+  height: 20px;
+  width: 20px;
+  margin-left: 20px;
+  align-self: center;
+}
+
 .pinImage{
   height: 10px;
   width: 10px;
@@ -412,38 +604,73 @@ body {
   padding-right: 5px;
 }
 
-.rightButtons{
+.rightButtons {
   margin-left: 20px;
   margin-right: 20px;
+  width: 160px;
   display: flex;
-  flex-direction: row
+  flex-direction: nowrap;
+  align-items: center;
+  justify-content: center;
 }
+
 .modButton{
   border: none;
-  background-color: #009DCD;
+  background-color: #4A90E2;
   color: white;
-  height: 30px;
-  width: 40px;
+  height: 40px;
+  width: 60px;
   border-radius: 6px;
 }
-.modButton2{
-  background-color: #D8D8D8;
+
+.modButtonAbs{
   border: none;
+  background-color: #4A90E2;
   color: white;
-  height: 30px;
-  width: 40px;
+  height: 40px;
+  width: 60px;
   border-radius: 6px;
+  position: absolute;
+}
+
+.modButtonLeft{
+  border: none;
+  background-color: #4A90E2;
+  color: white;
+  height: 40px;
+  width: 60px;
+  border-radius: 6px;
+  margin-left: -10px;
+}
+
+.modButton50Left{
+  background-color: rgba(74,144,226, 0.3);
+  border: 1px solid #4A90E2;
+  color: #4A90E2;
+  height: 40px;
+  border-radius: 6px;
+  margin-left: 50px;
+  width: 60px;
+}
+
+
+.modButton50{
+  background-color: rgba(74,144,226, 0.3);
+  border: 1px solid #4A90E2;
+  color: #4A90E2;
+  height: 40px;
+  border-radius: 6px;
+  width: 60px;
 }
 
 .listButton{
   border: none;
   border-bottom: solid;
-  border-bottom-color: #009DCD;
+  border-bottom-color: #4A90E2;
   border-radius: 0;
   font-size: 14px;
-  height: 25px;
-  color: #393939;
-  margin-top: 0px;
+  color: #4A4A4A;
+  height: 30px;
   white-space: nowrap;
   background-color: #ffffff
 }
@@ -460,9 +687,9 @@ body {
   border: none;
   border-radius: 0;
   font-size: 14px;
-  color: #393939;
-  border-bottom-color: #009DCD;
-  height: 25px;
+  color: #4A4A4A;
+  border-bottom-color: #4A90E2;
+  height: 30px;
   margin-top: 0px;
   white-space: nowrap;
   background-color: #ffffff
@@ -488,19 +715,35 @@ body {
 
 .boxTitle{
   font-size: 14px;
-  height: 20px;
-  margin-bottom: 5px;
-  color: #393939;
+  height: 30px;
   white-space: nowrap;
-  padding-top: 5px;
+  margin: 25px 0px 0px 0px;
+  font-weight: normal;
+}
+
+.boxTitleBold{
+  font-size: 14px;
+  white-space: nowrap;
   margin-right: 5px;
+  font-weight: bold;
+  margin: 0px;
+  margin-top: 5px;
+}
+
+.boxTitleBoldMargin{
+  font-size: 14px;
+  height: 20px;
+  white-space: nowrap;
+  margin-right: 5px;
+  margin-top: 20px;
+  margin-bottom: 0px;
+  font-weight: bold;
 }
 
 .modalTitle {
   font-size: 16px;
   height: 20px;
   margin-bottom: 5px;
-  color: #393939;
   white-space: nowrap;
   padding-top: 0px;
   margin-right: 5px;  
@@ -517,19 +760,18 @@ body {
   margin-left: 10px;
 }
 
-.inputBox {
-  margin-left: 5px;
-}
-
 .textInputBox {
   flex-direction: row;
   display: flex;
   margin: 0px;
   padding: 0px;
-  border: 1px;
-  border-style: solid;
-  border-color:#CDCDCD;
+  border: none;
+  border-bottom: 1px;
+  border-bottom-style: solid;
+  border-bottom-color:#CDCDCD;
   background-color: #ffffff;
+  height: 40px;
+  color: #4A4A4A
 }
 
 .box {
@@ -539,6 +781,38 @@ body {
   display: flex;
   width: 90%;
   padding-left: 10px;
+  color: #4A4A4A
+}
+
+.textBox {
+  border: none;
+  margin: 0px;
+  font-size: 13px;
+  display: flex;
+  width: 90%;
+  padding-left: 10px;
+  color: #4A4A4A;
+  height: 16px;
+}
+
+.borderlessButton {
+  border: none;
+  background-color: white;
+  color: #4A90E2;
+  width: 200px;
+  white-space:nowrap
+}
+
+.borderlessButtonSmall {
+  border: none;
+  background-color: white;
+  color: #4A90E2;
+}
+
+.borderlessButtonMed {
+  border: none;
+  background-color: white;
+  color: #4A90E2;
 }
 
 .counter {
@@ -558,17 +832,144 @@ body {
   height: 24px;
   display: flex;
   margin-bottom: 16px;
-  color: #393939;
 }
 
 .csvButton{
-  display: inline-block;
   text-decoration: none;
-  background-color: #F0F0F0;
-  border: 1px solid #979797;
-  border-radius: 2px;
-  color: #4A4A4A;
-  font-size: 13px;
-  margin-left: 10px;
-  padding: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #4A90E2;
+  border-radius: 5px;
+  text-align: center;
+  color: #4A90E2;
+  font-size: 14px;
+  margin: 100px 25px 0px 0px;
+  padding: 10px;
+  float: right;
+  width: 140px;
+}
+
+.background-url {
+  flex: 1;
+  width: 90%;
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 1px solid #AEAEAE;
+  padding-left: 10px;
+}
+
+.presentation-container {
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  width: 800px;
+  height: 400px;
+  display: flex;
+  position: relative;
+}
+@media screen and (min-width: 1230px) {
+  .presentation-container {
+    width: 400px;
+    height: 800px;
+    flex-direction: column;
+  }
+}
+
+.presentation-side {
+  width: 400px;
+  height: 400px;
+  position: relative;
+  flex: 1
+}
+
+iframe.big-screen-container {
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+.presentation-overlays {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  background-color: rgba(255,255,255,0.5);
+  display: flex;
+  padding: 0.5em 0;
+}
+.presentation-overlays > * {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.overlay-button {
+  border: 1px solid #4A90E2;
+  background-color: white;
+  color: #4A90E2;
+  font-size: 14px;
+  height: 38px;
+  border-radius: 5px;
+  margin: 0px 0px 0px 20px;
+  align-self: center;
+  white-space: nowrap;
+}
+
+.attendee-selector {
+  display: flex;
+  border: 1px solid #e2e2e2;
+  height: 30em;
+  background-color: white;
+} 
+
+.attendee-selector__attendee--disabled {
+  background-color: #f2f2f2;
+}
+.attendee-selector__attendee {
+  height: 44px;
+  flex: 1;
+  border: 1px solid #e2e2e2;
+  background-color: white;
+}
+.attendee-selector__attendee--gray{
+  background-color: #E2E2E2;
+  height: 44px;
+  flex: 1;
+}
+
+.attendee-selector table {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.attendee-selector td {
+  line-height: 2.5em;
+  height: 2.5em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+}
+
+.attendee-selector tr {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.attendee-selector td {
+  line-height: 2.5em;
+  height: 2.5em;
+  flex: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0px 10px;
+}
+
+.attendee-selector td button {
+  background-color: white;
+  border: 1px solid #4A90E2;
+  border-radius: 5px;
+  color: #4A90E2;
 }

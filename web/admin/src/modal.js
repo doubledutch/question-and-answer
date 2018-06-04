@@ -58,22 +58,22 @@ export class CustomModal extends Component {
               </div>
             </form>
             <label className="boxTitle" style={{marginLeft: 5}}>
-                Current Q&A Sessions
+              Current Q&A Sessions
             </label>
             <ul className='sessionList'>
-                { sessions.map(task => {
-                  return (
-                    <li className='modalCellBox' key={task.key}>
-                      <CellEdit
-                      task = {task}
-                      confirmDelete = {this.confirmDelete}
-                      confirmEdit = {this.confirmEdit}
-                      sessions = {sessions}
-                      message = {this.state.modalMessage}
-                      height = {this.state.height}
-                      />
-                    </li>
-                  )
+              { sessions.map(task => {
+                return (
+                  <li className='modalCellBox' key={task.key}>
+                    <CellEdit
+                    task = {task}
+                    confirmDelete = {this.confirmDelete}
+                    confirmEdit = {this.confirmEdit}
+                    sessions = {sessions}
+                    message = {this.state.modalMessage}
+                    height = {this.state.height}
+                    />
+                  </li>
+                )
               })
               }
             </ul>

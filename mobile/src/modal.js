@@ -27,15 +27,18 @@ export default class CustomModal extends Component {
     super(props)
     this.state = {
       question: '', 
-      anom: false,
+      anomStatus: false,
       color: 'white', 
       borderColor: '#EFEFEF',
-      inputHeight: 0
+      inputHeight: 0,
+      search: false,
+      session: '',
+      newList: []
     }
   }
 
   modalClose() {
-    this.setState({anom: false, color: 'white'})
+    this.setState({anomStatus: false, color: 'white'})
     this.props.hideModal()
   }
 
@@ -43,9 +46,9 @@ export default class CustomModal extends Component {
     this.props.selectSession(session)
   }
 
-  makeQuestion = (question, anom) => {
-    this.props.createSharedTask(question, anom)
-    this.setState({question: '', anom: false})
+  makeQuestion = (question, anomStatus) => {
+    this.props.createSharedTask(question, anomStatus)
+    this.setState({question: ''})
   }
 
   render() {
@@ -80,12 +83,14 @@ export default class CustomModal extends Component {
     }
 
     if (this.props.launch === true) {
+      var sessions = this.props.sessions
+      if (this.state.search) sessions = this.state.newList
       return(
         <View style={{flex: 1}}>
           {this.renderModalHeader()}
           <FlatList
           style={{backgroundColor: '#EFEFEF'}}
-          data = {this.props.sessions}
+          data = {sessions}
           ListFooterComponent={<View style={{height: 100}}></View>}
           renderItem={({item}) => (
             <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
@@ -108,6 +113,7 @@ export default class CustomModal extends Component {
       var borderColor = this.state.borderColor
       if (this.props.showError === "red"){borderColor = "red"}
       const borderStyle = {borderColor: borderColor}
+      const allow = this.props.anom[0] ? this.props.anom[0].allow : true
       return (
         <View style={{flex: 1}}>
           <View style={[s.modal, borderStyle]}>
@@ -126,12 +132,14 @@ export default class CustomModal extends Component {
           <View style={s.bottomButtons}>
             <View style={s.rightBox}>
               <Text style={{color: this.props.showError, paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a question</Text>
-              <View style={s.anomBox}>
+              {allow ? <View style={s.anomBox}>
                 {this.renderAnomIcon()}
                 <Text style={s.anomText}>Ask anonymously</Text>
-              </View>
+              </View> : null
+              }
+
             </View>
-            <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anom)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
+            <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anomStatus)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
           </View>
           <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
         </View>
@@ -140,7 +148,7 @@ export default class CustomModal extends Component {
   }
 
   renderAnomIcon = () => {
-    if (this.state.anom) {
+    if (this.state.anomStatus) {
       return (
         <TouchableOpacity onPress={() => this.makeTrue()}><Image style={s.checkButton} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_active.png"}}/></TouchableOpacity>
       )
@@ -158,19 +166,67 @@ export default class CustomModal extends Component {
   };
 
   makeTrue() {
-    if (this.state.anom === false){
-      this.setState({anom: true, color: 'black'})
+    if (this.state.anomStatus === false){
+      this.setState({anomStatus: true, color: 'black'})
     }
-    if (this.state.anom === true){
-      this.setState({anom: false, color: 'white'})
+    if (this.state.anomStatus === true){
+      this.setState({anomStatus: false, color: 'white'})
+    }
+  }
+
+  updateList = (value) => {
+    const queryText = value.toLowerCase()
+    if (queryText.length > 0){
+      var queryResult = [];
+      this.props.sessions.forEach(function(content){
+        var title = content.sessionName
+        if (title) {
+          if (title.toLowerCase().indexOf(queryText)!== -1){
+            queryResult.push(content);
+          }
+        }
+      });
+      this.setState({search: true, newList: queryResult, session: value})
+    }
+    else {
+      this.setState({search: false, session: value})
     }
   }
   
   renderModalHeader = () => {
+    const newStyle = {
+      flex: 1,
+      fontSize: 18,
+      color: '#9B9B9B',
+      textAlignVertical: 'top',
+      maxHeight: 100,
+      height: Math.max(35, this.state.inputHeight),
+      paddingTop: 0,
+    }
+    const androidStyle = {
+      paddingLeft: 0,
+      marginTop: 0,
+      marginBottom: 10
+    }
+    const iosStyle = {
+      marginTop: 3,
+      marginBottom: 10,
+    }
     if (this.props.sessions.length > 0) {
       return ( 
         <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
           <Text style={s.modHeader}> Please confirm your session</Text>
+          <View style={{backgroundColor: '#9B9B9B', padding: 10}}>
+            <View style={{flexDirection: "row", backgroundColor: "#FFFFFF", borderBottomColor: "#b7b7b7", borderBottomWidth: 1, borderRadius: 5, height: 40}}>
+              <TouchableOpacity style={s.circleBoxMargin}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+              <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Search"
+                value={this.state.session}
+                onChangeText={session => this.updateList(session)} 
+                maxLength={25}
+                placeholderTextColor="#9B9B9B"
+              />
+            </View>
+          </View>
         </View >
       )
     }
@@ -201,6 +257,25 @@ const s = ReactNative.StyleSheet.create({
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
+  },
+  circleBoxMargin: {
+  marginTop:10,
+  marginRight: 10,
+  marginLeft: 10,
+  marginBottom: 20,
+  justifyContent: 'center',
+  backgroundColor: '#9B9B9B',
+  paddingTop: 8,
+  paddingBottom: 8,
+  paddingLeft: 8,
+  paddingRight: 8,
+  height: 22,
+  borderRadius: 50,
+  },
+
+  whiteText: {
+    fontSize: 18,
+    color: 'white',
   },
 
   modHeader: {
@@ -390,10 +465,6 @@ const s = ReactNative.StyleSheet.create({
     flex: 1,
     fontSize: 18,
     color: '#9B9B9B',
-  },
-  whiteText: {
-    fontSize: 18,
-    color: 'white',
   },
   radio: {
     height: 20,

@@ -34,20 +34,21 @@ export class CellEdit extends Component {
         return(
         <div className="sessionCell">    
             <div className="sessionCellTop">
-            <input className="sessionTitle" name="value" maxLength="250" type="text" ref={(ip) => this.myInp = ip} onKeyPress={this.handleKeyPress} onFocus={this.handleEdit} onBlur={this.handleBlur} value={this.state.value} onChange={this.handleChange} />
-            {this.renderIcons(task)}
+              <textarea className="sessionTitle" rows="1" name="value" maxLength="250" type="text" ref={(ip) => this.myInp = ip} onKeyPress={this.handleKeyPress} onBlur={this.handleBlur} value={this.state.value} onChange={this.handleChange} />
+              {this.renderIcons(task)}
             </div>
             <p className="errorText" style={{height: this.state.height}}>{this.state.modalMessage}</p>
         </div>
         )
     }
 
+
     renderIcons = (task) => {
         if (this.state.action === "state") {
             return (
             <div className="rightButtons">
-                <img style={{height: 16, width: 16, marginTop: 12, marginRight: 10}} value="edit"  onClick={this.handleEdit} src={require('./icons/Pencil.png')} alt="edit" />
-                <img style={{height: 16, width: 12, marginTop: 12}} value="delete" onClick={this.handleDelete} src={require('./icons/trashcan.svg')} alt="delete" />
+                <button className="borderlessButtonSmall" onClick={this.handleEdit} value="false">Edit</button>
+                <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? "Display in App" : "Hide in App"}</button>
             </div>
             )
         }
@@ -77,7 +78,7 @@ export class CellEdit extends Component {
       }
 
     handleBlur = (event) => {
-      var currentButton = event.relatedTarget.value
+      const currentButton = event.relatedTarget ? event.relatedTarget.value : ''
       if (currentButton === "edit"){
         this.confirmEdit()
       }
@@ -88,10 +89,10 @@ export class CellEdit extends Component {
 
 
     handleEdit = () => {
+        this.setState({action: "edit"});
         this.myInp.focus();
         var length = this.state.value.length
         this.myInp.setSelectionRange(length, length)
-        this.setState({action: "edit"});
      }
 
      handleDelete = () => {

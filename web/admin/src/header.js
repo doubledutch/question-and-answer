@@ -22,7 +22,6 @@ export default class CustomHeader extends Component {
     const newQuestions = this.props.questions
     const showBlock = this.props.showBlock
     const showAnswer = this.props.showAnswer
-
     var approveQuestions = newQuestions.filter(item => item.approve === true && item.new === false && item.answered === false)
     var blockedQuestions = newQuestions.filter(item => item.block === true && item.new === false && item.answered === false)
     var answeredQuestions = newQuestions.filter(item => item.answered === true)

@@ -4,13 +4,19 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@doubledutch/admin-client": "^1.0.2",
-    "@doubledutch/firebase-connector": "^3.2.3",
-    "react": "^16.0.0",
+    "@doubledutch/admin-client": "^1.2.0",
+    "@doubledutch/firebase-connector": "^3.4.3",
+    "@doubledutch/react-components": "0.0.10",
+    "moment": "^2.22.2",
+    "moment-timezone": "^0.5.17",
+    "react": "^16.4.0",
+    "react-beautiful-dnd": "3.0.0",
     "react-csv": "^1.0.14",
-    "react-dom": "^16.0.0",
+    "react-dom": "16.4.0",
     "react-modal": "^3.1.2",
-    "react-scripts": "1.0.14"
+    "react-scripts": "1.0.14",
+    "react-select": "^1.2.1",
+    "react-tooltip": "^3.5.1"
   },
   "scripts": {
     "start": "node emulator",

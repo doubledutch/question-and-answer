@@ -21,8 +21,10 @@ import ReactNative, {
 } from 'react-native'
 import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
+import firebase from 'firebase'
 import MyList  from './table'
 import CustomModal from './modal'
+import FilterSelect from "./filtersModal"
 Text.defaultProps.allowFontScaling=false
 const fbc = FirebaseConnector(client, 'questionanswer')
 fbc.initializeAppWithSimpleBackend()
@@ -37,16 +39,16 @@ class HomeView extends Component {
       disable: true, 
       session: '', 
       sessions: [], 
-      questions: [], 
+      questions: [],
       sharedVotes: [], 
-      moderator: [], 
+      moderator: [],
+      anom: [],
       characterCount: 0, 
       showRecent: false, 
       showAnswer: false, 
       showError: "white", 
       newUpdate: false, 
       modalVisible: true, 
-      anom: false, 
       color: 'white', 
       height: 20, 
       newValue: '', 
@@ -56,7 +58,11 @@ class HomeView extends Component {
       questionAsk: false,
       questionError: "Ask Question",
       topBorder: "#EFEFEF",
-      approve: false
+      approve: false,
+      isAdmin: false,
+      showFilterSelect: false,
+      currentSort: "New",
+      openAdminHeader: false
     }
     this.signin = fbc.signin()
       .then(user => this.user = user)
@@ -68,51 +74,80 @@ class HomeView extends Component {
     this.signin.then(() => {
       const modRef = fbc.database.public.adminRef('moderators')
       const sessRef = fbc.database.public.adminRef('sessions')
+      const anomRef = fbc.database.public.adminRef('askAnom') 
 
-      sessRef.on('child_added', data => {
-        this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
-      })
+      const wireListeners = () => {
+        sessRef.on('child_added', data => {
+          this.setState({ sessions: [...this.state.sessions, {...data.val(), key: data.key }] })
+        })
 
-      sessRef.on('child_removed', data => {
-        if (data.key === this.state.session.key) {
-          this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key), session: '', launch: true, modalVisible: true})
-        }
-        else {
-          this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key) })
-        }
-      })
-
-      sessRef.on('child_changed', data => {
-        var sessions = this.state.sessions
-        for (var i in sessions) {
-          if (sessions[i].key === data.key) {
-            sessions[i].sessionName = data.val().sessionName
-            if (this.state.session.key === data.key) {
-              var newSession = this.state.session
-              newSession.sessionName = data.val().sessionName
-              this.setState({sessions, session: newSession })
-            }
-            else {
-              this.setState({sessions})
-            }
-            break;
+        sessRef.on('child_removed', data => {
+          if (data.key === this.state.session.key) {
+            this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key), session: '', launch: true, modalVisible: true})
           }
-        }
-      })
-
-      modRef.on('child_added', data => {
-        this.setState({ moderator: [...this.state.moderator, {...data.val(), key: data.key }] })
-      })
-
-      modRef.on('child_changed', data => {
-        var moderator = this.state.moderator
-        for (var i in moderator) {
-          if (moderator[i].key === data.key) {
-            moderator[i].approve = data.val().approve
-            this.setState({moderator})
-            break;
+          else {
+            this.setState({ sessions: this.state.sessions.filter(x => x.key !== data.key) })
           }
+        })
+
+        sessRef.on('child_changed', data => {
+          var sessions = this.state.sessions
+          for (var i in sessions) {
+            if (sessions[i].key === data.key) {
+              sessions[i].sessionName = data.val().sessionName
+              if (this.state.session.key === data.key) {
+                var newSession = this.state.session
+                newSession.sessionName = data.val().sessionName
+                this.setState({sessions, session: newSession })
+              }
+              else {
+                this.setState({sessions})
+              }
+              break;
+            }
+          }
+        })
+
+        modRef.on('child_added', data => {
+          this.setState({ moderator: [...this.state.moderator, {...data.val(), key: data.key }] })
+        })
+
+        modRef.on('child_changed', data => {
+          var moderator = this.state.moderator
+          for (var i in moderator) {
+            if (moderator[i].key === data.key) {
+              moderator[i].approve = data.val().approve
+              this.setState({moderator})
+              break;
+            }
+          }
+        })
+        anomRef.on('child_added', data => {
+          this.setState({ anom: [...this.state.anom, {...data.val(), key: data.key }] })
+        })
+
+        anomRef.on('child_changed', data => {
+          var anom = this.state.anom
+          for (var i in anom) {
+            if (anom[i].key === data.key) {
+              anom[i] = data.val()
+              anom[i].key = data.key
+              this.setState({anom})
+            }
+          }
+        })
+      }
+      fbc.database.private.adminableUserRef('adminToken').once('value', async data => {
+        const longLivedToken = data.val()
+        if (longLivedToken) {
+          console.log('Attendee appears to be admin.  Logging out and logging in w/ admin token.')
+          await firebase.auth().signOut()
+          client.longLivedToken = longLivedToken
+          await fbc.signinAdmin()
+          console.log('Re-logged in as admin')
+          this.setState({isAdmin: true})
         }
+        wireListeners()
       })
     })
   }
@@ -133,7 +168,8 @@ class HomeView extends Component {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
         <TitleBar title={titleText} client={client} signin={this.signin} />
-        {this.renderHome()}
+        {this.state.showFilterSelect ? <FilterSelect currentSort={this.state.currentSort} handleChange={this.handleChange}
+        /> : this.renderHome()}
       </KeyboardAvoidingView> 
     )
   }
@@ -158,12 +194,10 @@ class HomeView extends Component {
       textAlignVertical: 'center'
     }
 
-    const { questions, sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, sessions, launch, showAnswer, session} = this.state
-    var pinnedQuestions = this.state.questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
-    var otherQuestions = this.state.questions.filter(item => item.pin === false && item.block === false && item.session === session.key)
-    this.originalOrder(pinnedQuestions)
-    this.originalOrder(otherQuestions)
-    let newQuestions = pinnedQuestions.concat(otherQuestions)
+    const { sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, launch, showAnswer, session, isAdmin} = this.state
+    const sessions = this.state.sessions.filter(item => item.archive !== true)
+    var newQuestions = []
+    if (session) newQuestions = this.sortFilter()
     if (this.state.modalVisible === false){
       return(
       <View style={{flex:1}}>
@@ -189,6 +223,12 @@ class HomeView extends Component {
           findOrderDate = {this.findOrderDate}
           originalOrder = {this.originalOrder}
           newVote = {this.newVote}
+          isAdmin={this.state.isAdmin}
+          changeQuestionStatus={this.changeQuestionStatus}
+          renderFilterSelect={this.renderFilterSelect}
+          currentSort={this.state.currentSort}
+          showAdminPanel = {this.showAdminPanel}
+          openAdminHeader = {this.state.openAdminHeader}
           />
         </View>
         {this.renderModal()}
@@ -202,6 +242,7 @@ class HomeView extends Component {
           showModal = {this.showModal}
           closeSessionModal = {this.closeSessionModal}
           makeTrue = {this.makeTrue}
+          anom = {this.state.anom}
           createSharedTask = {this.createSharedTask}
           selectSession = {this.selectSession}
           disable = {this.state.disable}
@@ -215,6 +256,34 @@ class HomeView extends Component {
         />
       )
     }
+  }
+
+  sortFilter = () => {
+    const { currentSort, questions, session } = this.state
+      if (this.state.isAdmin) {
+        const pinnedQuestions = questions.filter(item => item.pin === true)
+        const otherQuestions = questions.filter(item => item.pin === false)
+        pinnedQuestions.sort(function (a,b){ 
+          return a.order - b.order
+        })
+        this.originalOrder(otherQuestions)
+        var orderedQuestions = pinnedQuestions.concat(otherQuestions)
+        if (currentSort === "Approved" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.block === false && item.answered === false && item.session === session.key)
+        if (currentSort === "Answered" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.answered === true && item.session === session.key)
+        if (currentSort === "Blocked" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.block === true && item.new === false && item.session === session.key)
+        if (currentSort === "New" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.approve === false && item.new === true && item.session === session.key)
+        return orderedQuestions
+      }
+      else {
+        var pinnedQuestions = questions.filter(item => item.pin === true && item.block === false && item.session === session.key)
+        var otherQuestions = questions.filter(item => item.pin === false && item.block === false && item.session === session.key)
+        pinnedQuestions.sort(function (a,b){ 
+          return a.order - b.order
+        })
+        this.originalOrder(otherQuestions)
+        var newQuestions = pinnedQuestions.concat(otherQuestions)
+        return newQuestions
+      }
   }
 
   showAnswered = () => {
@@ -246,7 +315,7 @@ class HomeView extends Component {
   selectSession = (session) => {
     this.setState({session, disable: false})
       fbc.database.public.allRef('questions').child(session.key).on('child_added', data => {
-        this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }] })
+        this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }]})
         fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
           const isThisMyVote = vote.key === client.currentUser.id
           this.setState(prevState => ({
@@ -268,22 +337,23 @@ class HomeView extends Component {
           }))
         })
       })
+      
       fbc.database.public.allRef('questions').child(session.key).on('child_changed', data => {
         var questions = this.state.questions
         for (var i in questions) {
           if (questions[i].key === data.key) {
-            var score = questions[i].score
-            var myVote = questions[i].myVote
-            var oldState = questions[i].approve
-            questions[i] = data.val()
-            questions[i].score = score
-            questions[i].myVote = myVote
-            questions[i].key = data.key
+            const score = questions[i].score
+            const myVote = questions[i].myVote
+            const oldState = questions[i].approve
+            const newQuestions = questions.filter(x => x.key !== data.key)
+            var newObject = data.val()
+            newObject.score = score
+            newObject.myVote = myVote
             if (data.val().creator.id === client.currentUser.id && oldState !== data.val().approve){
-              this.setState({questions, approve: true, questionAsk: true})
+              this.setState({questions: [...newQuestions, {...newObject, key: data.key }], approve: true, questionAsk: true})
             }
             else {
-              this.setState({questions})
+              this.setState({questions: [...newQuestions, {...newObject, key: data.key }]})
             }
             break
           }
@@ -292,6 +362,10 @@ class HomeView extends Component {
       fbc.database.public.allRef('questions').child(session.key).on('child_removed', data => {
         this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
       })
+    }
+
+    handleChange = (prop, value) => {
+      this.setState({[prop]: value})
     }
 
     closeSessionModal = () => {
@@ -306,7 +380,7 @@ class HomeView extends Component {
           modOn = this.state.moderator[0].approve
         }
       }
-      if (this.state.questionAsk && modOn && this.state.approve) {
+      if (this.state.questionAsk && modOn && this.state.approve && this.state.isAdmin === false) {
         setTimeout(() => {
           this.closeConfirm()
           }
@@ -319,7 +393,7 @@ class HomeView extends Component {
         )
       }
 
-      if (this.state.questionAsk && modOn && this.state.approve === false) {
+      if (this.state.questionAsk && modOn && this.state.approve === false && this.state.isAdmin === false) {
         setTimeout(() => {
           this.closeConfirm()
           }
@@ -340,6 +414,18 @@ class HomeView extends Component {
       this.setState({questionAsk: false, approve: false})
     }
 
+    changeQuestionStatus = (question, variable) => {
+      const time = new Date().getTime()
+      if (variable === "approve") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
+      if (variable === "answer") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'block': false, 'new': false, 'pin': false, 'lastEdit': time})
+      if (variable === "block") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true,  "answered": false, 'approve': false, 'new': false, 'pin': false, 'lastEdit': time})
+    }
+
+    showAdminPanel = () => {
+      const current = this.state.openAdminHeader
+      this.setState({openAdminHeader: !current})
+    }
+
     originalOrder = (questions) => {
       if (this.state.showRecent === false) {
         this.dateSort(questions)
@@ -356,6 +442,11 @@ class HomeView extends Component {
       questions.sort(function (a,b){
         return b.dateCreate - a.dateCreate
       })
+    }
+
+    renderFilterSelect = () => {
+      const current = this.state.showFilterSelect
+      this.setState({showFilterSelect : !current})
     }
 
     findOrder = () => {
@@ -397,7 +488,7 @@ class HomeView extends Component {
           sessionName: this.state.session.sessionName
         })
         .then(() => {
-          this.setState({question: '', anom: false, showError: "white"})
+          this.setState({question: '', showError: "white"})
           setTimeout(() => {
             this.hideModal()
             this.setState({questionAsk: this.state.moderator[0].approve})
