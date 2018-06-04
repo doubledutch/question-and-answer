@@ -325,22 +325,26 @@ export default class Admin extends Component {
       if (this.state.moderator[0].approve === true) {
         return (
         <div className="questionContainer">
-        <span className="buttonSpan"><p className='boxTitle'>New ({totalQuestions.length})</p></span>
-        <span className="questionBox">
-          <ul className='listBox'>
-            { questions.filter(task => task.new).map(task => {
-              var difference = doDateMath(task.dateCreate)
-              return (
-                <li className='cellBox' key={task.key}>
-                  <CustomCell task = {task} difference = {difference}
-                  />
-                  <CustomButtons task = {task} header = {header} makeApprove = {this.makeApprove} blockQuestion = {this.blockQuestion}
-                    canPin = {this.canPin} makePin = {this.makePin} makeAnswer = {this.makeAnswer} />
-                </li>
-              )
-            }) }
-          </ul>
-        </span>
+          <span className="buttonSpan">
+            <p className='boxTitle'>New ({totalQuestions.length})</p>
+            <span className="spacer"/>
+            {(totalQuestions.length) ? <button className="approveButton" onClick={this.approveAll(questions)}>Mark All As Approved</button> : null}
+          </span>
+          <span className="questionBox">
+            <ul className='listBox'>
+              { questions.filter(task => task.new).map(task => {
+                var difference = doDateMath(task.dateCreate)
+                return (
+                  <li className='cellBox' key={task.key}>
+                    <CustomCell task = {task} difference = {difference}
+                    />
+                    <CustomButtons task = {task} header = {header} makeApprove = {this.makeApprove} blockQuestion = {this.blockQuestion}
+                      canPin = {this.canPin} makePin = {this.makePin} makeAnswer = {this.makeAnswer} />
+                  </li>
+                )
+              }) }
+            </ul>
+          </span>
         </div>
         )
       }
@@ -764,6 +768,16 @@ export default class Admin extends Component {
 
   blockQuestion = (question) => {
     this.props.fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true, "answered": false, 'approve': false, 'new': false, 'pin': false})
+  }
+
+  approveAll = (questions) => {
+    if (questions.length) {
+      questions.forEach(question => {
+        if (question.new) {
+          this.props.fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"new": false, "approve": true})
+        }
+      })
+    }
   }
 
   answerAll = () => {

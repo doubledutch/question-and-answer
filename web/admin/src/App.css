@@ -462,6 +462,20 @@ h2 {
   min-width: 0px;
 }
 
+.approveButton{
+  border: none;
+  border-radius: 0;
+  font-size: 14px;
+  color: #85B650;
+  text-align: right;
+  white-space: nowrap;
+  background-color: #ffffff;
+  margin-right: 40px;
+  padding: 0px;
+  height: 37px;
+  margin-top: 10px;
+}
+
 .answerButton{
   border: none;
   border-radius: 0;
@@ -702,10 +716,8 @@ h2 {
 .boxTitle{
   font-size: 14px;
   height: 30px;
-  margin-bottom: 5px;
   white-space: nowrap;
-  padding-top: 5px;
-  margin-right: 5px;
+  margin: 25px 0px 0px 0px;
   font-weight: normal;
 }
 
@@ -772,6 +784,17 @@ h2 {
   color: #4A4A4A
 }
 
+.textBox {
+  border: none;
+  margin: 0px;
+  font-size: 13px;
+  display: flex;
+  width: 90%;
+  padding-left: 10px;
+  color: #4A4A4A;
+  height: 16px;
+}
+
 .borderlessButton {
   border: none;
   background-color: white;
@@ -789,6 +812,7 @@ h2 {
 .borderlessButtonMed {
   border: none;
   background-color: white;
+  color: #4A90E2;
 }
 
 .counter {

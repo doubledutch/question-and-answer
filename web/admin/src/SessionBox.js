@@ -77,7 +77,7 @@ export class SessionBox extends Component {
       return (
         <div>
           <span className="textInputBox">
-            <input className="box" name="value" maxLength="250" type="text" autoFocus style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
+            <textarea className="textBox" name="value" maxLength="250" type="text" autoFocus style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
             <div className="rightButtons">
               <button className="borderlessButtonMed" onClick={this.handleSubmit} value="false">Save</button>
               <button className="borderlessButton" onClick={this.handleClose} value="false">Cancel</button>

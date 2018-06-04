@@ -18,7 +18,9 @@ import React, { Component } from 'react'
 import './App.css'
 import ReactTooltip from 'react-tooltip'
 import checkocircle from './icons/checkocircle.svg'
+import checkcircle from './icons/checkcircle.svg'
 import deleteocircle from './icons/deleteocircle.svg'
+import deletecircle from './icons/deletecircle.svg'
 import check from './icons/check.svg'
 
 
@@ -69,6 +71,7 @@ export default class CustomButtons extends Component {
         <span style={{marginTop: 25}}>
           <span className='cellBoxRight'>
             <img className='button1' data-tip="Move to Approved" onClick={() => makeApprove(task)} src={checkocircle} alt="approve" />
+            <img className='button1' data-tip="Unavailable" src={deletecircle} alt="block"/>
           </span>
           <ReactTooltip />
         </span>
@@ -78,6 +81,7 @@ export default class CustomButtons extends Component {
       return (
         <span style={{marginTop: 25}}>
           <span className='cellBoxRight'>
+            <img className='button1' data-tip="Unavailable" src={checkcircle} alt="approve" />
             <img className='button1' data-tip="Move to Blocked" onClick={() => blockQuestion(task)} src={deleteocircle} alt="block"/>
           </span>
           <ReactTooltip />
