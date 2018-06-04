@@ -16,8 +16,7 @@
 
 import React, {PureComponent} from 'react'
 import './BigScreen.css'
-import Avatar from "./Avatar"
-
+import {Avatar} from '@doubledutch/react-components'
 
 export default class BigScreen extends PureComponent {
   state = {questions: []}
@@ -105,7 +104,7 @@ export default class BigScreen extends PureComponent {
           <li className='box-content' key={task.key}>
             <p className="question-title">"{task.text}"</p>
             { !task.anom ? <div className="cellName">
-              <Avatar user={task.creator} size={2}/>
+              <Avatar user={task.creator} size={25}/>
               <p className="name">{task.creator.firstName} {task.creator.lastName}</p><img className="box-icon" src={require('./icons/Inactive.png')} alt="inactive"/><p className="vote">{task.score}</p>
               </div> : <div className="cellName"><p className="name">-Anonymous</p><img className="box-icon" src={require('./icons/Inactive.png')} alt="inactive"/><p className="vote">{task.score}</p></div>}
           </li> )

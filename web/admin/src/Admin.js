@@ -379,12 +379,11 @@ export default class Admin extends Component {
     const sample = {value: "All", label: "All", className: "dropdownText"}
     const sessions = []
     const sessionName = this.state.currentSession ? {value: "", label: this.state.currentSession.sessionName || "", className: "dropdownText"} : sample
-    console.log(sessionName)
     sessions.push(sample)
     this.state.sessions.forEach(session => sessions.push(Object.assign({}, {value: session.key, label: session.sessionName, className: "dropdownText"})))
     return (
       <span className="buttonSpan">
-        <h2>Moderation</h2>
+        <h2 className="noPadding">Moderation</h2>
         <Select
           className="dropdownMenu" 
           name="session"
@@ -398,10 +397,10 @@ export default class Admin extends Component {
         />
         <p className='boxTitleBoldMargin'>Moderation:   </p>
         <ModIcon moderator = {this.state.moderator} offApprove = {this.offApprove} onApprove = {this.onApprove} />
-        {this.state.session === "All" ? null : <div className="buttonSpan">
+        {this.state.session === "All" ? null : <span className="buttonSpanMargin">
           <PresentationDriver fbc={this.props.fbc} session={this.state.session}/>
           <button className="overlay-button" onClick={this.launchPresentation} disabled={this.state.launchDisabled || !this.bigScreenUrl()}>Launch in new tab</button>
-        </div> }
+        </span> }
       </span>
     )
   }
