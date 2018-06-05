@@ -61,7 +61,7 @@ class HomeView extends Component {
       approve: false,
       isAdmin: false,
       showFilterSelect: false,
-      currentSort: "New",
+      currentSort: "Popular",
       openAdminHeader: false
     }
     this.signin = fbc.signin()
@@ -168,7 +168,7 @@ class HomeView extends Component {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
         <TitleBar title={titleText} client={client} signin={this.signin} />
-        {this.state.showFilterSelect ? <FilterSelect currentSort={this.state.currentSort} handleChange={this.handleChange}
+        {this.state.showFilterSelect ? <FilterSelect currentSort={this.state.currentSort} handleChange={this.handleChange}  openAdminHeader = {this.state.openAdminHeader} findOrder={this.findOrder} findOrderDate={this.findOrderDate}
         /> : this.renderHome()}
       </KeyboardAvoidingView> 
     )
@@ -259,6 +259,7 @@ class HomeView extends Component {
   }
 
   sortFilter = () => {
+    console.log("sortFilter")
     const { currentSort, questions, session } = this.state
       if (this.state.isAdmin) {
         const pinnedQuestions = questions.filter(item => item.pin === true)
@@ -268,7 +269,9 @@ class HomeView extends Component {
         })
         this.originalOrder(otherQuestions)
         var orderedQuestions = pinnedQuestions.concat(otherQuestions)
-        if (currentSort === "Approved" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.block === false && item.answered === false && item.session === session.key)
+        if (currentSort === "Approved" || "Popular" || "Recent" && orderedQuestions.length) { 
+          orderedQuestions = orderedQuestions.filter(item => item.block === false && item.answered === false && item.session === session.key)
+        }
         if (currentSort === "Answered" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.answered === true && item.session === session.key)
         if (currentSort === "Blocked" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.block === true && item.new === false && item.session === session.key)
         if (currentSort === "New" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.approve === false && item.new === true && item.session === session.key)
@@ -423,7 +426,9 @@ class HomeView extends Component {
 
     showAdminPanel = () => {
       const current = this.state.openAdminHeader
-      this.setState({openAdminHeader: !current})
+      var currentSort = "Popular"
+      if (current === false) { currentSort = "New" }
+      this.setState({openAdminHeader: !current, currentSort})
     }
 
     originalOrder = (questions) => {

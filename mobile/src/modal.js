@@ -84,11 +84,17 @@ export default class CustomModal extends Component {
 
     if (this.props.launch === true) {
       var sessions = this.props.sessions
-      if (this.state.search) sessions = this.state.newList
+      var displayTable = true
+      if (this.state.search) { 
+        sessions = this.state.newList
+        if (sessions.length === 0) {
+          displayTable = false
+        }
+      }
       return(
         <View style={{flex: 1}}>
           {this.renderModalHeader()}
-          <FlatList
+          { displayTable ? <FlatList
           style={{backgroundColor: '#EFEFEF'}}
           data = {sessions}
           ListFooterComponent={<View style={{height: 100}}></View>}
@@ -101,7 +107,7 @@ export default class CustomModal extends Component {
                 <Text style={{fontSize: 16}}>{item.sessionName}</Text>
               </View>
             </TouchableOpacity>
-          )} />
+          )} /> : <Text style={{textAlign: "center", marginTop: 100, fontSize: 20, color: '#9B9B9B', flex: 1, }}>No Search Results</Text> }
           <View style={{borderTopColor:"#b7b7b7", borderTopWidth: 1, backgroundColor: '#EFEFEF'}}>
             <TouchableOpacity disabled={this.props.disable} onPress={this.props.closeSessionModal} style={[s.bigButton, colorStyle]}>
               <Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>Join Q&amp;A</Text>
@@ -117,17 +123,17 @@ export default class CustomModal extends Component {
       return (
         <View style={{flex: 1}}>
           <View style={[s.modal, borderStyle]}>
-              <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-              <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Type your question here"
-                value={this.state.question}
-                onChangeText={question => this.setState({question})} 
-                maxLength={250}
-                autoFocus={true}
-                multiline={true}
-                placeholderTextColor="#9B9B9B"
-                onContentSizeChange={(event) => this._handleSizeChange(event)}
-              />
-              <Text style={s.counter}>{250 - this.state.question.length} </Text>
+            <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+            <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Type your question here"
+              value={this.state.question}
+              onChangeText={question => this.setState({question})} 
+              maxLength={250}
+              autoFocus={true}
+              multiline={true}
+              placeholderTextColor="#9B9B9B"
+              onContentSizeChange={(event) => this._handleSizeChange(event)}
+            />
+            <Text style={s.counter}>{250 - this.state.question.length} </Text>
           </View>
           <View style={s.bottomButtons}>
             <View style={s.rightBox}>
@@ -137,7 +143,6 @@ export default class CustomModal extends Component {
                 <Text style={s.anomText}>Ask anonymously</Text>
               </View> : null
               }
-
             </View>
             <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anomStatus)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
           </View>

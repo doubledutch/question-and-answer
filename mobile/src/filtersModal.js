@@ -10,8 +10,8 @@ export default class FilterSelect extends Component {
     super(props)
     this.state = {
       sortList: ["New", "Approved", "Blocked", "Answered"],
+      sortListUser: ["Popular", "Answered", "Recent"],
       search: false
-
     }
   }
 
@@ -24,12 +24,15 @@ export default class FilterSelect extends Component {
     )
   }
 
+
+
   sortTable = () => {
+  const tableData = this.props.openAdminHeader ? this.state.sortList : this.state.sortListUser
    return (
       <View style={s.table}>
-        {this.state.sortList.map((item, i) => {
+        {tableData.map((item, i) => {
           return (
-            <TouchableOpacity style={s.row} key={i} onPress={((item === this.props.currentSort) ? null : () => this.props.handleChange("currentSort", item))}><Text style={((item === this.props.currentSort) ? s.rowTextHighlight: s.rowText)}>{item}</Text></TouchableOpacity>
+            <TouchableOpacity style={s.row} key={i} onPress={() => this.handleChange(item)}><Text style={((item === this.props.currentSort) ? s.rowTextHighlight: s.rowText)}>{item}</Text></TouchableOpacity>
           )
         })}
       </View>
@@ -40,10 +43,18 @@ export default class FilterSelect extends Component {
     return (
       <View style={s.buttonContainer}>
         <TouchableOpacity onPress={() => this.props.handleChange("showFilterSelect", false)}><Text style={s.closeButton}>X</Text></TouchableOpacity>
-        <Text style={s.title}>Sort</Text>
+        <Text style={s.title}>Lists</Text>
         <Text style={{width: 25}}></Text>
       </View>
     )
+  }
+
+  handleChange = (item) => {
+    if (this.props.currentSort !== item) {
+      if (item === "Recent") this.props.findOrder()
+      else this.props.findOrderDate()
+      this.props.handleChange("currentSort", item)
+    }
   }
 
 

@@ -328,7 +328,7 @@ export default class Admin extends Component {
           <span className="buttonSpan">
             <p className='boxTitle'>New ({totalQuestions.length})</p>
             <span className="spacer"/>
-            {(totalQuestions.length) ? <button className="approveButton" onClick={this.approveAll(questions)}>Mark All As Approved</button> : null}
+            {(totalQuestions.length) ? <button className="approveButton" onClick={() => this.approveAll(questions)}>Mark All As Approved</button> : null}
           </span>
           <span className="questionBox">
             <ul className='listBox'>
@@ -736,9 +736,13 @@ export default class Admin extends Component {
   }
 
   offAnom = () => {
-    const anom = this.state.anom[0]
-    this.props.fbc.database.public.adminRef('askAnom').child(anom.key).update({"allow": false})
-
+    if (this.state.anom.length === 0) {
+      this.props.fbc.database.public.adminRef('askAnom').push({"allow": false})
+    }
+    else {
+      const anom = this.state.anom[0]
+      this.props.fbc.database.public.adminRef('askAnom').child(anom.key).update({"allow": false})
+    }
   }
 
   makeApprove = (question) => {
