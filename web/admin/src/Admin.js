@@ -726,6 +726,7 @@ export default class Admin extends Component {
   }
 
   onAnom = () => {
+    //On initial launching of the app this fbc object would not exist. In that case the default is to be on. On first action we would set the object to the expected state and from there use update. 
     if (this.state.anom.length === 0) {
       this.props.fbc.database.public.adminRef('askAnom').push({"allow": true})
     }
@@ -736,6 +737,7 @@ export default class Admin extends Component {
   }
 
   offAnom = () => {
+    //Same logic as onAnom
     if (this.state.anom.length === 0) {
       this.props.fbc.database.public.adminRef('askAnom').push({"allow": false})
     }

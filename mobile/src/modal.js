@@ -83,8 +83,8 @@ export default class CustomModal extends Component {
     }
 
     if (this.props.launch === true) {
-      var sessions = this.props.sessions
-      var displayTable = true
+      let sessions = this.props.sessions
+      let displayTable = true
       if (this.state.search) { 
         sessions = this.state.newList
         if (sessions.length === 0) {
@@ -223,13 +223,14 @@ export default class CustomModal extends Component {
           <Text style={s.modHeader}> Please confirm your session</Text>
           <View style={{backgroundColor: '#9B9B9B', padding: 10}}>
             <View style={{flexDirection: "row", backgroundColor: "#FFFFFF", borderBottomColor: "#b7b7b7", borderBottomWidth: 1, borderRadius: 5, height: 40}}>
-              <TouchableOpacity style={s.circleBoxMargin}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+              {this.state.search ? <View style={{width: 40}} /> : <TouchableOpacity style={s.circleBoxMargin}><Text style={s.whiteText}>?</Text></TouchableOpacity>}
               <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Search"
                 value={this.state.session}
                 onChangeText={session => this.updateList(session)} 
                 maxLength={25}
                 placeholderTextColor="#9B9B9B"
               />
+              {this.state.search ? <TouchableOpacity style={s.circleBoxMargin} onPress={this.resetSearch}><Text style={s.whiteText}>X</Text></TouchableOpacity> : null}
             </View>
           </View>
         </View >
@@ -245,6 +246,10 @@ export default class CustomModal extends Component {
         </View>
       )
     }
+  }
+
+  resetSearch = () => {
+    this.setState({session: "", search: false})
   }
 }
 

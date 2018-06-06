@@ -32,7 +32,9 @@ export default class FilterSelect extends Component {
       <View style={s.table}>
         {tableData.map((item, i) => {
           return (
-            <TouchableOpacity style={s.row} key={i} onPress={() => this.handleChange(item)}><Text style={((item === this.props.currentSort) ? s.rowTextHighlight: s.rowText)}>{item}</Text></TouchableOpacity>
+            <TouchableOpacity style={s.row} key={i} onPress={() => this.onSortChange(item)}>
+              <Text style={((item === this.props.currentSort) ? s.rowTextHighlight: s.rowText)}>{item}</Text>
+            </TouchableOpacity>
           )
         })}
       </View>
@@ -42,14 +44,16 @@ export default class FilterSelect extends Component {
   topicsHeader = () => {
     return (
       <View style={s.buttonContainer}>
-        <TouchableOpacity onPress={() => this.props.handleChange("showFilterSelect", false)}><Text style={s.closeButton}>X</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.handleChange("showFilterSelect", false)}>
+          <Text style={s.closeButton}>X</Text>
+        </TouchableOpacity>
         <Text style={s.title}>Lists</Text>
         <Text style={{width: 25}}></Text>
       </View>
     )
   }
 
-  handleChange = (item) => {
+  onSortChange = (item) => {
     if (this.props.currentSort !== item) {
       if (item === "Recent") this.props.findOrder()
       else this.props.findOrderDate()

@@ -94,10 +94,12 @@ class HomeView extends Component {
           var sessions = this.state.sessions
           for (var i in sessions) {
             if (sessions[i].key === data.key) {
-              sessions[i].sessionName = data.val().sessionName
+              sessions[i] = data.val()
+              sessions[i].key = data.key
               if (this.state.session.key === data.key) {
                 var newSession = this.state.session
-                newSession.sessionName = data.val().sessionName
+                newSession = data.val()
+                newSession.key = data.key
                 this.setState({sessions, session: newSession })
               }
               else {
@@ -202,14 +204,14 @@ class HomeView extends Component {
       return(
       <View style={{flex:1}}>
         <View style={s.textBox}>
-            <TouchableOpacity style={s.circleBox} onPress={this.showModal}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-            <TextInput  underlineColorAndroid='transparent' style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
-            value={this.state.question}
-            autoFocus={false}
-            onFocus={this.showModal}
-            multiline={true}
-            placeholderTextColor="#9B9B9B"
-            />
+          <TouchableOpacity style={s.circleBox} onPress={this.showModal}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+          <TextInput  underlineColorAndroid='transparent' style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
+          value={this.state.question}
+          autoFocus={false}
+          onFocus={this.showModal}
+          multiline={true}
+          placeholderTextColor="#9B9B9B"
+          />
         </View>
         <View style={{flex:1}}>
           <MyList 
@@ -259,7 +261,6 @@ class HomeView extends Component {
   }
 
   sortFilter = () => {
-    console.log("sortFilter")
     const { currentSort, questions, session } = this.state
       if (this.state.isAdmin) {
         const pinnedQuestions = questions.filter(item => item.pin === true)
