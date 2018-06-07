@@ -81,7 +81,7 @@ export default class CustomButtons extends Component {
       return (
         <span style={{marginTop: 25}}>
           <span className='cellBoxRight'>
-            <img className='button1' data-tip="Unavailable" src={checkcircle} alt="approve" />
+            <img className='button1' data-tip="Move to Approved" onClick={() => makeApprove(task)} src={checkocircle} alt="approve" />
             <img className='button1' data-tip="Move to Blocked" onClick={() => blockQuestion(task)} src={deleteocircle} alt="block"/>
           </span>
           <ReactTooltip />
