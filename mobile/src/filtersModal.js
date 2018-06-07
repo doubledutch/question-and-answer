@@ -100,7 +100,8 @@ const s = ReactNative.StyleSheet.create({
     color: '#9B9B9B'
   },
   closeButton: {
-    marginLeft: 20,
-    color: client.primaryColor
+    marginLeft: 5,
+    color: client.primaryColor,
+    padding: 15
   }
 })

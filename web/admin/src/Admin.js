@@ -277,17 +277,20 @@ export default class Admin extends Component {
     return (
       <div style={{marginRight: 20, marginBottom: 20}}>
           <div className="cellBoxTop">
-            <h2>Settings</h2>
+            <h2>Moderators</h2>
             <div style={{flex:1}}/>
-            <button className="hideButton" onClick={() => this.hideSection("Admins")}>Hide Section</button>
+            <button className="hideButton" onClick={() => this.hideSection("Admins")}>{this.state.hideAdmins ? "Show Section" : "Hide Section" }</button>
           </div>
-          { this.state.hideAdmins ? null : <AttendeeSelector 
+          { this.state.hideAdmins ? null : <div>
+            <p className="modSectionDes">Moderators will have access to the moderator panel in the Q&A mobile app. They will be able to approve, block and mark questions as answered from within the moderator panel. Being designated as a moderator is not necessary to moderate sessions from within the CMS.</p>
+            <AttendeeSelector 
             client={client}
             searchTitle="Select Admins"
             selectedTitle="Current Admins"
             onSelected={this.onAdminSelected}
             onDeselected={this.onAdminDeselected}
-            selected={this.props.attendees.filter(a => this.isAdmin(a.id))} /> }
+            selected={this.props.attendees.filter(a => this.isAdmin(a.id))} />
+            </div> }
       </div>
     )
   }
