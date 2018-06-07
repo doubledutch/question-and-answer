@@ -328,7 +328,7 @@ export default class Admin extends Component {
           <span className="buttonSpan">
             <p className='boxTitle'>New ({totalQuestions.length})</p>
             <span className="spacer"/>
-            {(totalQuestions.length) ? <button className="approveButton" onClick={this.approveAll(questions)}>Mark All As Approved</button> : null}
+            {(totalQuestions.length) ? <button className="approveButton" onClick={() => this.approveAll(questions)}>Mark All As Approved</button> : null}
           </span>
           <span className="questionBox">
             <ul className='listBox'>
@@ -726,6 +726,7 @@ export default class Admin extends Component {
   }
 
   onAnom = () => {
+    //On initial launching of the app this fbc object would not exist. In that case the default is to be on. On first action we would set the object to the expected state and from there use update. 
     if (this.state.anom.length === 0) {
       this.props.fbc.database.public.adminRef('askAnom').push({"allow": true})
     }
@@ -736,9 +737,14 @@ export default class Admin extends Component {
   }
 
   offAnom = () => {
-    const anom = this.state.anom[0]
-    this.props.fbc.database.public.adminRef('askAnom').child(anom.key).update({"allow": false})
-
+    //Same logic as onAnom
+    if (this.state.anom.length === 0) {
+      this.props.fbc.database.public.adminRef('askAnom').push({"allow": false})
+    }
+    else {
+      const anom = this.state.anom[0]
+      this.props.fbc.database.public.adminRef('askAnom').child(anom.key).update({"allow": false})
+    }
   }
 
   makeApprove = (question) => {

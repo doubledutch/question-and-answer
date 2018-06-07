@@ -61,7 +61,7 @@ class HomeView extends Component {
       approve: false,
       isAdmin: false,
       showFilterSelect: false,
-      currentSort: "New",
+      currentSort: "Popular",
       openAdminHeader: false
     }
     this.signin = fbc.signin()
@@ -94,10 +94,12 @@ class HomeView extends Component {
           var sessions = this.state.sessions
           for (var i in sessions) {
             if (sessions[i].key === data.key) {
-              sessions[i].sessionName = data.val().sessionName
+              sessions[i] = data.val()
+              sessions[i].key = data.key
               if (this.state.session.key === data.key) {
                 var newSession = this.state.session
-                newSession.sessionName = data.val().sessionName
+                newSession = data.val()
+                newSession.key = data.key
                 this.setState({sessions, session: newSession })
               }
               else {
@@ -168,7 +170,7 @@ class HomeView extends Component {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
         <TitleBar title={titleText} client={client} signin={this.signin} />
-        {this.state.showFilterSelect ? <FilterSelect currentSort={this.state.currentSort} handleChange={this.handleChange}
+        {this.state.showFilterSelect ? <FilterSelect currentSort={this.state.currentSort} handleChange={this.handleChange}  openAdminHeader = {this.state.openAdminHeader} findOrder={this.findOrder} findOrderDate={this.findOrderDate}
         /> : this.renderHome()}
       </KeyboardAvoidingView> 
     )
@@ -202,14 +204,14 @@ class HomeView extends Component {
       return(
       <View style={{flex:1}}>
         <View style={s.textBox}>
-            <TouchableOpacity style={s.circleBox} onPress={this.showModal}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-            <TextInput  underlineColorAndroid='transparent' style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
-            value={this.state.question}
-            autoFocus={false}
-            onFocus={this.showModal}
-            multiline={true}
-            placeholderTextColor="#9B9B9B"
-            />
+          <TouchableOpacity style={s.circleBox} onPress={this.showModal}><Text style={s.whiteText}>?</Text></TouchableOpacity>
+          <TextInput  underlineColorAndroid='transparent' style={Platform.select({ios: newStyle, android: [newStyle, androidStyle]})} placeholder="Type your question here"
+          value={this.state.question}
+          autoFocus={false}
+          onFocus={this.showModal}
+          multiline={true}
+          placeholderTextColor="#9B9B9B"
+          />
         </View>
         <View style={{flex:1}}>
           <MyList 
@@ -268,7 +270,9 @@ class HomeView extends Component {
         })
         this.originalOrder(otherQuestions)
         var orderedQuestions = pinnedQuestions.concat(otherQuestions)
-        if (currentSort === "Approved" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.block === false && item.answered === false && item.session === session.key)
+        if (currentSort === "Approved" || "Popular" || "Recent" && orderedQuestions.length) { 
+          orderedQuestions = orderedQuestions.filter(item => item.block === false && item.answered === false && item.session === session.key)
+        }
         if (currentSort === "Answered" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.answered === true && item.session === session.key)
         if (currentSort === "Blocked" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.block === true && item.new === false && item.session === session.key)
         if (currentSort === "New" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.approve === false && item.new === true && item.session === session.key)
@@ -423,7 +427,9 @@ class HomeView extends Component {
 
     showAdminPanel = () => {
       const current = this.state.openAdminHeader
-      this.setState({openAdminHeader: !current})
+      var currentSort = "Popular"
+      if (current === false) { currentSort = "New" }
+      this.setState({openAdminHeader: !current, currentSort})
     }
 
     originalOrder = (questions) => {

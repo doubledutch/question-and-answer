@@ -193,7 +193,7 @@ export default class MyList extends Component {
     if (isAdmin) return (
       <View style={{height: 60}}>
         <View style={s.buttonContainer}>
-          <TouchableOpacity style={s.squareHeaderButton1} onPress={this.props.showAdminPanel}><Text style={s.adminDashboardButton}>{this.props.openAdminHeader ? "Hide" : "Show"} Admin Panel</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton1} onPress={this.props.showAdminPanel}><Text style={s.adminDashboardButton}>{this.props.openAdminHeader ? "Hide" : "Open"} Admin Panel</Text></TouchableOpacity>
           <TouchableOpacity style={s.squareHeaderButton2} onPress={this.props.renderFilterSelect}><Text style={s.adminDashboardButtonTitle}>Filters: </Text><Text style={s.adminDashboardButton}> {this.props.currentSort}</Text></TouchableOpacity>
         </View>
       </View>
