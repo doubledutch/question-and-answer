@@ -11,9 +11,12 @@ export default class FilterSelect extends Component {
     this.state = {
       sortList: ["New", "Approved", "Blocked", "Answered"],
       sortListUser: ["Popular", "Answered", "Recent"],
-      search: false
+      search: false,
+      originalSort: ""
     }
   }
+
+
 
   render() { 
     return (
@@ -44,16 +47,25 @@ export default class FilterSelect extends Component {
   topicsHeader = () => {
     return (
       <View style={s.buttonContainer}>
-        <TouchableOpacity onPress={() => this.props.handleChange("showFilterSelect", false)}>
+        <TouchableOpacity onPress={this.revertSort}>
           <Text style={s.closeButton}>X</Text>
         </TouchableOpacity>
         <Text style={s.title}>Lists</Text>
-        <Text style={{width: 25}}></Text>
+        <TouchableOpacity onPress={() => this.props.handleChange("showFilterSelect", false)}>
+          <Text style={s.closeButton}>Save</Text>
+        </TouchableOpacity>
       </View>
     )
   }
 
+  revertSort = () => {
+    const originalSort = this.state.originalSort ? this.state.originalSort : this.props.currentSort
+    this.props.handleChange("showFilterSelect", false)
+    this.props.handleChange("currentSort", originalSort)
+  }
+
   onSortChange = (item) => {
+    if (!this.state.originalSort) this.setState({originalSort: this.props.currentSort})
     if (this.props.currentSort !== item) {
       if (item === "Recent") this.props.findOrderDate()
       else this.props.findOrder()
@@ -65,7 +77,6 @@ export default class FilterSelect extends Component {
 }
 
 const fontSize = 18
-color: 
 const s = ReactNative.StyleSheet.create({
   table: {
     flexDirection: "column",
