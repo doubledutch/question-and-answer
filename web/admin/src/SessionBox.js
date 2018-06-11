@@ -41,8 +41,8 @@ export class SessionBox extends Component {
         <div>
           <div className="cellBoxTop">
             <h2>Sessions</h2>
-            <button className="addSessionButton" onClick={this.handleNewSession} value="false">{this.state.showNewSession ? "Cancel" : "Add Session"}</button>
-            <SearchBar updateList={this.updateList}/>
+            { this.props.hideSessions ? null : <button className="addSessionButton" onClick={this.handleNewSession} value="false">{this.state.showNewSession ? "Cancel" : "Add Session"}</button> }
+            { this.props.hideSessions ? null : <SearchBar updateList={this.updateList}/> }
             <div style={{flex:1}}/>
             <button className="hideButton" onClick={() => this.props.hideSection("Sessions")}>{this.props.hideSessions ? "Show" : "Hide" } Section</button>
           </div>
