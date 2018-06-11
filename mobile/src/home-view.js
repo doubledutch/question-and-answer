@@ -271,10 +271,15 @@ class HomeView extends Component {
         this.originalOrder(otherQuestions)
         const allQuestions = pinnedQuestions.concat(otherQuestions)
         let orderedQuestions = allQuestions
-        if (currentSort === "Answered"){ orderedQuestions = allQuestions.filter(item => item.answered === true && item.session === session.key) }
-        if (currentSort === "Blocked"){ orderedQuestions = allQuestions.filter(item => item.block === true && item.new === false && item.session === session.key) }
-        if (currentSort === "New"){ orderedQuestions = allQuestions.filter(item => item.approve === false && item.new === true && item.session === session.key) }
-        else { orderedQuestions = allQuestions.filter(item => item.block === false && item.answered === false && item.approve && item.new === false && item.session === session.key) }
+        switch (currentSort) {
+          case "Answered" : orderedQuestions = allQuestions.filter(item => item.answered && item.session === session.key)
+          break;
+          case "Blocked" : orderedQuestions = allQuestions.filter(item => item.block && item.new === false && item.session === session.key) 
+            break;
+          case "New" : orderedQuestions = allQuestions.filter(item => item.approve === false && item.new && item.session === session.key)
+            break;
+          default : orderedQuestions = allQuestions.filter(item => item.block === false && item.answered === false && item.approve && item.new === false && item.session === session.key)
+        }
         return orderedQuestions
       }
       else {
