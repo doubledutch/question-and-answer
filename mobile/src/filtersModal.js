@@ -55,8 +55,8 @@ export default class FilterSelect extends Component {
 
   onSortChange = (item) => {
     if (this.props.currentSort !== item) {
-      if (item === "Recent") this.props.findOrder()
-      else this.props.findOrderDate()
+      if (item === "Recent") this.props.findOrderDate()
+      else this.props.findOrder()
       this.props.handleChange("currentSort", item)
     }
   }

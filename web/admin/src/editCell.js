@@ -35,6 +35,7 @@ export class CellEdit extends Component {
         <div className="sessionCell">    
             <div className="sessionCellTop">
               <input className="sessionTitle" rows="1" name="value" maxLength="250" type="text" ref={(ip) => this.myInp = ip} onKeyPress={this.handleKeyPress} onBlur={this.handleBlur} value={this.state.value} onChange={this.handleChange} />
+              {(this.state.action !== "state") ? <p className="grayText">{250-this.state.value.length}</p> : null}
               {this.renderIcons(task)}
             </div>
             <p className="errorText" style={{height: this.state.height}}>{this.state.modalMessage}</p>
@@ -114,7 +115,7 @@ export class CellEdit extends Component {
               }
             }
             if (status){
-                this.setState({modalMessage: "", height: 0, action: "state"})
+                this.setState({modalMessage: "", height: 0, action: "state", value: named})
                 this.myInp.blur()
                 this.props.confirmEdit(this.props.task, named)
             }

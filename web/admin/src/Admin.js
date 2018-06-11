@@ -157,6 +157,9 @@ export default class Admin extends Component {
           if (data.val().pin && !isInPinned) {
             this.setState({ pinnedQuestions: [...this.state.pinnedQuestions, {...data.val(), key: data.key }] })
           }
+          if (data.val().pin === false && isInPinned){
+            this.setState({ pinnedQuestions: this.state.pinnedQuestions.filter(x => x.key !== data.key) })
+          }
         })
       })
       
@@ -221,7 +224,7 @@ export default class Admin extends Component {
   }
 
   render() {
-    const { questions, sessions, backgroundUrl, launchDisabled } = this.state 
+    const { questions, sessions, backgroundUrl } = this.state 
     questions.sort(function (a,b){
       return b.dateCreate - a.dateCreate
     })
@@ -383,7 +386,7 @@ export default class Admin extends Component {
   }
 
   renderLeftHeader = () => {
-    const sample = {value: "All", label: "All", className: "dropdownText"}
+    const sample = {value: "All", label: "All Sessions", className: "dropdownText"}
     const sessions = []
     const sessionName = this.state.currentSession ? {value: "", label: this.state.currentSession.sessionName || "", className: "dropdownText"} : sample
     sessions.push(sample)
@@ -449,7 +452,7 @@ export default class Admin extends Component {
               return (
                 <li className='cellBox' key={task.key}>
                   <CustomCell task = {task} difference = {difference} />
-                  <CustomButtons task = {task} answered = {true} blockQuestion = {this.blockQuestion} />
+                  <CustomButtons task = {task} answered = {true} blockQuestion = {this.blockQuestion} makeApprove={this.makeApprove}/>
                 </li>
               )
             }) }
@@ -752,7 +755,7 @@ export default class Admin extends Component {
 
   makeApprove = (question) => {
     const time = new Date().getTime()
-    this.props.fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
+    this.props.fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time, "answered": false, "pin" : false})
   }
 
   canPin = () => {

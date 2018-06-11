@@ -214,6 +214,10 @@ html, body, input, button, select, form{
  border-bottom-color: #DEDEDE;
 }
 
+.grayText{
+  color: #AEAEAE;
+}
+
 .cellBoxTop {
   width: 100%;
   flex-flow: row wrap;

@@ -70,7 +70,10 @@ export default class MyList extends Component {
     data={newQuestions}
     ListFooterComponent={<View style={{height: 100}}></View>}
     renderItem={({item}) => {
-      if (moderator.length > 0 && currentSort === "New"){
+      if (moderator.length > 0){
+        if (currentSort === "Blocked" || currentSort ==="New") {
+          return this.renderCell(item)
+        }
         if (moderator[0].approve !== true && item.answered === false) {
           return this.renderCell(item)
         }
