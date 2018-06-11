@@ -271,12 +271,10 @@ class HomeView extends Component {
         this.originalOrder(otherQuestions)
         const allQuestions = pinnedQuestions.concat(otherQuestions)
         let orderedQuestions = allQuestions
-        if (currentSort === "Approved" || "Popular" || "Recent" && allQuestions.length) { 
-          orderedQuestions = allQuestions.filter(item => item.block === false && item.answered === false && item.approve && item.new === false && item.session === session.key)
-        }
-        if (currentSort === "Answered" && allQuestions.length) orderedQuestions = allQuestions.filter(item => item.answered === true && item.session === session.key)
-        if (currentSort === "Blocked" && allQuestions.length) orderedQuestions = allQuestions.filter(item => item.block === true && item.new === false && item.session === session.key)
-        if (currentSort === "New" && allQuestions.length) orderedQuestions = allQuestions.filter(item => item.approve === false && item.new === true && item.session === session.key)
+        if (currentSort === "Answered") orderedQuestions = allQuestions.filter(item => item.answered === true && item.session === session.key)
+        if (currentSort === "Blocked") orderedQuestions = allQuestions.filter(item => item.block === true && item.new === false && item.session === session.key)
+        if (currentSort === "New") orderedQuestions = allQuestions.filter(item => item.approve === false && item.new === true && item.session === session.key)
+        else orderedQuestions = allQuestions.filter(item => item.block === false && item.answered === false && item.approve && item.new === false && item.session === session.key)
         return orderedQuestions
       }
       else {
@@ -354,7 +352,7 @@ class HomeView extends Component {
             var newObject = data.val()
             newObject.score = score
             newObject.myVote = myVote
-            if (data.val().creator.id === client.currentUser.id && oldState !== data.val().approve && !data.val().block && !data.val().answered){
+            if (data.val().creator.id === client.currentUser.id && oldState !== newObject.approve && !newObject.block && !newObject.answered){
               this.setState({questions: [...newQuestions, {...newObject, key: data.key }], approve: true, questionAsk: true})
             }
             else {

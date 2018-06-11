@@ -16,7 +16,6 @@
 
 import React, { Component } from 'react'
 import './App.css'
-import Modal  from 'react-modal'
 import CellEdit from './editCell'
 import SearchBar from "./SearchBar"
 
@@ -77,7 +76,7 @@ export class SessionBox extends Component {
       return (
         <div>
           <span className="textInputBox">
-            <input className="textBox" name="value" maxLength="250" type="text" autoFocus style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
+            <input className="textBox" name="value" maxLength="250" type="text" autoFocus value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
             <p className="grayText">{250-this.state.value.length}</p>
             <div className="rightButtons">
               <button className="borderlessButtonMed" onClick={this.handleSubmit} value="false">Save</button>

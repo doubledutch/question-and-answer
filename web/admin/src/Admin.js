@@ -18,9 +18,7 @@ import React, { Component } from 'react'
 import './App.css'
 import { CSVLink } from 'react-csv'
 import client from '@doubledutch/admin-client'
-import FirebaseConnector from '@doubledutch/firebase-connector'
 import moment from 'moment'
-import CustomModal from './modal'
 import CustomCell from './cell'
 import ModIcon from './modicon'
 import AnomIcon from './anomicon'
@@ -31,7 +29,7 @@ import SortableTable from './sortableTable'
 import PresentationDriver from './PresentationDriver'
 import SessionBox from './SessionBox'
 import Select from 'react-select';
-import {AttendeeSelector, TextInput} from '@doubledutch/react-components'
+import {AttendeeSelector} from '@doubledutch/react-components'
 import 'react-select/dist/react-select.css';
 import {openTab} from './utils'
 
