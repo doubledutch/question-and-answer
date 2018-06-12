@@ -33,7 +33,7 @@ export default class MyList extends Component {
     }
 
   render() {
-    const {showRecent, moderator, isAdmin, currentSort } = this.props
+    const {moderator, isAdmin, currentSort } = this.props
     var showAnswer = this.props.showAnswer
     let newQuestions = this.props.questions
     if (isAdmin && currentSort === "Answered") showAnswer = true
@@ -47,7 +47,7 @@ export default class MyList extends Component {
     if (showAnswer === false){
       newQuestions = newQuestions.filter(item => item.answered === false)
     }
-
+    console.log(newQuestions)
     let testQuestions = newQuestions
     if (moderator.length > 0 && isAdmin === false){    
       if (moderator[0].approve === true){
@@ -150,45 +150,59 @@ export default class MyList extends Component {
  }
 
   renderHeader = (questions) => {
-    const { isAdmin } = this.props
-    if (questions.length === 0) {
-      if (isAdmin) {
-        return (
-          <View>
-            {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
-            <View style={{marginTop: 96}}b>
-              <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>No Matching Questions</Text>
-            </View>
+    const { isAdmin, showAnswer, showRecent, allQuestions } = this.props
+    if (allQuestions.length === 0 && isAdmin === false) {
+      return (
+        <View>
+          {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
+          <View style={{marginTop: 96}}>
+            <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>Be the First to Ask a Question!</Text>
+            <TouchableOpacity style={{marginTop: 5, height: 25}} onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 18, color: client.primaryColor}}>Tap here to get started</Text></TouchableOpacity>
           </View>
-        )
-      }
-      else {
-        return (
-          <View>
-            {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
-            <View style={{marginTop: 96}}b>
-              <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>Be the First to Ask a Question!</Text>
-              <TouchableOpacity style={{marginTop: 5, height: 25}} onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 18, color: client.primaryColor}}>Tap here to get started</Text></TouchableOpacity>
-            </View>
-          </View>
-        )
-      }
-    }
-    if (this.props.showAnswer === true) {
-      return (
-        this.renderHeaderButtons(s.button2, s.button2, s.button1)
+        </View>
       )
     }
-    if (this.props.showRecent === false) {
+    if (isAdmin){
       return (
-        this.renderHeaderButtons(s.button1, s.button2, s.button2)
+        <View>
+          {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
+          {questions.length ? null : this.renderHelpText()}
+        </View>
       )
     }
-    if (this.props.showRecent === true) {
+    if (showAnswer) {
       return (
-        this.renderHeaderButtons(s.button2, s.button1, s.button2)
+        <View>
+          {this.renderHeaderButtons(s.button2, s.button2, s.button1)}
+          {questions.length ? null : this.renderHelpText()}
+        </View>
       )
     }
+    if (showRecent) {
+      return (
+        <View>
+          {this.renderHeaderButtons(s.button2, s.button1, s.button2)}
+          {questions.length ? null : this.renderHelpText()}
+        </View>
+      )
+    }
+    else {
+      return (
+        <View>
+          {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
+          {questions.length ? null : this.renderHelpText()}
+        </View>
+      )
+    }
+  }
+
+  renderHelpText = () => {
+    const {moderator, currentSort} = this.props
+    return (
+      <View style={{marginTop: 96}}b>
+        <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>{moderator[0].approve === false && currentSort === "New" ? "Moderation is turned off": "No Matching Questions" }</Text>
+      </View>
+    )
   }
 
   renderHeaderButtons = (x,y,z) => {
@@ -232,7 +246,7 @@ export default class MyList extends Component {
       )
       case "Blocked": return (
         <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
-          <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> UnBlock</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> Approve</Text></TouchableOpacity>
         </View>
       )
       case "Approved": return (

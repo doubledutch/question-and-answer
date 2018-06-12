@@ -216,6 +216,7 @@ class HomeView extends Component {
         <View style={{flex:1}}>
           <MyList 
           questions={newQuestions}
+          allQuestions={this.state.questions}
           showModal = {this.showModal}
           showAnswer = {showAnswer}
           moderator = {moderator}

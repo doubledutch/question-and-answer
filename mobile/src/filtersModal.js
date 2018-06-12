@@ -1,9 +1,7 @@
 'use strict'
 import React, { Component } from 'react'
-import ReactNative, {
-  Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
-} from 'react-native'
-import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
+import ReactNative, { TouchableOpacity, Text, View } from 'react-native'
+import client, { } from '@doubledutch/rn-client'
 
 export default class FilterSelect extends Component {
   constructor(props){
@@ -62,6 +60,8 @@ export default class FilterSelect extends Component {
     const originalSort = this.state.originalSort ? this.state.originalSort : this.props.currentSort
     this.props.handleChange("showFilterSelect", false)
     this.props.handleChange("currentSort", originalSort)
+    if (originalSort === "Recent") { this.props.findOrderDate() }
+    else { this.props.findOrder() }
   }
 
   onSortChange = (item) => {
