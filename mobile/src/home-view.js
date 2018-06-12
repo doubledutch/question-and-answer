@@ -196,7 +196,7 @@ class HomeView extends Component {
       textAlignVertical: 'center'
     }
 
-    const { sharedVotes, showRecent, newUpdate, dropDown, newValue, height, marginTop, moderator, launch, showAnswer, session, isAdmin} = this.state
+    const { showRecent, moderator, launch, showAnswer, session, isAdmin} = this.state
     const sessions = this.state.sessions.filter(item => item.archive !== true)
     var newQuestions = []
     if (session) newQuestions = this.sortFilter()
@@ -216,16 +216,17 @@ class HomeView extends Component {
         <View style={{flex:1}}>
           <MyList 
           questions={newQuestions}
+          allQuestions={this.state.questions}
           showModal = {this.showModal}
-          showAnswer = {this.state.showAnswer}
-          moderator = {this.state.moderator}
-          showRecent = {this.state.showRecent}
+          showAnswer = {showAnswer}
+          moderator = {moderator}
+          showRecent = {showRecent}
           showAnswered = {this.showAnswered}
           findOrder = {this.findOrder}
           findOrderDate = {this.findOrderDate}
           originalOrder = {this.originalOrder}
           newVote = {this.newVote}
-          isAdmin={this.state.isAdmin}
+          isAdmin={isAdmin}
           changeQuestionStatus={this.changeQuestionStatus}
           renderFilterSelect={this.renderFilterSelect}
           currentSort={this.state.currentSort}
@@ -269,13 +270,17 @@ class HomeView extends Component {
           return a.order - b.order
         })
         this.originalOrder(otherQuestions)
-        var orderedQuestions = pinnedQuestions.concat(otherQuestions)
-        if (currentSort === "Approved" || "Popular" || "Recent" && orderedQuestions.length) { 
-          orderedQuestions = orderedQuestions.filter(item => item.block === false && item.answered === false && item.approve && item.new === false && item.session === session.key)
+        const allQuestions = pinnedQuestions.concat(otherQuestions)
+        let orderedQuestions = allQuestions
+        switch (currentSort) {
+          case "Answered" : orderedQuestions = allQuestions.filter(item => item.answered && item.session === session.key)
+          break;
+          case "Blocked" : orderedQuestions = allQuestions.filter(item => item.block && item.new === false && item.session === session.key) 
+            break;
+          case "New" : orderedQuestions = allQuestions.filter(item => item.approve === false && item.new && item.session === session.key)
+            break;
+          default : orderedQuestions = allQuestions.filter(item => item.block === false && item.answered === false && item.approve && item.new === false && item.session === session.key)
         }
-        if (currentSort === "Answered" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.answered === true && item.session === session.key)
-        if (currentSort === "Blocked" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.block === true && item.new === false && item.session === session.key)
-        if (currentSort === "New" && orderedQuestions.length) orderedQuestions = orderedQuestions.filter(item => item.approve === false && item.new === true && item.session === session.key)
         return orderedQuestions
       }
       else {
@@ -353,11 +358,11 @@ class HomeView extends Component {
             var newObject = data.val()
             newObject.score = score
             newObject.myVote = myVote
-            if (data.val().creator.id === client.currentUser.id && oldState !== data.val().approve){
+            if (data.val().creator.id === client.currentUser.id && oldState !== newObject.approve && !newObject.block && !newObject.answered){
               this.setState({questions: [...newQuestions, {...newObject, key: data.key }], approve: true, questionAsk: true})
             }
             else {
-              this.setState({questions: [...newQuestions, {...newObject, key: data.key }]})
+              this.setState({questions: [...newQuestions, {...newObject, key: data.key}]})
             }
             break
           }
@@ -384,7 +389,7 @@ class HomeView extends Component {
           modOn = this.state.moderator[0].approve
         }
       }
-      if (this.state.questionAsk && modOn && this.state.approve && this.state.isAdmin === false) {
+      if (this.state.questionAsk && modOn && this.state.approve && this.state.openAdminHeader === false) {
         setTimeout(() => {
           this.closeConfirm()
           }
@@ -397,7 +402,7 @@ class HomeView extends Component {
         )
       }
 
-      if (this.state.questionAsk && modOn && this.state.approve === false && this.state.isAdmin === false) {
+      if (this.state.questionAsk && modOn && this.state.approve === false && this.state.openAdminHeader === false) {
         setTimeout(() => {
           this.closeConfirm()
           }

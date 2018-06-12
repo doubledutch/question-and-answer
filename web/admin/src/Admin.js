@@ -18,9 +18,7 @@ import React, { Component } from 'react'
 import './App.css'
 import { CSVLink } from 'react-csv'
 import client from '@doubledutch/admin-client'
-import FirebaseConnector from '@doubledutch/firebase-connector'
 import moment from 'moment'
-import CustomModal from './modal'
 import CustomCell from './cell'
 import ModIcon from './modicon'
 import AnomIcon from './anomicon'
@@ -31,7 +29,7 @@ import SortableTable from './sortableTable'
 import PresentationDriver from './PresentationDriver'
 import SessionBox from './SessionBox'
 import Select from 'react-select';
-import {AttendeeSelector, TextInput} from '@doubledutch/react-components'
+import {AttendeeSelector} from '@doubledutch/react-components'
 import 'react-select/dist/react-select.css';
 import {openTab} from './utils'
 
@@ -157,6 +155,9 @@ export default class Admin extends Component {
           if (data.val().pin && !isInPinned) {
             this.setState({ pinnedQuestions: [...this.state.pinnedQuestions, {...data.val(), key: data.key }] })
           }
+          if (data.val().pin === false && isInPinned){
+            this.setState({ pinnedQuestions: this.state.pinnedQuestions.filter(x => x.key !== data.key) })
+          }
         })
       })
       
@@ -221,7 +222,7 @@ export default class Admin extends Component {
   }
 
   render() {
-    const { questions, sessions, backgroundUrl, launchDisabled } = this.state 
+    const { questions, sessions, backgroundUrl } = this.state 
     questions.sort(function (a,b){
       return b.dateCreate - a.dateCreate
     })
@@ -383,7 +384,7 @@ export default class Admin extends Component {
   }
 
   renderLeftHeader = () => {
-    const sample = {value: "All", label: "All", className: "dropdownText"}
+    const sample = {value: "All", label: "All Sessions", className: "dropdownText"}
     const sessions = []
     const sessionName = this.state.currentSession ? {value: "", label: this.state.currentSession.sessionName || "", className: "dropdownText"} : sample
     sessions.push(sample)
@@ -449,7 +450,7 @@ export default class Admin extends Component {
               return (
                 <li className='cellBox' key={task.key}>
                   <CustomCell task = {task} difference = {difference} />
-                  <CustomButtons task = {task} answered = {true} blockQuestion = {this.blockQuestion} />
+                  <CustomButtons task = {task} answered = {true} blockQuestion = {this.blockQuestion} makeApprove={this.makeApprove}/>
                 </li>
               )
             }) }
@@ -752,7 +753,7 @@ export default class Admin extends Component {
 
   makeApprove = (question) => {
     const time = new Date().getTime()
-    this.props.fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
+    this.props.fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time, "answered": false, "pin" : false})
   }
 
   canPin = () => {

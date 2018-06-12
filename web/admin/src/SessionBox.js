@@ -16,7 +16,6 @@
 
 import React, { Component } from 'react'
 import './App.css'
-import Modal  from 'react-modal'
 import CellEdit from './editCell'
 import SearchBar from "./SearchBar"
 
@@ -41,8 +40,8 @@ export class SessionBox extends Component {
         <div>
           <div className="cellBoxTop">
             <h2>Sessions</h2>
-            <button className="addSessionButton" onClick={this.handleNewSession} value="false">{this.state.showNewSession ? "Cancel" : "Add Session"}</button>
-            <SearchBar updateList={this.updateList}/>
+            { this.props.hideSessions ? null : <button className="addSessionButton" onClick={this.handleNewSession} value="false">{this.state.showNewSession ? "Cancel" : "Add Session"}</button> }
+            { this.props.hideSessions ? null : <SearchBar updateList={this.updateList}/> }
             <div style={{flex:1}}/>
             <button className="hideButton" onClick={() => this.props.hideSection("Sessions")}>{this.props.hideSessions ? "Show" : "Hide" } Section</button>
           </div>
@@ -77,7 +76,8 @@ export class SessionBox extends Component {
       return (
         <div>
           <span className="textInputBox">
-            <input className="textBox" name="value" maxLength="250" type="text" autoFocus style={{}}value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
+            <input className="textBox" name="value" maxLength="250" type="text" autoFocus value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
+            <p className="grayText">{250-this.state.value.length}</p>
             <div className="rightButtons">
               <button className="borderlessButtonMed" onClick={this.handleSubmit} value="false">Save</button>
               <button className="borderlessButton" onClick={this.handleClose} value="false">Cancel</button>
