@@ -47,7 +47,6 @@ export default class MyList extends Component {
     if (showAnswer === false){
       newQuestions = newQuestions.filter(item => item.answered === false)
     }
-    console.log(newQuestions)
     let testQuestions = newQuestions
     if (moderator.length > 0 && isAdmin === false){    
       if (moderator[0].approve === true){
