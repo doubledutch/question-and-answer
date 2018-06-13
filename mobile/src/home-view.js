@@ -425,7 +425,7 @@ class HomeView extends Component {
 
     changeQuestionStatus = (question, variable) => {
       const time = new Date().getTime()
-      if (variable === "approve") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, 'lastEdit': time})
+      if (variable === "approve") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, "answered": false, 'lastEdit': time})
       if (variable === "answer") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'block': false, 'new': false, 'pin': false, 'lastEdit': time})
       if (variable === "block") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true,  "answered": false, 'approve': false, 'new': false, 'pin': false, 'lastEdit': time})
     }

@@ -288,8 +288,7 @@ html, body, input, button, select, form{
 }
 
 .searchBar {
-  margin: 5px;
-  margin-left: 30px;
+  margin: 3px 5px 5px 30px;
   background-color: white;
   padding-left: 10px;
   border-radius: 5px;
@@ -298,8 +297,7 @@ html, body, input, button, select, form{
 }
 
 .searchBar--gray {
-  margin: 5px;
-  margin-left: 30px;
+  margin: 3px 5px 5px 30px;
   padding-left: 10px;
   border-radius: 5px;
   height: 41px;

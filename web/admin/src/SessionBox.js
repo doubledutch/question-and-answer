@@ -43,7 +43,7 @@ export class SessionBox extends Component {
             { this.props.hideSessions ? null : <button className="addSessionButton" onClick={this.handleNewSession} value="false">{this.state.showNewSession ? "Cancel" : "Add Session"}</button> }
             { this.props.hideSessions ? null : <SearchBar updateList={this.updateList}/> }
             <div style={{flex:1}}/>
-            <button className="hideButton" onClick={() => this.props.hideSection("Sessions")}>{this.props.hideSessions ? "Show" : "Hide" } Section</button>
+            <button className="hideButton" onClick={this.handleHideSection}>{this.props.hideSessions ? "Show" : "Hide" } Section</button>
           </div>
           {this.props.hideSessions ? null : <div>
             <label className="boxTitleBold" style={{marginLeft: 10}}>Name</label>
@@ -86,6 +86,11 @@ export class SessionBox extends Component {
           {(this.state.color !== this.props.modalColor) ? <p style={{color: this.state.color, fontSize: 12, margin: 0, padding: 0, marginTop: 2}}>{this.state.message}</p> : null}
         </div>
       )
+    }
+
+    handleHideSection = () => {
+      this.setState({search: false, value: ""})
+      this.props.hideSection("Sessions")
     }
 
     handleChange = (event) => {

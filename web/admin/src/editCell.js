@@ -65,7 +65,7 @@ export class CellEdit extends Component {
         if (this.state.action === "edit") {
             return (
               <div className="rightButtons">
-                  <button className="smallCloseButton" ref={(ip) => this.myInp1 = ip }value="edit" onClick={this.confirmEdit}>Done</button>
+                  <button className="smallCloseButton" value="edit" onClick={this.confirmEdit}>Done</button>
               </div>
             )
         }
@@ -116,8 +116,8 @@ export class CellEdit extends Component {
             }
             if (status){
                 this.setState({modalMessage: "", height: 0, action: "state", value: named})
-                this.myInp.blur()
                 this.props.confirmEdit(this.props.task, named)
+                this.myInp.blur()
             }
             if (status === false) {
                 this.handleEdit()
