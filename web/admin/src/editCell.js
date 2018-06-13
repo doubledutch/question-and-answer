@@ -65,7 +65,8 @@ export class CellEdit extends Component {
         if (this.state.action === "edit") {
             return (
               <div className="rightButtons">
-                  <button className="smallCloseButton" ref={(ip) => this.myInp1 = ip }value="edit" onClick={this.confirmEdit}>Done</button>
+                  <button className="smallCloseButton" ref={(ip) => this.myInp1 = ip } value="edit" onClick={this.confirmEdit}>Done</button>
+                  <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? "Display in App" : "Hide in App"}</button>
               </div>
             )
         }
@@ -108,6 +109,7 @@ export class CellEdit extends Component {
      confirmEdit = () => {
         var named = this.state.value.trim()
         var status = true
+        console.log(named)
         if (named) {
             for (var item of this.props.sessions){
               if (item.sessionName.toUpperCase() === named.toUpperCase()){
@@ -115,17 +117,20 @@ export class CellEdit extends Component {
               }
             }
             if (status){
+                console.log("here")
                 this.setState({modalMessage: "", height: 0, action: "state", value: named})
-                this.myInp.blur()
                 this.props.confirmEdit(this.props.task, named)
+                this.myInp.blur()
             }
             if (status === false) {
+              console.log("there")
                 this.handleEdit()
                 this.setState({modalMessage: "*This session name already exists. Please enter a valid session name", height: 20});
             }   
         }
         else {
             this.handleEdit()
+            console.log("everywhere")
             this.setState({modalMessage: "*Please enter a valid session name", height: 20});
         }
      }
