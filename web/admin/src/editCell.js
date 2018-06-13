@@ -66,7 +66,6 @@ export class CellEdit extends Component {
             return (
               <div className="rightButtons">
                   <button className="smallCloseButton" ref={(ip) => this.myInp1 = ip } value="edit" onClick={this.confirmEdit}>Done</button>
-                  <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? "Display in App" : "Hide in App"}</button>
               </div>
             )
         }
