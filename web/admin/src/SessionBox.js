@@ -104,22 +104,15 @@ export class SessionBox extends Component {
     }
 
     updateList = (value) => {
-      var queryText = value.toLowerCase()
-      if (queryText.length > 0){
-        this.setState({search: true, searchValue: value})
-      }
-      else {
-        this.setState({search: false, searchValue: value})
-      }
+      this.setState({search: value.length > 0, searchValue: value})
     }
 
     returnNewList = () => {
-      let value = this.state.searchValue
-      var queryText = value.toLowerCase()
+      const queryText = this.state.value.toLowerCase()
       if (queryText.length > 0){
-        var queryResult=[];
+        let queryResult=[];
         this.props.sessions.forEach(function(content){
-          var title = content.sessionName
+          const title = content.sessionName
           if (title) {
             if (title.toLowerCase().indexOf(queryText)!== -1){
               queryResult.push(content);
