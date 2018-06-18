@@ -46,37 +46,37 @@ export class CellEdit extends Component {
 
     renderIcons = (task) => {
         if (this.state.action === "state") {
-            return (
-            <div className="rightButtons">
-                <button className="borderlessButtonSmall" onClick={this.handleEdit} value="false">Edit</button>
-                <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? "Display in App" : "Hide in App"}</button>
-            </div>
-            )
+          return (
+          <div className="rightButtons">
+            <button className="borderlessButtonSmall" onClick={this.handleEdit} value="false">Edit</button>
+            <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? "Display in App" : "Hide in App"}</button>
+          </div>
+          )
         }
 
         if (this.state.action === "delete") {
-            return (
-              <div className="rightButtons">
-                  <button className="smallCloseButton" value="delete" onClick={this.confirmDelete}>Confirm</button>
-              </div>
-            )
+          return (
+            <div className="rightButtons">
+              <button className="smallCloseButton" value="delete" onClick={this.confirmDelete}>Confirm</button>
+            </div>
+          )
         }
 
         if (this.state.action === "edit") {
             return (
               <div className="rightButtons">
-                  <button className="smallCloseButton" value="edit" onClick={this.confirmEdit}>Done</button>
+                <button className="smallCloseButton" value="edit" onClick={this.confirmEdit}>Done</button>
               </div>
             )
         }
     }
 
     handleKeyPress = (event) => {
-        if (event.key === 'Enter'){
-            event.preventDefault()
-            this.confirmEdit()    
-        }
+      if (event.key === 'Enter'){
+          event.preventDefault()
+          this.confirmEdit()    
       }
+    }
 
     handleBlur = (event) => {
       const currentButton = event.relatedTarget ? event.relatedTarget.value : ''

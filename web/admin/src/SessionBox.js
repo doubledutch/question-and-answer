@@ -29,13 +29,14 @@ export class SessionBox extends Component {
             editMessage: "",
             height: 0,
             showNewSession: false,
-            newList: []
+            newList: [],
+            search: false,
+            searchValue: ""
         }
     }
 
     render() {
-      var sessions = this.props.sessions
-      if (this.state.search) sessions = this.state.newList
+      let sessions = this.returnNewList()
       return(   
         <div>
           <div className="cellBoxTop">
@@ -54,12 +55,12 @@ export class SessionBox extends Component {
                   return (
                     <li className='modalCellBox' key={task.key}>
                       <CellEdit
-                      task = {task}
-                      confirmDelete = {this.confirmDelete}
-                      confirmEdit = {this.confirmEdit}
-                      sessions = {sessions}
-                      message = {this.state.modalMessage}
-                      height = {this.state.height}
+                        task = {task}
+                        confirmDelete = {this.confirmDelete}
+                        confirmEdit = {this.confirmEdit}
+                        sessions = {sessions}
+                        message = {this.state.modalMessage}
+                        height = {this.state.height}
                       />
                     </li>
                   )
@@ -99,10 +100,21 @@ export class SessionBox extends Component {
 
     handleNewSession = () => {
       const current = this.state.showNewSession
-      this.setState({showNewSession: !current})
+      this.setState({showNewSession: !current, color: "#FAFAFA"})
     }
 
     updateList = (value) => {
+      var queryText = value.toLowerCase()
+      if (queryText.length > 0){
+        this.setState({search: true, searchValue: value})
+      }
+      else {
+        this.setState({search: false, searchValue: value})
+      }
+    }
+
+    returnNewList = () => {
+      let value = this.state.searchValue
       var queryText = value.toLowerCase()
       if (queryText.length > 0){
         var queryResult=[];
@@ -114,11 +126,12 @@ export class SessionBox extends Component {
             }
           }
         });
-        this.setState({search: true, newList: queryResult})
+        return queryResult
       }
       else {
-        this.setState({search: false})
+        return this.props.sessions
       }
+
     }
 
     handleKeyPress = (event) => {

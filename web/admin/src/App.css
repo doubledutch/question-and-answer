@@ -216,6 +216,7 @@ html, body, input, button, select, form{
 
 .grayText{
   color: #AEAEAE;
+  padding: 0px;
 }
 
 .cellBoxTop {
@@ -275,6 +276,7 @@ html, body, input, button, select, form{
   border: none;
   font-size: 14px;
   background-color: white;
+  padding: 0px;
   color: #4A90E2;
 }
 
