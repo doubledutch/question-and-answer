@@ -36,7 +36,7 @@ export class SessionBox extends Component {
     }
 
     render() {
-      let sessions = this.returnNewList()
+      let sessions = this.createList()
       return(   
         <div>
           <div className="cellBoxTop">
@@ -107,7 +107,7 @@ export class SessionBox extends Component {
       this.setState({search: value.length > 0, searchValue: value})
     }
 
-    returnNewList = () => {
+    createList = () => {
       const queryText = this.state.value.toLowerCase()
       if (queryText.length > 0){
         let queryResult=[];

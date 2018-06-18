@@ -98,8 +98,7 @@ class HomeView extends Component {
               sessions[i].key = data.key
               if (this.state.session.key === data.key) {
                 let changeViewStatus = false
-                var newSession = this.state.session
-                newSession = data.val()
+                let newSession = data.val()
                 newSession.key = data.key
                 if (this.state.session.archive === false && data.val().archive) {
                   changeViewStatus = true
