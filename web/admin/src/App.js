@@ -23,7 +23,7 @@ export default class App extends PureComponent {
       client.getUsers().then(users => {
         this.setState({allUsers: users, isSignedIn: true})
       })
-    })
+    }).catch((error) => console.log(error))
   }
 
   render() {

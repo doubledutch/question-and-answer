@@ -142,11 +142,7 @@ class HomeView extends Component {
             }
           }
         })
-        fbc.database.private.adminableUserRef('adminToken').on('child_removed', data => {
-          console.log("here")
-          this.setState({isAdmin: false})
-        })
-
+        
       }
       fbc.database.private.adminableUserRef('adminToken').once('value', async data => {
         const longLivedToken = data.val()
