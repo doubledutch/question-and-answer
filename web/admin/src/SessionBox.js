@@ -84,7 +84,7 @@ export class SessionBox extends Component {
               <button className="borderlessButton" onClick={this.handleClose} value="false">Cancel</button>
             </div>
           </span>
-          {this.state.isError ? <p style={{color: "red", fontSize: 12, margin: 0, padding: 0, marginTop: 2}}>{this.state.message}</p> : null}
+          {this.state.isError ? <p className="errorTextMargin">{this.state.message}</p> : null}
         </div>
       )
     }
