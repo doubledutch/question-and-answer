@@ -24,13 +24,13 @@ export class SessionBox extends Component {
         super(props)
         this.state = {
             value: '',
-            color: this.props.modalColor,
+            isError: false,
             message: this.props.message,
             editMessage: "",
             height: 0,
             showNewSession: false,
             newList: [],
-            search: false,
+            search: true,
             searchValue: ""
         }
     }
@@ -42,7 +42,7 @@ export class SessionBox extends Component {
           <div className="cellBoxTop">
             <h2>Sessions</h2>
             { this.props.hideSessions ? null : <button className="addSessionButton" onClick={this.handleNewSession} value="false">{this.state.showNewSession ? "Cancel" : "Add Session"}</button> }
-            { this.props.hideSessions ? null : <SearchBar updateList={this.updateList}/> }
+            { this.props.hideSessions ? null : <SearchBar updateList={this.updateList} search={this.state.search}/> }
             <div style={{flex:1}}/>
             <button className="hideButton" onClick={this.handleHideSection}>{this.props.hideSessions ? "Show" : "Hide" } Section</button>
           </div>
@@ -84,23 +84,24 @@ export class SessionBox extends Component {
               <button className="borderlessButton" onClick={this.handleClose} value="false">Cancel</button>
             </div>
           </span>
-          {(this.state.color !== this.props.modalColor) ? <p style={{color: this.state.color, fontSize: 12, margin: 0, padding: 0, marginTop: 2}}>{this.state.message}</p> : null}
+          {this.state.isError ? <p style={{color: "red", fontSize: 12, margin: 0, padding: 0, marginTop: 2}}>{this.state.message}</p> : null}
         </div>
       )
     }
 
     handleHideSection = () => {
-      this.setState({search: false, value: ""})
+      this.setState({search: false, value: "", searchValue: ""})
       this.props.hideSection("Sessions")
+      this.handleClose()
     }
 
     handleChange = (event) => {
-      this.setState({[event.target.name]: event.target.value, color: "#FAFAFA"});
+      this.setState({[event.target.name]: event.target.value});
     }
 
     handleNewSession = () => {
       const current = this.state.showNewSession
-      this.setState({showNewSession: !current, color: "#FAFAFA"})
+      this.setState({showNewSession: !current, isError: false, search: false, searchValue: ""})
     }
 
     updateList = (value) => {
@@ -108,23 +109,14 @@ export class SessionBox extends Component {
     }
 
     createList = () => {
-      const queryText = this.state.value.toLowerCase()
+      const queryText = this.state.searchValue.toLowerCase()
       if (queryText.length > 0){
-        let queryResult=[];
-        this.props.sessions.forEach(function(content){
-          const title = content.sessionName
-          if (title) {
-            if (title.toLowerCase().indexOf(queryText)!== -1){
-              queryResult.push(content);
-            }
-          }
-        });
+        const queryResult = this.props.sessions.filter(s => s.title && s.title.toLowerCase().includes(queryText))
         return queryResult
       }
       else {
         return this.props.sessions
       }
-
     }
 
     handleKeyPress = (event) => {
@@ -136,14 +128,14 @@ export class SessionBox extends Component {
           this.handleSubmit(event, keyPress)
         }
         else {
-          this.setState({color: "red", message: "*Please enter a session name."});
+          this.setState({isError: true, message: "*Please enter a session name."});
         }
       }
     }
 
     handleClose = () => {
       const current = this.state.showNewSession
-      this.setState({value: "", color: "#FAFAFA", showNewSession: !current});
+      this.setState({value: "", isError: false, showNewSession: !current});
     }
 
     makeFocus = () => {
@@ -157,13 +149,13 @@ export class SessionBox extends Component {
         for (var item of this.props.sessions){
           if (item.sessionName.toUpperCase() === sessionName.toUpperCase()){
             status = false
-            this.setState({color: "red", message: "*This session name already exists. Please enter a new session name."});
+            this.setState({isError: true, message: "*This session name already exists. Please enter a new session name."});
           }
         }
         if (status){
         this.props.newSession(sessionName)
         const current = this.state.showNewSession
-        this.setState({value: "", color: "#FAFAFA", showNewSession: !current});
+        this.setState({value: "", isError: false, showNewSession: !current});
         if (event.target.value === "true") {
           this.props.closeModal()
         }
@@ -173,7 +165,7 @@ export class SessionBox extends Component {
       }
     }
       else {
-        this.setState({color: "red", message: "*Please enter a session name."});
+        this.setState({isError: true, message: "*Please enter a session name."});
       }
     }
 

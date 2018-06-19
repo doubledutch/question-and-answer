@@ -285,12 +285,12 @@ export default class Admin extends Component {
           { this.state.hideAdmins ? null : <div>
             <p className="modSectionDes">Moderators will have access to the moderator panel in the Q&A mobile app. They will be able to approve, block and mark questions as answered from within the moderator panel. Being designated as a moderator is not necessary to moderate sessions from within the CMS.</p>
             <AttendeeSelector 
-            client={client}
-            searchTitle="Select Admins"
-            selectedTitle="Current Admins"
-            onSelected={this.onAdminSelected}
-            onDeselected={this.onAdminDeselected}
-            selected={this.props.attendees.filter(a => this.isAdmin(a.id))} />
+              client={client}
+              searchTitle="Select Admins"
+              selectedTitle="Current Admins"
+              onSelected={this.onAdminSelected}
+              onDeselected={this.onAdminDeselected}
+              selected={this.props.attendees.filter(a => this.isAdmin(a.id))} />
             </div> }
       </div>
     )
@@ -397,7 +397,7 @@ export default class Admin extends Component {
           name="session"
           value={sessionName}
           onSelectResetsInput={false}
-          onBlurResetsInput={false}
+          onBlurResetsInput={true}
           onChange={this.handleSessionChange}
           clearable={false}
           options={sessions}
@@ -840,7 +840,8 @@ function questionForCsv(q) {
     Session: q.sessionName,
     First_Name: creator.firstName,
     Last_Name: creator.lastName,
-    Email: creator.email
+    Email: creator.email,
+    Votes: q.score
   }
 }
 

@@ -31,7 +31,11 @@ export default class BigScreen extends PureComponent {
     const {backgroundUrl, session} = this.state
     const { client } = this.props
     const color = client
-    if (!session) return this.renderNonexistent()
+    if (!session) return (
+      <div className="big-screen">
+        {this.renderNonexistent()}
+      </div>
+    )
     return (
       <div className="big-screen" style={backgroundUrl ? {backgroundImage: `url(${backgroundUrl})`} : null}>
         {this.renderState(session)}
@@ -86,7 +90,7 @@ export default class BigScreen extends PureComponent {
   renderState(session) {
     switch (session.state) {
       case 'LIVE': return this.renderTable()
-      default: return null
+      default: return this.renderNonexistent()
     }
   }
 
@@ -131,7 +135,7 @@ export default class BigScreen extends PureComponent {
     })
   }
 
-  renderNonexistent = () => <div className="big-screen"><div className="box box-content">This session has not been initialized for viewing</div></div>
+  renderNonexistent = () => <div className="box"><div className="box-content">This session has not been initialized for viewing</div></div>
 
   sessionRef = () => this.props.fbc.database.public.adminRef('sessions').child(this.props.session)
   backgroundUrlRef = () => this.props.fbc.database.public.adminRef('backgroundUrl')
