@@ -46,7 +46,7 @@ class HomeView extends Component {
       characterCount: 0, 
       showRecent: false, 
       showAnswer: false, 
-      showError: "white", 
+      showError: false, 
       newUpdate: false, 
       modalVisible: true, 
       color: 'white', 
@@ -97,14 +97,20 @@ class HomeView extends Component {
               sessions[i] = data.val()
               sessions[i].key = data.key
               if (this.state.session.key === data.key) {
-                let changeViewStatus = false
+                let changeModalView = this.state.modalVisible
+                let changeLaunch = this.state.launch
+                let changeDisable = true
                 let newSession = data.val()
                 newSession.key = data.key
-                if (this.state.session.archive === false && data.val().archive) {
-                  changeViewStatus = true
+                if (changeLaunch && changeModalView){
+                  newSession = ""
+                }
+                if (data.val().archive) {
+                  changeModalView = true
+                  changeLaunch = true
                   newSession= ""
                }
-                this.setState({sessions, session: newSession, modalVisible: changeViewStatus, launch: changeViewStatus, disable: changeViewStatus })
+                this.setState({sessions, session: newSession, modalVisible: changeModalView, launch: changeLaunch, disable: changeDisable })
               }
               else {
                 this.setState({sessions})
@@ -175,7 +181,7 @@ class HomeView extends Component {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
         <TitleBar title={titleText} client={client} signin={this.signin} />
-        {this.state.showFilterSelect ? <FilterSelect currentSort={this.state.currentSort} handleChange={this.handleChange}  openAdminHeader = {this.state.openAdminHeader} findOrder={this.findOrder} findOrderDate={this.findOrderDate}
+        {this.state.showFilterSelect ? <FilterSelect session={this.state.session} currentSort={this.state.currentSort} questions={this.state.questions} handleChange={this.handleChange}  openAdminHeader = {this.state.openAdminHeader} findOrder={this.findOrder} findOrderDate={this.findOrderDate}
         /> : this.renderHome()}
       </KeyboardAvoidingView> 
     )
@@ -319,10 +325,10 @@ class HomeView extends Component {
 
   hideModal = () => {
     if (this.state.launch === false) {
-      this.setState({modalVisible: false, animation: "slide", showError: "white"})
+      this.setState({modalVisible: false, animation: "slide", showError: false})
     }
     if (this.state.launch === true){
-      this.setState({modalVisible: false, animation: "slide", showError: "white"})
+      this.setState({modalVisible: false, animation: "slide", showError: false})
     }
   }
   
@@ -479,7 +485,7 @@ class HomeView extends Component {
       var time = new Date().getTime()
       var questionName = question.trim()
       if (questionName.length === 0) {
-        this.setState({showError: "red"})
+        this.setState({showError: true})
       }
       let approveVar = true
       let newVar = false
@@ -504,7 +510,7 @@ class HomeView extends Component {
           sessionName: this.state.session.sessionName
         })
         .then(() => {
-          this.setState({question: '', showError: "white"})
+          this.setState({question: '', showError: false})
           setTimeout(() => {
             this.hideModal()
             this.setState({questionAsk: this.state.moderator[0].approve})

@@ -193,7 +193,7 @@ html, body, input, button, select, form{
   padding: 0px;
   list-style-type: none;
   overflow-x:hidden; 
-  overflow-y:scroll;
+  overflow-y:auto;
 }
 
 .all-attendees__table {
@@ -779,6 +779,12 @@ h2 {
   margin-left: 10px;
 }
 
+.sessionBoxHelpText {
+  font-size: 22px;
+  text-align: center;
+  color: #898989;
+}
+
 .errorTextMargin {
   font-size: 12px;
   color: red;
@@ -852,7 +858,6 @@ h2 {
   height: 20;
   padding-right: 10px;
   padding-left: 10px;
-  color: '#9B9B9B'; 
   text-align: center;
   color: #C1C1C1;
 }

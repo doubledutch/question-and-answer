@@ -57,7 +57,8 @@ export class CellEdit extends Component {
         if (this.state.action === "delete") {
           return (
             <div className="rightButtons">
-              <button className="smallCloseButton" value="delete" onClick={this.confirmDelete}>Confirm</button>
+              <button className="borderlessButton" value="cancel" onClick={this.handleBlur}>Cancel</button>
+              <button className="borderlessButton" value="delete" onClick={this.confirmDelete}>Confirm</button>
             </div>
           )
         }
@@ -65,7 +66,8 @@ export class CellEdit extends Component {
         if (this.state.action === "edit") {
             return (
               <div className="rightButtons">
-                <button className="smallCloseButton" value="edit" onClick={this.confirmEdit}>Done</button>
+                <button className="borderlessButton" value="cancel" onClick={this.handleBlur}>Cancel</button>
+                <button className="borderlessButton" value="edit" onClick={this.confirmEdit}>Done</button>
               </div>
             )
         }

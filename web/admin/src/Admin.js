@@ -54,6 +54,7 @@ export default class Admin extends Component {
       questions: [],
       pinnedQuestions: [],
       admins: [],
+      attendees: [],
       sessions: [],
       showRecent: false,
       modalVisible: false, 
@@ -77,6 +78,8 @@ export default class Admin extends Component {
   publicUsersRef = () => this.props.fbc.database.public.usersRef()
 
   componentDidMount() {
+    this.props.client.getUsers().then(users => {
+      this.setState({attendees: users})
       const {fbc} = this.props
       const modRef = fbc.database.public.adminRef('moderators')
       const sessRef = fbc.database.public.adminRef('sessions')
@@ -212,7 +215,8 @@ export default class Admin extends Component {
             this.setState({anom})
           }
         }
-      })    
+      })
+    })    
   }
 
   questionsInCurrentSession = (questions) => {
@@ -290,7 +294,7 @@ export default class Admin extends Component {
               selectedTitle="Current Admins"
               onSelected={this.onAdminSelected}
               onDeselected={this.onAdminDeselected}
-              selected={this.props.attendees.filter(a => this.isAdmin(a.id))} />
+              selected={this.state.attendees.filter(a => this.isAdmin(a.id))} />
             </div> }
       </div>
     )

@@ -41,7 +41,7 @@ export class SessionBox extends Component {
         <div>
           <div className="cellBoxTop">
             <h2>Sessions</h2>
-            { this.props.hideSessions ? null : <button className="addSessionButton" onClick={this.handleNewSession} value="false">{this.state.showNewSession ? "Cancel" : "Add Session"}</button> }
+            { this.props.hideSessions ? null : <button className="addSessionButton" onClick={this.handleNewSession} value="save">{this.state.showNewSession ? "Cancel" : "Add Session"}</button> }
             { this.props.hideSessions ? null : <SearchBar updateList={this.updateList} search={this.state.search}/> }
             <div style={{flex:1}}/>
             <button className="hideButton" onClick={this.handleHideSection}>{this.props.hideSessions ? "Show" : "Hide" } Section</button>
@@ -67,6 +67,7 @@ export class SessionBox extends Component {
                 })
                 }
               </ul>
+              {sessions.length === 0 ? <p className="sessionBoxHelpText">No Available Sessions</p> : null}
             </div>
           </div>}
         </div>    
@@ -77,10 +78,10 @@ export class SessionBox extends Component {
       return (
         <div>
           <span className="textInputBox">
-            <input className="textBox" name="value" maxLength="250" type="text" autoFocus value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
+            <input className="textBox" name="value" maxLength="250" type="text" autoFocus onBlur={this.handleBlur} value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
             <p className="grayText">{250-this.state.value.length}</p>
             <div className="rightButtons">
-              <button className="borderlessButtonMed" onClick={this.handleSubmit} value="false">Save</button>
+              <button className="borderlessButtonMed" onClick={this.handleSubmit} value="save">Save</button>
               <button className="borderlessButton" onClick={this.handleClose} value="false">Cancel</button>
             </div>
           </span>
@@ -89,10 +90,16 @@ export class SessionBox extends Component {
       )
     }
 
+    handleBlur = (event) => {
+      const currentButton = event.relatedTarget ? event.relatedTarget.value : ''
+      if (currentButton !== 'save') {
+        this.handleClose()
+      }
+    }
+
     handleHideSection = () => {
-      this.setState({search: false, value: "", searchValue: ""})
+      this.setState({search: false, value: "", searchValue: "", isError: false, showNewSession: false})
       this.props.hideSection("Sessions")
-      this.handleClose()
     }
 
     handleChange = (event) => {
@@ -101,7 +108,7 @@ export class SessionBox extends Component {
 
     handleNewSession = () => {
       const current = this.state.showNewSession
-      this.setState({showNewSession: !current, isError: false, search: false, searchValue: ""})
+      this.setState({showNewSession: !current, isError: false, search: false, searchValue: "", value: ""})
     }
 
     updateList = (value) => {
@@ -111,7 +118,7 @@ export class SessionBox extends Component {
     createList = () => {
       const queryText = this.state.searchValue.toLowerCase()
       if (queryText.length > 0){
-        const queryResult = this.props.sessions.filter(s => s.title && s.title.toLowerCase().includes(queryText))
+        const queryResult = this.props.sessions.filter(s => s.sessionName && s.sessionName.toLowerCase().includes(queryText))
         return queryResult
       }
       else {
@@ -134,8 +141,7 @@ export class SessionBox extends Component {
     }
 
     handleClose = () => {
-      const current = this.state.showNewSession
-      this.setState({value: "", isError: false, showNewSession: !current});
+      this.setState({value: "", isError: false, showNewSession: false});
     }
 
     makeFocus = () => {
