@@ -66,7 +66,6 @@ export class CellEdit extends Component {
         if (this.state.action === "edit") {
             return (
               <div className="rightButtons">
-                <button className="borderlessButton" value="cancel" onClick={this.handleBlur}>Cancel</button>
                 <button className="borderlessButton" value="edit" onClick={this.confirmEdit}>Done</button>
               </div>
             )
