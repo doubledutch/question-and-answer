@@ -33,7 +33,15 @@ export default class CustomModal extends Component {
       inputHeight: 0,
       search: false,
       session: '',
-      newList: []
+      newList: [],
+      isError: this.props.showError
+    }
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.showError !== this.state.isError){
+      this.setState({isError: nextProps.showError})
     }
   }
 
@@ -55,7 +63,7 @@ export default class CustomModal extends Component {
     const newStyle = {
       flex: 1,
       fontSize: 18,
-      color: '#9B9B9B',
+      color: '#364247',
       textAlignVertical: 'top',
       maxHeight: 100,
       height: Math.max(35, this.state.inputHeight),
@@ -104,7 +112,7 @@ export default class CustomModal extends Component {
                 <SessionRadio selected={this.props.session === item} />
               </View>
               <View style={s.rightContainer}>
-                <Text style={{fontSize: 16}}>{item.sessionName}</Text>
+                <Text style={{fontSize: 16, color: '#364247'}}>{item.sessionName}</Text>
               </View>
             </TouchableOpacity>
           )} /> : <Text style={{textAlign: "center", marginTop: 100, fontSize: 20, color: '#9B9B9B', flex: 1, }}>No Search Results</Text> }
@@ -117,7 +125,7 @@ export default class CustomModal extends Component {
       )
     } else {
       var borderColor = this.state.borderColor
-      if (this.props.showError === "red"){borderColor = "red"}
+      if (this.state.isError){borderColor = "red"}
       const borderStyle = {borderColor: borderColor}
       const allow = this.props.anom[0] ? this.props.anom[0].allow : true
       return (
@@ -126,7 +134,7 @@ export default class CustomModal extends Component {
             <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
             <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Type your question here"
               value={this.state.question}
-              onChangeText={question => this.setState({question})} 
+              onChangeText={question => this.setState({question, isError: false})} 
               maxLength={250}
               autoFocus={true}
               multiline={true}
@@ -137,7 +145,7 @@ export default class CustomModal extends Component {
           </View>
           <View style={s.bottomButtons}>
             <View style={s.rightBox}>
-              <Text style={{color: this.props.showError, paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a question</Text>
+              <Text style={{color: this.state.isError ? "red" : "white", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a question</Text>
               {allow ? <View style={s.anomBox}>
                 {this.renderAnomIcon()}
                 <Text style={s.anomText}>Ask anonymously</Text>
@@ -202,7 +210,7 @@ export default class CustomModal extends Component {
     const newStyle = {
       flex: 1,
       fontSize: 18,
-      color: '#9B9B9B',
+      color: '#364247',
       textAlignVertical: 'top',
       maxHeight: 100,
       height: Math.max(35, this.state.inputHeight),
@@ -210,8 +218,8 @@ export default class CustomModal extends Component {
     }
     const androidStyle = {
       paddingLeft: 0,
-      marginTop: 0,
-      marginBottom: 10
+      marginTop: 5,
+      marginBottom: 5,
     }
     const iosStyle = {
       marginTop: 3,
@@ -294,6 +302,7 @@ const s = ReactNative.StyleSheet.create({
     fontSize: 18, 
     textAlign: "center", 
     paddingTop: 15, 
+    color: '#364247'
   },
   bottomButtons: {
     flexDirection: 'row',

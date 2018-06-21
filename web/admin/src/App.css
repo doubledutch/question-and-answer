@@ -193,7 +193,7 @@ html, body, input, button, select, form{
   padding: 0px;
   list-style-type: none;
   overflow-x:hidden; 
-  overflow-y:scroll;
+  overflow-y:auto;
 }
 
 .all-attendees__table {
@@ -275,6 +275,7 @@ html, body, input, button, select, form{
   border: none;
   font-size: 14px;
   background-color: white;
+  padding: 0;
   color: #4A90E2;
 }
 
@@ -360,7 +361,7 @@ html, body, input, button, select, form{
 }
 
 .sessionList {
-  padding: 0px;
+  padding: 0;
   background-color: #ffffff;
   list-style: none;
   min-height: 40px;
@@ -373,10 +374,10 @@ html, body, input, button, select, form{
 .sessionListBox {
   border-radius: 5px;
   border: 1px solid #E3ECF8;
-  padding: 0px;
+  padding: 0;
   background-color: #ffffff;
   overflow:hidden; 
-  overflow-y:scroll;
+  overflow-y:auto;
   height: 200px;
   box-sizing: border-box;
   margin: 5px 0 0 0;
@@ -437,7 +438,7 @@ h2 {
 }
 
 .noPadding {
-  padding: 0px;
+  padding: 0;
   margin: 10px 0px 0px 0px;
 }
 
@@ -456,7 +457,7 @@ h2 {
   display: flex;
   flex-flow: row nowrap;
   flex-grow: 1;
-  padding: 0px;
+  padding: 0;
   margin-right: 10px;
   margin-top: 13px;
   margin-bottom: 10px;
@@ -489,7 +490,7 @@ h2 {
   white-space: nowrap;
   background-color: #ffffff;
   margin-right: 40px;
-  padding: 0px;
+  padding: 0;
   height: 37px;
   margin-top: 10px;
 }
@@ -772,17 +773,33 @@ h2 {
   font-size: 12px;
   color: red;
   background-color: white;
-  padding: 0px;
+  padding: 0;
   margin-bottom: 0;
   margin-top: 0;
+  margin-left: 10px;
+}
+
+.sessionBoxHelpText {
+  font-size: 22px;
+  text-align: center;
+  color: #898989;
+}
+
+.errorTextMargin {
+  font-size: 12px;
+  color: red;
+  background-color: white;
+  padding: 0;
+  margin-bottom: 0;
+  margin-top: 2px;
   margin-left: 10px;
 }
 
 .textInputBox {
   flex-direction: row;
   display: flex;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   border: none;
   border-bottom: 1px;
   border-bottom-style: solid;
@@ -841,7 +858,6 @@ h2 {
   height: 20;
   padding-right: 10px;
   padding-left: 10px;
-  color: '#9B9B9B'; 
   text-align: center;
   color: #C1C1C1;
 }

@@ -35,7 +35,7 @@ export class CellEdit extends Component {
         <div className="sessionCell">    
             <div className="sessionCellTop">
               <input className="sessionTitle" rows="1" name="value" maxLength="250" type="text" ref={(ip) => this.myInp = ip} onKeyPress={this.handleKeyPress} onBlur={this.handleBlur} value={this.state.value} onChange={this.handleChange} />
-              {(this.state.action !== "state") ? <p className="grayText">{250-this.state.value.length}</p> : null}
+              {(this.state.action === "edit") ? <p className="grayText">{250-this.state.value.length}</p> : null}
               {this.renderIcons(task)}
             </div>
             <p className="errorText" style={{height: this.state.height}}>{this.state.modalMessage}</p>
@@ -46,37 +46,38 @@ export class CellEdit extends Component {
 
     renderIcons = (task) => {
         if (this.state.action === "state") {
-            return (
-            <div className="rightButtons">
-                <button className="borderlessButtonSmall" onClick={this.handleEdit} value="false">Edit</button>
-                <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? "Display in App" : "Hide in App"}</button>
-            </div>
-            )
+          return (
+          <div className="rightButtons">
+            <button className="borderlessButtonSmall" onClick={this.handleEdit} value="false">Edit</button>
+            <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? "Display in App" : "Hide in App"}</button>
+          </div>
+          )
         }
 
         if (this.state.action === "delete") {
-            return (
-              <div className="rightButtons">
-                  <button className="smallCloseButton" value="delete" onClick={this.confirmDelete}>Confirm</button>
-              </div>
-            )
+          return (
+            <div className="rightButtons">
+              <button className="borderlessButton" value="cancel" onClick={this.handleBlur}>Cancel</button>
+              <button className="borderlessButton" value="delete" onClick={this.confirmDelete}>Confirm</button>
+            </div>
+          )
         }
 
         if (this.state.action === "edit") {
             return (
               <div className="rightButtons">
-                  <button className="smallCloseButton" value="edit" onClick={this.confirmEdit}>Done</button>
+                <button className="borderlessButton" value="edit" onClick={this.confirmEdit}>Done</button>
               </div>
             )
         }
     }
 
     handleKeyPress = (event) => {
-        if (event.key === 'Enter'){
-            event.preventDefault()
-            this.confirmEdit()    
-        }
+      if (event.key === 'Enter'){
+          event.preventDefault()
+          this.confirmEdit()    
       }
+    }
 
     handleBlur = (event) => {
       const currentButton = event.relatedTarget ? event.relatedTarget.value : ''
