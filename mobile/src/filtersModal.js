@@ -34,7 +34,7 @@ export default class FilterSelect extends Component {
         {tableData.map((item, i) => {
           return (
             <TouchableOpacity style={s.row} key={i} onPress={() => this.onSortChange(item)}>
-              <Text style={((item === this.props.currentSort) ? s.rowTextHighlight: s.rowText)}>{item} ({this.returnTotal(item)})</Text>
+              <Text style={((item === this.props.currentSort) ? s.rowTextHighlight: s.rowText)}>{item} ({this.findQuestionTotals(item)})</Text>
             </TouchableOpacity>
           )
         })}
@@ -73,18 +73,18 @@ export default class FilterSelect extends Component {
     }
   }
 
-  returnTotal = (sort) => {
+  findQuestionTotals = (sort) => {
     const {questions, session} = this.props
     let orderedQuestions = questions
     switch (sort) {
       case "Answered" : orderedQuestions = questions.filter(item => item.answered && item.session === session.key)
-      return orderedQuestions.length
+        return orderedQuestions.length
       case "Blocked" : orderedQuestions = questions.filter(item => item.block && item.new === false && item.session === session.key)
-      return orderedQuestions.length 
+        return orderedQuestions.length 
       case "New" : orderedQuestions = questions.filter(item => item.approve === false && item.new && item.session === session.key)
-      return orderedQuestions.length
+        return orderedQuestions.length
       default : orderedQuestions = questions.filter(item => item.block === false && item.answered === false && item.approve && item.new === false && item.session === session.key)
-      return orderedQuestions.length   
+        return orderedQuestions.length   
     }
   }
 }

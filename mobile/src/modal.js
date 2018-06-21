@@ -40,7 +40,7 @@ export default class CustomModal extends Component {
 
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.showError !== this.props.showError){
+    if (nextProps.showError !== this.state.isError){
       this.setState({isError: nextProps.showError})
     }
   }
@@ -58,8 +58,6 @@ export default class CustomModal extends Component {
     this.props.createSharedTask(question, anomStatus)
     this.setState({question: ''})
   }
-
-  flatlistref = null;
 
   render() {
     const newStyle = {
@@ -107,7 +105,6 @@ export default class CustomModal extends Component {
           { displayTable ? <FlatList
           style={{backgroundColor: '#EFEFEF'}}
           data = {sessions}
-          ref={(ref) => this.flatlistref = ref}
           ListFooterComponent={<View style={{height: 100}}></View>}
           renderItem={({item}) => (
             <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
@@ -203,9 +200,6 @@ export default class CustomModal extends Component {
         }
       });
       this.setState({search: true, newList: queryResult, session: value})
-      if (queryResult.length) {
-        this.scrollToTop()
-      }
     }
     else {
       this.setState({search: false, session: value})
@@ -261,10 +255,6 @@ export default class CustomModal extends Component {
       )
     }
   }
-
-  scrollToTop = () => {
-    this.flatlistref.scrollToOffset({y: 0, animated: true});
- }
 
   resetSearch = () => {
     this.setState({session: "", search: false})
