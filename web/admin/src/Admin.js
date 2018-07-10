@@ -409,7 +409,10 @@ export default class Admin extends Component {
         />
         <p className='boxTitleBoldMargin'>Moderation:   </p>
         <ModIcon moderator = {this.state.moderator} offApprove = {this.offApprove} onApprove = {this.onApprove} />
-        {this.state.session === "All" ? null : <span className="buttonSpanMargin">
+        {this.state.session === "All" ? <span className="buttonSpanMargin">
+          <div style={{flex: 1}}/>
+          <button className="dd-bordered" disabled={true}>Launch in new tab</button>
+        </span> : <span className="buttonSpanMargin">
           <PresentationDriver fbc={this.props.fbc} session={this.state.session}/>
           <button className="overlay-button" onClick={this.launchPresentation} disabled={this.state.launchDisabled || !this.bigScreenUrl()}>Launch in new tab</button>
         </span> }

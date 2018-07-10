@@ -475,6 +475,18 @@ h2 {
   margin-top: 20px;
 }
 
+.disabledLaunchButton {
+  border: 1px solid #4A90E2;
+  background-color: #CDCDCD;
+  color: #4A90E2;
+  font-size: 14px;
+  height: 38px;
+  border-radius: 5px;
+  margin: 0px 0px 0px 20px;
+  align-self: center;
+  white-space: nowrap;
+}
+
 .spacer{
   flex: 1;
   height: 25px;
@@ -939,8 +951,8 @@ iframe.big-screen-container {
 
 button.overlay-button {
   border: 1px solid #4A90E2;
-  background-color: white;
-  color: #4A90E2;
+  background-color: #4A90E2;
+  color: white;
   font-size: 14px;
   height: 38px;
   border-radius: 5px;
