@@ -957,8 +957,23 @@ button.overlay-button {
   height: 38px;
   border-radius: 5px;
   margin: 0px 0px 0px 20px;
+  padding: 0px 20px;
   align-self: center;
   white-space: nowrap;
+}
+
+button.overlay-button-opaque {
+  border: 1px solid #4A90E2;
+  background-color: #4A90E2;
+  color: white;
+  font-size: 14px;
+  height: 38px;
+  border-radius: 5px;
+  margin: 0px 0px 0px 20px;
+  padding: 0px 20px;
+  align-self: center;
+  white-space: nowrap;
+  opacity: 0.5;
 }
 
 .attendee-selector {
