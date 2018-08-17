@@ -250,7 +250,7 @@ export default class CustomModal extends Component {
           <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1, marginBottom: 150}}>
             <Text style={s.modHeader}> Please confirm your session</Text>
           </View >
-            <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>No Live Sessions Available</Text>
+            {this.props.isDataLoaded && <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>No Live Sessions Available</Text>}
         </View>
       )
     }
