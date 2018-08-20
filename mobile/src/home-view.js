@@ -25,6 +25,7 @@ import firebase from 'firebase'
 import MyList  from './table'
 import CustomModal from './modal'
 import FilterSelect from "./filtersModal"
+import LoadingView from "./LoadingView"
 Text.defaultProps.allowFontScaling=false
 const fbc = FirebaseConnector(client, 'questionanswer')
 fbc.initializeAppWithSimpleBackend()
@@ -62,7 +63,10 @@ class HomeView extends Component {
       isAdmin: false,
       showFilterSelect: false,
       currentSort: "Popular",
-      openAdminHeader: false
+      openAdminHeader: false,
+      isLoggedIn: false,
+      logInFailed: false,
+      isDataLoaded: false
     }
     this.signin = fbc.signin()
       .then(user => this.user = user)
@@ -148,6 +152,16 @@ class HomeView extends Component {
             }
           }
         })
+
+        fbc.database.private.adminableUserRef('dummy').once('value', data => {
+          // We don't expect data. This is just to capture whether we are done loading data.
+          this.setState({isDataLoaded: true})
+        })
+
+        //The function below will hide the login screen component with a 1/2 second delay to provide an oppt for firebase data to downlaod
+        this.hideLogInScreen = setTimeout(() => {
+          this.setState( {isLoggedIn: true})
+        }, 500)
         
       }
       fbc.database.private.adminableUserRef('adminToken').once('value', async data => {
@@ -162,7 +176,7 @@ class HomeView extends Component {
         }
         wireListeners()
       })
-    })
+    }).catch(()=> this.setState({logInFailed: true}))
   }
 
   render() {
@@ -181,8 +195,12 @@ class HomeView extends Component {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
         <TitleBar title={titleText} client={client} signin={this.signin} />
-        {this.state.showFilterSelect ? <FilterSelect session={this.state.session} currentSort={this.state.currentSort} questions={this.state.questions} handleChange={this.handleChange}  openAdminHeader = {this.state.openAdminHeader} findOrder={this.findOrder} findOrderDate={this.findOrderDate}
-        /> : this.renderHome()}
+        {this.state.isLoggedIn 
+          ? this.state.showFilterSelect 
+            ? <FilterSelect session={this.state.session} currentSort={this.state.currentSort} questions={this.state.questions} handleChange={this.handleChange}  openAdminHeader = {this.state.openAdminHeader} findOrder={this.findOrder} findOrderDate={this.findOrderDate}/>
+            : this.renderHome()
+          : <LoadingView LogInFailed={this.state.LogInFailed}/>
+        }
       </KeyboardAvoidingView> 
     )
   }
@@ -267,6 +285,7 @@ class HomeView extends Component {
           modalVisible = {this.state.modalVisible}
           questionError = {this.state.questionError}
           style={{flex:1}}
+          isDataLoaded={this.state.isDataLoaded} 
         />
       )
     }
