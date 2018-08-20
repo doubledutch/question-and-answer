@@ -19,28 +19,17 @@ import ReactNative, {Text, View} from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class LoadingView extends Component {
-  constructor() {
-    super()
-    this.state = { 
-      visible: true,
-    }
+
+  render() {
+    return (
+      <View style={s.container}>
+        {!this.props.logInFailed 
+          ? <Spinner visible={!this.props.logInFailed} textContent={"Loading..."} textStyle={{color: '#FFF'}} size={"large"}/>
+          : <Text style={s.errorText}>Error connecting to database</Text>
+        }
+      </View>
+    );
   }
-
-    componentWillReceiveProps(nextProps) {
-      if (nextProps.logInFailed) {
-        this.setState({visible: false})
-      }
-    }
-
-    render() {
-      return (
-        <View style={s.container}>
-          {this.state.visible ? <Spinner visible={this.state.visible} textContent={"Loading..."} textStyle={{color: '#FFF'}} size={"large"}/>
-          : <Text style={s.errorText}>Error connecting to database</Text>}
-        </View>
-      );
-    }
-
 }
 
 const s = ReactNative.StyleSheet.create({
