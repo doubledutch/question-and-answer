@@ -15,6 +15,7 @@
  */
 
 import React, { Component } from 'react'
+import {translate as t} from '@doubledutch/admin-client'
 import './App.css'
 import CellEdit from './editCell'
 import SearchBar from "./SearchBar"
@@ -40,14 +41,14 @@ export class SessionBox extends Component {
       return(   
         <div>
           <div className="cellBoxTop">
-            <h2>Sessions</h2>
-            { this.props.hideSessions ? null : <button className="addSessionButton" onClick={this.handleNewSession} value="save">{this.state.showNewSession ? "Cancel" : "Add Session"}</button> }
+            <h2>{t('sessions')}</h2>
+            { this.props.hideSessions ? null : <button className="addSessionButton" onClick={this.handleNewSession} value="save">{this.state.showNewSession ? t('cancel') : t('add_session')}</button> }
             { this.props.hideSessions ? null : <SearchBar updateList={this.updateList} search={this.state.search}/> }
             <div style={{flex:1}}/>
-            <button className="hideButton" onClick={this.handleHideSection}>{this.props.hideSessions ? "Show" : "Hide" } Section</button>
+            <button className="hideButton" onClick={this.handleHideSection}>{this.props.hideSessions ? t('section_show') : t('section_hide')}</button>
           </div>
           {this.props.hideSessions ? null : <div>
-            <label className="boxTitleBold" style={{marginLeft: 10}}>Name</label>
+            <label className="boxTitleBold" style={{marginLeft: 10}}>{t('name')}</label>
             <div className="sessionListBox">
               {this.state.showNewSession ? this.renderNewSession(): null}
               <ul className='sessionList'>
@@ -67,7 +68,7 @@ export class SessionBox extends Component {
                 })
                 }
               </ul>
-              {sessions.length === 0 ? <p className="sessionBoxHelpText">No Available Sessions</p> : null}
+              {sessions.length === 0 ? <p className="sessionBoxHelpText">{t('no_sessions')}</p> : null}
             </div>
           </div>}
         </div>    
@@ -81,8 +82,8 @@ export class SessionBox extends Component {
             <input className="textBox" name="value" maxLength="250" type="text" autoFocus onBlur={this.handleBlur} value={this.state.value} onKeyPress={this.handleKeyPress} onChange={this.handleChange} ref={(ip) => this.myInp = ip }/>
             <p className="grayText">{250-this.state.value.length}</p>
             <div className="rightButtons">
-              <button className="borderlessButtonMed" onClick={this.handleSubmit} value="save">Save</button>
-              <button className="borderlessButton" onClick={this.handleClose} value="false">Cancel</button>
+              <button className="borderlessButtonMed" onClick={this.handleSubmit} value="save">{t('save')}</button>
+              <button className="borderlessButton" onClick={this.handleClose} value="false">{t('cancel')}</button>
             </div>
           </span>
           {this.state.isError ? <p className="errorTextMargin">{this.state.message}</p> : null}
@@ -135,7 +136,7 @@ export class SessionBox extends Component {
           this.handleSubmit(event, keyPress)
         }
         else {
-          this.setState({isError: true, message: "*Please enter a session name."});
+          this.setState({isError: true, message: '*' + t('session_name_invalid')});
         }
       }
     }
@@ -146,32 +147,31 @@ export class SessionBox extends Component {
 
     makeFocus = () => {
       this.myInp.focus();
-   }
+    }
 
     handleSubmit = (event, keyPress) => {
       var status = true
       var sessionName = this.state.value.trim()
       if (sessionName) {
-        for (var item of this.props.sessions){
-          if (item.sessionName.toUpperCase() === sessionName.toUpperCase()){
+        for (var item of this.props.sessions) {
+          if (item.sessionName.toUpperCase() === sessionName.toUpperCase()) {
             status = false
-            this.setState({isError: true, message: "*This session name already exists. Please enter a new session name."});
+            this.setState({isError: true, message: '*' + t('session_name_taken')});
           }
         }
-        if (status){
-        this.props.newSession(sessionName)
-        const current = this.state.showNewSession
-        this.setState({value: "", isError: false, showNewSession: !current});
-        if (event.target.value === "true") {
-          this.props.closeModal()
+        if (status) {
+          this.props.newSession(sessionName)
+          const current = this.state.showNewSession
+          this.setState({value: "", isError: false, showNewSession: !current});
+          if (event.target.value === "true") {
+            this.props.closeModal()
+          }
+          if (keyPress){
+            this.props.closeModal()
+          }
         }
-        if (keyPress){
-          this.props.closeModal()
-        }
-      }
-    }
-      else {
-        this.setState({isError: true, message: "*Please enter a session name."});
+      } else {
+        this.setState({isError: true, message: '*' + t('session_name_invalid')});
       }
     }
 
@@ -182,8 +182,6 @@ export class SessionBox extends Component {
     confirmEdit = (task, value) => {
         this.props.confirmEdit(task, value)
     }
-
- 
 }
 
 export default SessionBox

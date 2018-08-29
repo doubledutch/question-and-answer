@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import './App.css'
+import {translate as t} from '@doubledutch/admin-client'
 import ReactTooltip from 'react-tooltip'
 import checkocircle from './icons/checkocircle.svg'
 import checkcircle from './icons/checkcircle.svg'
@@ -32,8 +33,8 @@ export default class CustomButtons extends Component {
       return(
         <span style={{marginTop: 25}}>
           <span className='cellBoxRight'>
-            <img className='button1' data-tip="Move to Approved" onClick={() => makeApprove(task)} src={checkocircle} alt="approve"/>
-            <img className='button1' data-tip="Move to Blocked" onClick={() => blockQuestion(task)} src={deleteocircle} alt="block"/>
+            <img className='button1' data-tip={t('move_approved')} onClick={() => makeApprove(task)} src={checkocircle} alt={t('approve')} />
+            <img className='button1' data-tip={t('move_blocked')} onClick={() => blockQuestion(task)} src={deleteocircle} alt={t('block_verb')} />
           </span>
           <ReactTooltip />
         </span>
@@ -45,8 +46,8 @@ export default class CustomButtons extends Component {
         return (
           <span style={{marginTop: 25}}>
             <span className='cellBoxRight'>
-              <img className='button1' data-tip="Move to Answered" onClick={() => makeAnswer(task)} src={check} alt="answered"/>
-              <img className='button1' data-tip="Move to Blocked" onClick={() => blockQuestion(task)} src={deleteocircle} alt="block"/>
+              <img className='button1' data-tip={t('move_answered')} onClick={() => makeAnswer(task)} src={check} alt={t('answer_verb')} />
+              <img className='button1' data-tip={t('move_blocked')} onClick={() => blockQuestion(task)} src={deleteocircle} alt={t('block_verb')} />
             </span>
             <ReactTooltip />
           </span>
@@ -57,8 +58,8 @@ export default class CustomButtons extends Component {
           <span>
             <button className="pinButton" disabled={!canPin()} style={{opacity: canPin() ? 1 : 0.3}} onClick={() => makePin(task)}><img className="pinImage" src={require('./icons/thumbtack.svg')} alt="" />Pin to Top</button>
             <span className='cellBoxRight'>
-              <img className='button1' data-tip="Move to Answered" onClick={() => makeAnswer(task)} src={check} alt="answered"/>
-              <img className='button1' data-tip="Move to Blocked" onClick={() => blockQuestion(task)} src={deleteocircle} alt="block"/>
+              <img className='button1' data-tip={t('move_answered')} onClick={() => makeAnswer(task)} src={check} alt={t('answer_verb')} />
+              <img className='button1' data-tip={t('move_blocked')} onClick={() => blockQuestion(task)} src={deleteocircle} alt={t('block_verb')} />
             </span>
             <ReactTooltip />
           </span>
@@ -70,8 +71,8 @@ export default class CustomButtons extends Component {
       return (
         <span style={{marginTop: 25}}>
           <span className='cellBoxRight'>
-            <img className='button1' data-tip="Move to Approved" onClick={() => makeApprove(task)} src={checkocircle} alt="approve" />
-            <img className='button1' data-tip="Unavailable" src={deletecircle} alt="block"/>
+            <img className='button1' data-tip={t('move_approved')} onClick={() => makeApprove(task)} src={checkocircle} alt={t('approve_verb')} />
+            <img className='button1' data-tip={t('unavailable')} src={deletecircle} alt={t('block_verb')} />
           </span>
           <ReactTooltip />
         </span>
@@ -81,8 +82,8 @@ export default class CustomButtons extends Component {
       return (
         <span style={{marginTop: 25}}>
           <span className='cellBoxRight'>
-            <img className='button1' data-tip="Move to Approved" onClick={() => makeApprove(task)} src={checkocircle} alt="approve" />
-            <img className='button1' data-tip="Move to Blocked" onClick={() => blockQuestion(task)} src={deleteocircle} alt="block"/>
+            <img className='button1' data-tip={t('move_approved')} onClick={() => makeApprove(task)} src={checkocircle} alt={t('approve_verb')} />
+            <img className='button1' data-tip={t('move_blocked')} onClick={() => blockQuestion(task)} src={deleteocircle} alt={t('block_verb')} />
           </span>
           <ReactTooltip />
         </span>

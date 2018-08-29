@@ -18,6 +18,7 @@ import React, { Component } from 'react'
 import './App.css'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import moment from 'moment'
+import {translate as t} from '@doubledutch/admin-client'
 import CustomCell from './cell'
 import CustomButtons from './buttons';
 
@@ -76,7 +77,7 @@ class SortableTable extends Component {
               )}
             {...provided.dragHandleProps}
           >
-            <img className='sortIcon' data-tip="Use to sort your pinned questions" src={require('./icons/reordericon.png')} alt="block"/> 
+            <img className='sortIcon' data-tip={t('reorder_pinned')} src={require('./icons/reordericon.png')} alt={t('reorder')}/> 
             <CustomCell
             task = {task}
             difference = {difference}
@@ -126,9 +127,7 @@ class SortableTable extends Component {
         </Droppable>
         </DragDropContext>  
       </div>
-
     )
-
   }
 
   render(){
@@ -141,6 +140,5 @@ class SortableTable extends Component {
 }
 
 const doDateMath = date => ' ' + moment(date).fromNow()
-
 
 export default SortableTable

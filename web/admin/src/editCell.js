@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import './App.css'
+import {translate as t} from '@doubledutch/admin-client'
 
 export class CellEdit extends Component {
     constructor(props){
@@ -48,8 +49,8 @@ export class CellEdit extends Component {
         if (this.state.action === "state") {
           return (
           <div className="rightButtons">
-            <button className="borderlessButtonSmall" onClick={this.handleEdit} value="false">Edit</button>
-            <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? "Display in App" : "Hide in App"}</button>
+            <button className="borderlessButtonSmall" onClick={this.handleEdit} value="false">{t('edit_verb')}</button>
+            <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? t('diplay_in_app') : t('hide_in_app')}</button>
           </div>
           )
         }
@@ -57,8 +58,8 @@ export class CellEdit extends Component {
         if (this.state.action === "delete") {
           return (
             <div className="rightButtons">
-              <button className="borderlessButton" value="cancel" onClick={this.handleBlur}>Cancel</button>
-              <button className="borderlessButton" value="delete" onClick={this.confirmDelete}>Confirm</button>
+              <button className="borderlessButton" value="cancel" onClick={this.handleBlur}>{t('cancel')}</button>
+              <button className="borderlessButton" value="delete" onClick={this.confirmDelete}>{t('confirm')}</button>
             </div>
           )
         }
@@ -66,7 +67,7 @@ export class CellEdit extends Component {
         if (this.state.action === "edit") {
             return (
               <div className="rightButtons">
-                <button className="borderlessButton" value="edit" onClick={this.confirmEdit}>Done</button>
+                <button className="borderlessButton" value="edit" onClick={this.confirmEdit}>{t('done')}</button>
               </div>
             )
         }
@@ -122,12 +123,12 @@ export class CellEdit extends Component {
             }
             if (status === false) {
                 this.handleEdit()
-                this.setState({modalMessage: "*This session name already exists. Please enter a valid session name", height: 20});
+                this.setState({modalMessage: '*' + t('session_name_taken'), height: 20});
             }   
         }
         else {
             this.handleEdit()
-            this.setState({modalMessage: "*Please enter a valid session name", height: 20});
+            this.setState({modalMessage: '*' + t('session_name_invalid'), height: 20});
         }
      }
 

@@ -17,7 +17,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import { CSVLink } from 'react-csv'
-import client from '@doubledutch/admin-client'
+import client, {translate as t} from '@doubledutch/admin-client'
 import moment from 'moment'
 import CustomCell from './cell'
 import ModIcon from './modicon'
@@ -70,7 +70,8 @@ export default class Admin extends Component {
       hideSessions: false,
       hideSettings: false,
       hideAdmins: false,
-      message: "* Please enter a valid session name" 
+      message: 'enter_valid_session_name',
+      backgroundUrl: '',
     }
   }
 
@@ -87,7 +88,7 @@ export default class Admin extends Component {
       const adminableUsersRef = () => fbc.database.private.adminableUsersRef()
 
       this.backgroundUrlRef = () => fbc.database.public.adminRef('backgroundUrl') 
-      this.backgroundUrlRef().on('value', data => this.setState({backgroundUrl: data.val()}))
+      this.backgroundUrlRef().on('value', data => this.setState({backgroundUrl: data.val() || ''}))
       fbc.getLongLivedAdminToken().then(longLivedToken => this.setState({longLivedToken}))
 
       adminableUsersRef().on('value', data => {
@@ -237,7 +238,7 @@ export default class Admin extends Component {
       <div className="containerSmall">
         <SessionBox openVar = {this.state.openVar} closeModal = {this.closeModal} newSession = {this.newSession}
         sessions = {this.state.sessions} confirmDelete = {this.confirmDelete} confirmEdit = {this.confirmEdit}
-        modalColor = {this.state.modalColor} message = {this.state.message} hideSection={this.hideSection} hideSessions={this.state.hideSessions}/>
+        modalColor = {this.state.modalColor} message={'* ' + t(this.state.message)} hideSection={this.hideSection} hideSessions={this.state.hideSessions}/>
       </div>
       <div className="container">
         {this.renderLeftHeader()}
@@ -259,15 +260,15 @@ export default class Admin extends Component {
         <div className="cellBoxTop">
           <h2>Settings</h2>
           <div style={{flex:1}}/>
-          <button className="hideButton" onClick={() => this.hideSection("Settings")}>Hide Section</button>
+          <button className="hideButton" onClick={() => this.hideSection("Settings")}>{t('hide_section')}</button>
         </div>
         <div className="topBox">
-          <p className='boxTitleBold'>Allow Attendees to Ask Anonymous Questions</p>
+          <p className='boxTitleBold'>{t('allow_anon_title')}</p>
           <AnomIcon anom = {this.state.anom} offApprove = {this.offAnom} onApprove = {this.onAnom}/>
         </div>
         <div className="topBox">
-          <p className='boxTitleBold'>Image for Presentation Background (Optional)</p>
-          <input type="text" value={backgroundUrl} onChange={this.onBackgroundUrlChange} placeholder="Custom background image URL. Suggested at least 700px high and wide." className="background-url" />
+          <p className='boxTitleBold'>{t('background_image_title')}</p>
+          <input type="text" value={backgroundUrl} onChange={this.onBackgroundUrlChange} placeholder={t('background_image_placeholder')} className="background-url" />
         </div>
       </div> }
       <div className="containerSmall">
@@ -284,14 +285,14 @@ export default class Admin extends Component {
           <div className="cellBoxTop">
             <h2>Moderators</h2>
             <div style={{flex:1}}/>
-            <button className="hideButton" onClick={() => this.hideSection("Admins")}>{this.state.hideAdmins ? "Show Section" : "Hide Section" }</button>
+            <button className="hideButton" onClick={() => this.hideSection("Admins")}>{this.state.hideAdmins ? t('show_section') : t('hide_section') }</button>
           </div>
           { this.state.hideAdmins ? null : <div>
-            <p className="modSectionDes">Moderators will have access to the moderator panel in the Q&A mobile app. They will be able to approve, block and mark questions as answered from within the moderator panel. Being designated as a moderator is not necessary to moderate sessions from within the CMS.</p>
+            <p className="modSectionDes">{t('moderator_desc')}</p>
             <AttendeeSelector 
               client={client}
-              searchTitle="Select Admins"
-              selectedTitle="Current Admins"
+              searchTitle={t('select_admins')}
+              selectedTitle={t('current_admins')}
               onSelected={this.onAdminSelected}
               onDeselected={this.onAdminDeselected}
               selected={this.state.attendees.filter(a => this.isAdmin(a.id))} />
@@ -313,7 +314,7 @@ export default class Admin extends Component {
         <div className="presentation-side">
           <iframe className="big-screen-container" src={this.bigScreenUrl()} title="presentation" />
           <div className="presentation-overlays">
-            <div>Presentation Screen <button className="overlay-button" onClick={this.launchPresentation} disabled={launchDisabled || !this.bigScreenUrl()}>Launch in new tab</button></div>
+            <div>{t('presentation_screen')} <button className="overlay-button" onClick={this.launchPresentation} disabled={launchDisabled || !this.bigScreenUrl()}>{t('launch_tab')}</button></div>
           </div>
         </div>
         <div className="presentation-side">
@@ -334,9 +335,9 @@ export default class Admin extends Component {
         return (
         <div className="questionContainer">
           <span className="buttonSpan">
-            <p className='boxTitle'>New ({totalQuestions.length})</p>
+            <p className='boxTitle'>{t('header_new', {count: totalQuestions.length})}</p>
             <span className="spacer"/>
-            {(totalQuestions.length) ? <button className="approveButton" onClick={() => this.approveAll(questions)}>Mark All As Approved</button> : null}
+            {(totalQuestions.length) ? <button className="approveButton" onClick={() => this.approveAll(questions)}>{t('mark_all_approved')}</button> : null}
           </span>
           <span className="questionBox">
             <ul className='listBox'>
@@ -359,12 +360,12 @@ export default class Admin extends Component {
       else {
         return(
         <div className="questionContainer">
-          <span className="buttonSpan"><p className='boxTitle'>New ({totalQuestions.length})</p></span>
+          <span className="buttonSpan"><p className='boxTitle'>{t('header_new', {count: totalQuestions.length})}</p></span>
           <span className="questionBox">
             <div className="modTextBox">
-              <p className="bigModText">Moderation is turned off</p>
-              <p className="smallModText">All submitted questions will appear in the</p>
-              <p className="smallModText">approved questions list</p>
+              <p className="bigModText">{t('moderation_off')}</p>
+              <p className="smallModText">{t('moderation_off_desc_1')}</p>
+              <p className="smallModText">{t('moderation_off_desc_2')}</p>
             </div>
           </span>
         </div>
@@ -375,11 +376,11 @@ export default class Admin extends Component {
     else{
       return(
         <div className="questionContainer">
-          <span className="buttonSpan"><p className='boxTitle'>New ({totalQuestions.length})</p></span>
+          <span className="buttonSpan"><p className='boxTitle'>{t('header_new', {count: totalQuestions.length})}</p></span>
           <span className="questionBox">
             <div className="modTextBox">
-              <p className="bigModText">Create a Session to Start Q &amp; A</p>
-              <p className="smallModText">All submitted questions will appear below</p>
+              <p className="bigModText">{t('create_session')}</p>
+              <p className="smallModText">{t('questions_below')}</p>
             </div>
           </span>
         </div>
@@ -388,14 +389,14 @@ export default class Admin extends Component {
   }
 
   renderLeftHeader = () => {
-    const sample = {value: "All", label: "All Sessions", className: "dropdownText"}
+    const sample = {value: t('all'), label: t('all_sessions'), className: "dropdownText"}
     const sessions = []
     const sessionName = this.state.currentSession ? {value: "", label: this.state.currentSession.sessionName || "", className: "dropdownText"} : sample
     sessions.push(sample)
     this.state.sessions.forEach(session => sessions.push(Object.assign({}, {value: session.key, label: session.sessionName, className: "dropdownText"})))
     return (
       <span className="buttonSpan">
-        <h2 className="noPadding">Moderation</h2>
+        <h2 className="noPadding">{t('moderation')}</h2>
         <Select
           className="dropdownMenu" 
           name="session"
@@ -407,14 +408,14 @@ export default class Admin extends Component {
           options={sessions}
           disabled={this.state.disabled}
         />
-        <p className='boxTitleBoldMargin'>Moderation:   </p>
+        <p className='boxTitleBoldMargin'>{t('moderation')}:   </p>
         <ModIcon moderator = {this.state.moderator} offApprove = {this.offApprove} onApprove = {this.onApprove} />
         {this.state.session === "All" ? <span className="buttonSpanMargin">
           <div style={{flex: 1}}/>
-          <button className="overlay-button-opaque" disabled={true}>Launch in new tab</button>
+          <button className="overlay-button-opaque" disabled={true}>{t('launch_tab')}</button>
         </span> : <span className="buttonSpanMargin">
           <PresentationDriver fbc={this.props.fbc} session={this.state.session}/>
-          <button className="overlay-button" onClick={this.launchPresentation} disabled={this.state.launchDisabled || !this.bigScreenUrl()}>Launch in new tab</button>
+          <button className="overlay-button" onClick={this.launchPresentation} disabled={this.state.launchDisabled || !this.bigScreenUrl()}>{t('launch_tab')}</button>
         </span> }
       </span>
     )
@@ -437,7 +438,7 @@ export default class Admin extends Component {
               )
             }) }
           </ul>
-        : this.renderMessage("Blocked Questions Will Display Here", "Blocked questions will not be visible to", "attendees")
+        : this.renderMessage(t('blocked_questions'), t('blocked_questions_desc_1'), t('blocked_questions_desc_2'))
       }
     </span>
     )
@@ -462,7 +463,7 @@ export default class Admin extends Component {
               )
             }) }
           </ul>
-        : this.renderMessage("Answered Questions Will Display Here", "Click Check next to any approved question", "to mark it as answered")
+        : this.renderMessage(t('answered_questions'), t('answered_questions_desc_1'), t('answered_questions_desc_2'))
       }
       </span>
     )
@@ -565,7 +566,7 @@ export default class Admin extends Component {
                         )
                       }) }
                     </ul>
-                  : this.renderMessage("Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")}
+                  : this.renderMessage(t('approved_questions'), t('approved_questions_desc_1'), t('approved_questions_desc_2'))}
               </span>
             </div>
           )
@@ -610,7 +611,7 @@ export default class Admin extends Component {
                         </li> )
                       ) }
                     </ul>
-                  : this.renderMessage("Approved Questions Will Display Here", "All approved questions will be visible to", "attendees")
+                  : this.renderMessage(t('approved_questions'), t('approved_questions_desc_1'), t('approved_questions_desc_2'))
                 }
               </span>
             </div>
@@ -651,7 +652,7 @@ export default class Admin extends Component {
 
   confirmEdit = (task, value) => {
     this.props.fbc.database.public.adminRef('sessions').child(task.key).update({sessionName: value})
-    .catch(error => {alert("Please retry saving your session")})
+    .catch(error => {alert(t('retry_session'))})
   }
 
   confirmDelete = (task) => {
@@ -683,7 +684,7 @@ export default class Admin extends Component {
   }
 
   openModal = () => {
-    this.setState({openVar: true, modalColor: "#FAFAFA", message: "* Please enter a session name"});
+    this.setState({openVar: true, modalColor: "#FAFAFA", message: 'enter_session_name'});
   }
 
 
@@ -718,7 +719,7 @@ export default class Admin extends Component {
       this.props.fbc.database.public.adminRef('moderators').push({"approve": false})
     }
     this.props.fbc.database.public.adminRef('sessions').push({sessionName: newSession})
-    .catch(error => {alert("Please retry saving your session")})
+    .catch(error => {alert(t('retry_session'))})
   }
 
   onApprove = () => {
@@ -838,7 +839,6 @@ export default class Admin extends Component {
 }
 
 function questionForCsv(q) {
-  const boolText = x => x ? 'true' : 'false'
   const creator = q.creator || {}
   const Status = findStatus(q)
   return {

@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import './App.css'
+import {translate as t} from '@doubledutch/admin-client'
 
 export default class ModIcon extends Component {
   render() {
@@ -24,16 +25,16 @@ export default class ModIcon extends Component {
       if (moderator[0].approve === true){
         return ( 
           <span className="modIcons">
-            <button className="modButtonAbs">ON</button>
-            <button className="modButton50Left" onClick={this.props.offApprove}>OFF</button>
+            <button className="modButtonAbs">{t('on')}</button>
+            <button className="modButton50Left" onClick={this.props.offApprove}>{t('off')}</button>
           </span>
         )
       }
       else {
         return (
           <span className="modIcons">
-            <button className="modButton50" onClick={this.props.onApprove}>ON</button>
-            <button className="modButtonLeft">OFF</button>
+            <button className="modButton50" onClick={this.props.onApprove}>{t('on')}</button>
+            <button className="modButtonLeft">{t('off')}</button>
           </span>
         )
       }
@@ -41,8 +42,8 @@ export default class ModIcon extends Component {
     else {
       return (
         <span className="modIcons">
-          <button className="modButton50" onClick={this.props.onApprove}>ON</button>
-          <button className="modButtonLeft">OFF</button>
+          <button className="modButton50" onClick={this.props.onApprove}>{t('on')}</button>
+          <button className="modButtonLeft">{t('off')}</button>
         </span>
       )
     } 

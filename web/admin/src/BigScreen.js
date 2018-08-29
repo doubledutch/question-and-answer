@@ -17,6 +17,7 @@
 import React, {PureComponent} from 'react'
 import './BigScreen.css'
 import {Avatar} from '@doubledutch/react-components'
+import {translate as t} from '@doubledutch/admin-client'
 
 export default class BigScreen extends PureComponent {
   state = {questions: []}
@@ -29,8 +30,7 @@ export default class BigScreen extends PureComponent {
 
   render() {
     const {backgroundUrl, session} = this.state
-    const { client } = this.props
-    const color = client
+    const { client, sessionName } = this.props
     if (!session) return (
       <div className="big-screen">
         {this.renderNonexistent()}
@@ -40,7 +40,7 @@ export default class BigScreen extends PureComponent {
       <div className="big-screen" style={backgroundUrl ? {backgroundImage: `url(${backgroundUrl})`} : null}>
         {this.renderState(session)}
         <div className="big-screen-bottom">
-          <h2>Select the "{this.props.sessionName}" session from the Live Q&A section of the event app to join the conversation</h2>
+          <h2>{t('select_session', {sessionName})}</h2>
         </div>
       </div>
     )
@@ -135,7 +135,7 @@ export default class BigScreen extends PureComponent {
     })
   }
 
-  renderNonexistent = () => <div className="box"><div className="box-content">This session has not been initialized for viewing</div></div>
+  renderNonexistent = () => <div className="box"><div className="box-content">{t('session_uninitialized')}</div></div>
 
   sessionRef = () => this.props.fbc.database.public.adminRef('sessions').child(this.props.session)
   backgroundUrlRef = () => this.props.fbc.database.public.adminRef('backgroundUrl')
