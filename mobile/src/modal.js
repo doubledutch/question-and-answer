@@ -19,7 +19,7 @@ import React, { Component } from 'react'
 import ReactNative, {
   Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
 } from 'react-native'
-import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
+import client, { Color, translate as t } from '@doubledutch/rn-client'
 const primaryColor = new Color(client.primaryColor).limitLightness(0.9).rgbString()
 
 export default class CustomModal extends Component {
@@ -118,7 +118,7 @@ export default class CustomModal extends Component {
           )} /> : <Text style={{textAlign: "center", marginTop: 100, fontSize: 20, color: '#9B9B9B', flex: 1, }}>No Search Results</Text> }
           <View style={{borderTopColor:"#b7b7b7", borderTopWidth: 1, backgroundColor: '#EFEFEF'}}>
             <TouchableOpacity disabled={this.props.disable} onPress={this.props.closeSessionModal} style={[s.bigButton, colorStyle]}>
-              <Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>Join Q&amp;A</Text>
+              <Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>{t('join')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -132,7 +132,7 @@ export default class CustomModal extends Component {
         <View style={{flex: 1}}>
           <View style={[s.modal, borderStyle]}>
             <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-            <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Type your question here"
+            <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder={t('type_question')}
               value={this.state.question}
               onChangeText={question => this.setState({question, isError: false})} 
               maxLength={250}
@@ -145,7 +145,7 @@ export default class CustomModal extends Component {
           </View>
           <View style={s.bottomButtons}>
             <View style={s.rightBox}>
-              <Text style={{color: this.state.isError ? "red" : "white", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a question</Text>
+              <Text style={{color: this.state.isError ? "red" : "white", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*{t('enter_question')}</Text>
               {allow ? <View style={s.anomBox}>
                 {this.renderAnomIcon()}
                 <Text style={s.anomText}>Ask anonymously</Text>
@@ -228,11 +228,11 @@ export default class CustomModal extends Component {
     if (this.props.sessions.length > 0) {
       return ( 
         <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
-          <Text style={s.modHeader}> Please confirm your session</Text>
+          <Text style={s.modHeader}>{t('confirm_session')}</Text>
           <View style={{backgroundColor: '#9B9B9B', padding: 10}}>
             <View style={{flexDirection: "row", backgroundColor: "#FFFFFF", borderBottomColor: "#b7b7b7", borderBottomWidth: 1, borderRadius: 5, height: 40}}>
               {this.state.search ? <View style={{width: 40}} /> : <TouchableOpacity style={s.circleBoxMargin}><Text style={s.whiteText}>?</Text></TouchableOpacity>}
-              <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder="Search"
+              <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder={t('search')}
                 value={this.state.session}
                 onChangeText={session => this.updateList(session)} 
                 maxLength={25}
@@ -248,9 +248,9 @@ export default class CustomModal extends Component {
       return (
         <View>
           <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1, marginBottom: 150}}>
-            <Text style={s.modHeader}> Please confirm your session</Text>
+            <Text style={s.modHeader}>{t('confirm_session')}</Text>
           </View >
-            {this.props.isDataLoaded && <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>No Live Sessions Available</Text>}
+            {this.props.isDataLoaded && <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>{t('no_sessions')}</Text>}
         </View>
       )
     }

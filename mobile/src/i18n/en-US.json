@@ -1,0 +1,22 @@
+{
+  "q&a": "Q & A",
+  "approve": "Approve",
+  "answer": "Answer",
+  "ask_question": "Ask Question",
+  "block": "Block",
+  "confirm_session": "Please confirm your session",
+  "enter_question": "Please enter a question",
+  "error_connecting": "Error connecting to database",
+  "hide": "Hide",
+  "join": "Join Q&A",
+  "loading": "Loading...",
+  "mod_off": "Moderation is turned off",
+  "no_matching_questions": "No Matching Questions",
+  "no_sessions": "No Live Sessions Available",
+  "open": "Open",
+  "question_approved": "Your question has been approved!",
+  "question_submitted": "Your question has been submitted for approval!",
+  "retry": "Retry",
+  "search": "Search",
+  "type_question": "Type your question here"
+}

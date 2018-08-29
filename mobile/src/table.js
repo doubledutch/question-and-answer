@@ -19,7 +19,7 @@ import React, { Component } from 'react'
 import ReactNative, {
   Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
 } from 'react-native'
-import client, {Color} from '@doubledutch/rn-client'
+import client, {Color, translate as t} from '@doubledutch/rn-client'
 import {thumbsup, checkcircle, deletecircle, checkmark} from './images'
 
 export default class MyList extends Component {
@@ -199,7 +199,7 @@ export default class MyList extends Component {
     const {moderator, currentSort} = this.props
     return (
       <View style={{marginTop: 96}}b>
-        <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>{moderator[0].approve === false && currentSort === "New" ? "Moderation is turned off": "No Matching Questions" }</Text>
+        <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>{moderator[0].approve === false && currentSort === "New" ? t('mod_off'): t('no_matching_questions') }</Text>
       </View>
     )
   }
@@ -209,7 +209,7 @@ export default class MyList extends Component {
     if (isAdmin) return (
       <View style={{height: 60}}>
         <View style={s.buttonContainer}>
-          <TouchableOpacity style={s.squareHeaderButton1} onPress={this.props.showAdminPanel}><Text style={s.adminDashboardButton}>{this.props.openAdminHeader ? "Hide" : "Open"} Admin Panel</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton1} onPress={this.props.showAdminPanel}><Text style={s.adminDashboardButton}>{this.props.openAdminHeader ? t('hide') : t('open')} Admin Panel</Text></TouchableOpacity>
           <TouchableOpacity style={s.squareHeaderButton2} onPress={this.props.renderFilterSelect}><Text style={s.adminDashboardButtonTitle}>Filters: </Text><Text style={s.adminDashboardButton}> {this.props.currentSort}</Text></TouchableOpacity>
         </View>
       </View>
@@ -234,25 +234,25 @@ export default class MyList extends Component {
     switch(currentSort) {
       case "New": return (
       <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
-        <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> Block</Text></TouchableOpacity>
-        <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> Approve</Text></TouchableOpacity>
+        <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> {t('block')}</Text></TouchableOpacity>
+        <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> {t('approve')}</Text></TouchableOpacity>
       </View>
       )
       case "Answered": return (
         <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
-          <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> Block</Text></TouchableOpacity>
-          <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> Approve</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> {t('block')}</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> {t('approve')}</Text></TouchableOpacity>
         </View>
       )
       case "Blocked": return (
         <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
-          <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> Approve</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "approve")}><Image style={{height: 20, width: 20}} source={checkcircle}/><Text style={s.adminDashboardButtonGreen}> {t('approve')}</Text></TouchableOpacity>
         </View>
       )
       case "Approved": return (
         <View style={[{height: 44, backgroundColor: "white"}, s.buttonContainer]}>
-          <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> Block</Text></TouchableOpacity>
-          <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "answer")}><Image style={{height: 20, width: 20}} source={checkmark}/><Text style={s.adminDashboardButtonBlue}> Answer</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton1} onPress={()=>this.props.changeQuestionStatus(question, "block")}><Image style={{height: 20, width: 20}} source={deletecircle}/><Text style={s.adminDashboardButtonRed}> {t('block')}</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton2} onPress={()=>this.props.changeQuestionStatus(question, "answer")}><Image style={{height: 20, width: 20}} source={checkmark}/><Text style={s.adminDashboardButtonBlue}> {t('answer')}</Text></TouchableOpacity>
         </View>
       )
     }

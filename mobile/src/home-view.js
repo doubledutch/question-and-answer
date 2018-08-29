@@ -19,13 +19,15 @@ import React, { Component } from 'react'
 import ReactNative, {
   KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Image, Modal
 } from 'react-native'
-import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
+import client, { TitleBar, useStrings, translate as t } from '@doubledutch/rn-client'
+import i18n from './i18n'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import firebase from 'firebase'
 import MyList  from './table'
 import CustomModal from './modal'
 import FilterSelect from "./filtersModal"
 import LoadingView from "./LoadingView"
+useStrings(i18n)
 Text.defaultProps.allowFontScaling=false
 const fbc = FirebaseConnector(client, 'questionanswer')
 fbc.initializeAppWithSimpleBackend()
@@ -55,9 +57,9 @@ class HomeView extends Component {
       newValue: '', 
       marginTop: 18, 
       animation: "none",
-      title: "Q & A",
+      title: t('q&a'),
       questionAsk: false,
-      questionError: "Ask Question",
+      questionError: t('ask_question'),
       topBorder: "#EFEFEF",
       approve: false,
       isAdmin: false,
@@ -427,7 +429,7 @@ class HomeView extends Component {
         return (
           <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
             <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
-            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>Your question has been approved!</Text>
+            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>{t('question_approved')}</Text>
           </TouchableOpacity>
         )
       }
@@ -440,7 +442,7 @@ class HomeView extends Component {
         return (
           <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
             <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
-            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>Your question has been submitted for approval!</Text>
+            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>{t('question_submitted')}</Text>
           </TouchableOpacity>
         )
       }
@@ -536,7 +538,7 @@ class HomeView extends Component {
             }
             ,250)
         })
-        .catch(error => this.setState({questionError: "Retry"}))
+        .catch(error => this.setState({questionError: t('retry')}))
       }
     }
 
