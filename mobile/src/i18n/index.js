@@ -1,5 +1,5 @@
-import enUS from './en-US.json'
-//import deDE from './de-DE.json'
+import enUS from './question-and-answer.mobile.en-US.json'
+//import deDE from './question-and-answer.mobile.de-DE.json'
 
 export default strings = {
   "":      enUS,
