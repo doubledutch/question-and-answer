@@ -134,25 +134,24 @@ export default class Admin extends Component {
           })
         })
         fbc.database.public.allRef('questions').child(session.key).on('child_changed', data => {
-          var questions = this.state.questions
-          var pinnedQuestions = this.state.pinnedQuestions
-          var isInPinned = pinnedQuestions.find(question => question.key === data.key)
-          for (var i in questions) {
-            if (questions[i].key === data.key) {
-              var score = questions[i].score
-              questions[i] = data.val()
-              questions[i].score = score
-              questions[i].key = data.key
+          const {questions, pinnedQuestions} = this.state
+          const isInPinned = pinnedQuestions.find(question => question.key === data.key)
+          for (let q in questions) {
+            if (questions[q].key === data.key) {
+              const score = questions[q].score
+              questions[q] = data.val()
+              questions[q].score = score
+              questions[q].key = data.key
               this.setState({questions})
             }
           }
           for (var i in pinnedQuestions){
             if (pinnedQuestions[i].key === data.key) {
-              var score = questions[i].score
+              const score = questions[i].score
               pinnedQuestions[i] = data.val()
               pinnedQuestions[i].score = score
               pinnedQuestions[i].key = data.key
-              pinnedQuestions.sort(function (a,b){ return a.order - b.order })
+              pinnedQuestions.sort((a,b) => a.order - b.order)
               this.setState({pinnedQuestions})
             }
           }
@@ -471,31 +470,30 @@ export default class Admin extends Component {
   
 
   renderPinned = (questions) => {
-    var questions = questions.filter(question => question.answered === false && question.block === false)
-    if (this.state.session !== "All"){
+    questions = questions.filter(question => question.answered === false && question.block === false)
+    if (this.state.session !== "All") {
       return (
         <span>
           <SortableTable items={questions} origItems = {this.state.questions} onDragEnd = {this.onDragEnd} 
             makeApprove = {this.makeApprove} blockQuestion = {this.blockQuestion} canPin = {this.canPin} makePin = {this.makePin} makeAnswer = {this.makeAnswer}/>
         </span>
       )
+    } else {
+      return questions.map(task => {
+        const pin = true
+        const approve = true
+        const difference = doDateMath(task.dateCreate)
+        const origQuestion = this.state.questions.find(question => question.key === task.key)
+        task.score = origQuestion.score || 0
+        return (
+          <li className='cellBox' key={task.key}>
+            <CustomCell task = {task} difference = {difference} />
+            <CustomButtons task = {task} pin = {pin} approve = {approve} makeApprove = {this.makeApprove} blockQuestion = {this.blockQuestion}
+            canPin = {this.canPin} makePin = {this.makePin} makeAnswer = {this.makeAnswer} />
+          </li>
+        )
+      })
     }
-  else return (
-   questions.map(task => {
-    var pin = true
-    var approve = true
-    var difference = doDateMath(task.dateCreate)
-    var origQuestion = this.state.questions.find(question => question.key === task.key)
-    task.score = origQuestion.score || 0
-    return (
-      <li className='cellBox' key={task.key}>
-        <CustomCell task = {task} difference = {difference} />
-        <CustomButtons task = {task} pin = {pin} approve = {approve} makeApprove = {this.makeApprove} blockQuestion = {this.blockQuestion}
-        canPin = {this.canPin} makePin = {this.makePin} makeAnswer = {this.makeAnswer} />
-      </li>
-    )
-  })
-    )
   }
 
   setAdmin(userId, isAdmin, fbc) {

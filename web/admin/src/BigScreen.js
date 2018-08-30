@@ -30,7 +30,7 @@ export default class BigScreen extends PureComponent {
 
   render() {
     const {backgroundUrl, session} = this.state
-    const { client, sessionName } = this.props
+    const { sessionName } = this.props
     if (!session) return (
       <div className="big-screen">
         {this.renderNonexistent()}

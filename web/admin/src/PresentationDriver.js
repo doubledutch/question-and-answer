@@ -31,10 +31,6 @@ export default class PresentationDriver extends PureComponent {
     }
   }
 
-  componentDidUpdate() {
-    const {publicSession} = this.state
-  }
-
   componentDidMount() {
     this.wireHandlers(this.props)
   }
