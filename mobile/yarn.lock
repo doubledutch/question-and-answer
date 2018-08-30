@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@doubledutch/base-client@^3.0.3":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@doubledutch/base-client/-/base-client-3.0.5.tgz#3b0cc61b59e488ed90ee8e712982c0a3903bfda2"
+"@doubledutch/base-client@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@doubledutch/base-client/-/base-client-3.4.0.tgz#75b241e90c2cef5e2eed79a78fdf69e77eaef4a9"
 
 "@doubledutch/firebase-connector@^3.2.3":
   version "3.2.3"
@@ -13,13 +13,14 @@
     babel-runtime "^6.26.0"
     firebase "^4.6.0"
 
-"@doubledutch/rn-client@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@doubledutch/rn-client/-/rn-client-3.2.0.tgz#b7e424ef09d9618f65ff5574cd7e7dfe186bd9e4"
+"@doubledutch/rn-client@^3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@doubledutch/rn-client/-/rn-client-3.5.0.tgz#8cbb43860ee5a88dec1301a554b119197c4e3da7"
   dependencies:
-    "@doubledutch/base-client" "^3.0.3"
+    "@doubledutch/base-client" "^3.4.0"
     react "16.0.0-alpha.12"
     react-native "0.46.4"
+    react-native-fetch-blob "0.10.8"
 
 "@firebase/app@^0.1.2":
   version "0.1.2"

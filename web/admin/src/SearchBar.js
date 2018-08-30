@@ -15,6 +15,7 @@
  */
 
 import React, { Component } from 'react'
+import {translate as t} from '@doubledutch/admin-client'
 
 export default class SearchBar extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ export default class SearchBar extends Component {
   render() {
     return (
       <div>
-        <input className={"searchBar" + ((this.props.disable) ? '--gray' : '')} type="text" id="myInput" disabled={this.props.disable} value={this.props.search ? this.state.value : ""} onChange={this.handleChange} placeholder="Search"/>
+        <input className={"searchBar" + ((this.props.disable) ? '--gray' : '')} type="text" id="myInput" disabled={this.props.disable} value={this.props.search ? this.state.value : ""} onChange={this.handleChange} placeholder={t('search')}/>
       </div>
     )
   }

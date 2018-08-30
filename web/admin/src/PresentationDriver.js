@@ -15,6 +15,7 @@
  */
 
 import React, { PureComponent } from 'react'
+import {translate as t} from '@doubledutch/admin-client'
 import './PresentationDriver.css'
 
 export default class PresentationDriver extends PureComponent {
@@ -53,7 +54,7 @@ export default class PresentationDriver extends PureComponent {
     const {session} = this.props
     const {publicSession} = this.state
 
-    if (!session || !publicSession) return <div className="presentation-driver"><button onClick={this.initializeSession}>Initialize</button></div>
+    if (!session || !publicSession) return <div className="presentation-driver"><button onClick={this.initializeSession}>{t('initialize')}</button></div>
 
     switch (publicSession.state) {
       case 'LIVE': return <div className="presentation-driver">{this.renderClose()}</div>
@@ -61,12 +62,11 @@ export default class PresentationDriver extends PureComponent {
     }
   }
 
-  renderStart = () => <button className="tertiary" onClick={this.startSession}>Start Session</button>
+  renderStart = () => <button className="tertiary" onClick={this.startSession}>{t('session_start')}</button>
 
-  renderClose= () => <button className="tertiary" onClick={this.endSession}>Close Session</button>
+  renderClose= () => <button className="tertiary" onClick={this.endSession}>{t('session_close')}</button>
 
   startSession = () => this.publicSessionRef().update({state: 'LIVE'})
 
   endSession = () => this.publicSessionRef().update({state: 'ENDED'})
-  
 }

@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import './App.css'
+import {translate as t} from '@doubledutch/admin-client'
 
 export default class CustomCell extends Component {
   render() {
@@ -33,16 +34,16 @@ export default class CustomCell extends Component {
         <span className='cellBoxTop'>
           <p className='introText'>{title}</p>
           <p className='timeText'>{difference}</p>
-          <img src={require('./icons/Inactive.png')} alt="inactive"/>
+          <img src={require('./icons/Inactive.png')} alt={t('inactive')}/>
           <p className='timeText'>{'\xa0'}{task.score}</p>
         </span>
         <p className="questionText">"{task.text}"</p>
         { task.anom
             ? <p className="nameText">
-                -Anonymous
+                -{t('anonymous')}
               </p>
             : <p className="nameText">
-                -{firstName} {lastName}
+                -{t('full_name', {firstName, lastName})}
               </p>
         }
       </span>
