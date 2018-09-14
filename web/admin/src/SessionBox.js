@@ -16,7 +16,6 @@
 
 import React, { Component } from 'react'
 import {translate as t} from '@doubledutch/admin-client'
-import './App.css'
 import CellEdit from './editCell'
 import SearchBar from "./SearchBar"
 

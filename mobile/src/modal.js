@@ -16,11 +16,10 @@
 
 'use strict'
 import React, { Component } from 'react'
-import ReactNative, {
-  Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
+import {
+  FlatList, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View
 } from 'react-native'
-import client, { Color, translate as t } from '@doubledutch/rn-client'
-const primaryColor = new Color(client.primaryColor).limitLightness(0.9).rgbString()
+import { Color, translate as t } from '@doubledutch/rn-client'
 
 export default class CustomModal extends Component {
   constructor(props){
@@ -36,6 +35,7 @@ export default class CustomModal extends Component {
       newList: [],
       isError: this.props.showError
     }
+    this.primaryColor = new Color(props.primaryColor).limitLightness(0.9).rgbString()
   }
 
 
@@ -83,7 +83,7 @@ export default class CustomModal extends Component {
     
     var newColor = "#9B9B9B"
     if (this.props.session){
-      newColor = primaryColor
+      newColor = this.primaryColor
     }
 
     const colorStyle = {
@@ -99,7 +99,7 @@ export default class CustomModal extends Component {
           displayTable = false
         }
       }
-      return(
+      return (
         <View style={{flex: 1}}>
           {this.renderModalHeader()}
           { displayTable ? <FlatList
@@ -109,7 +109,7 @@ export default class CustomModal extends Component {
           renderItem={({item}) => (
             <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
               <View style={s.leftContainer}>
-                <SessionRadio selected={this.props.session === item} />
+                <SessionRadio selected={this.props.session === item} primaryColor={this.primaryColor} />
               </View>
               <View style={s.rightContainer}>
                 <Text style={{fontSize: 16, color: '#364247'}}>{item.sessionName}</Text>
@@ -152,13 +152,15 @@ export default class CustomModal extends Component {
               </View> : null
               }
             </View>
-            <TouchableOpacity style={s.sendButton} onPress={() => this.makeQuestion(this.state.question, this.state.anomStatus)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
+            <TouchableOpacity style={[s.sendButton, this.backgroundPrimaryColor()]} onPress={() => this.makeQuestion(this.state.question, this.state.anomStatus)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
           </View>
           <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
         </View>
       )
     }
   }
+
+  backgroundPrimaryColor = () => ({backgroundColor: this.primaryColor})
 
   renderAnomIcon = () => {
     if (this.state.anomStatus) {
@@ -261,34 +263,26 @@ export default class CustomModal extends Component {
   }
 }
 
-const SessionRadio = ({selected}) => (
+const SessionRadio = ({selected, primaryColor}) => (
   <View style={[s.radio, selected ? {borderColor: primaryColor} : null]}>
     {selected ? <View style={[s.radioDot, {backgroundColor: primaryColor}]} /> : null}
   </View>
 )
 
-const s = ReactNative.StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#EFEFEF',
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-  },
+const s = StyleSheet.create({
   circleBoxMargin: {
-  marginTop:10,
-  marginRight: 10,
-  marginLeft: 10,
-  marginBottom: 20,
-  justifyContent: 'center',
-  backgroundColor: '#9B9B9B',
-  paddingTop: 8,
-  paddingBottom: 8,
-  paddingLeft: 8,
-  paddingRight: 8,
-  height: 22,
-  borderRadius: 50,
+    marginTop:10,
+    marginRight: 10,
+    marginLeft: 10,
+    marginBottom: 20,
+    justifyContent: 'center',
+    backgroundColor: '#9B9B9B',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 8,
+    paddingRight: 8,
+    height: 22,
+    borderRadius: 50,
   },
 
   whiteText: {
@@ -320,17 +314,6 @@ const s = ReactNative.StyleSheet.create({
     backgroundColor: 'black',
     opacity: 0.5
   },
-
-  subText:{
-    fontSize: 12,
-    color: '#9B9B9B'
-
-  },
-  nameText:{
-    fontSize: 14,
-    color: '#9B9B9B',
-
-  },
   bigButton:{
     height: 42, 
     marginTop: 30, 
@@ -340,39 +323,6 @@ const s = ReactNative.StyleSheet.create({
     borderRadius: 4,
     borderTopWidth: 1,
     borderTopColor: "#b7b7b7"
-  },
-  button: {
-    width: '25%',
-    height: 40,
-    paddingTop: 10,
-    paddingBottom: 5,
-    justifyContent: 'center',
-  },
-  button1: {
-    height: 40,
-    paddingTop: 10,
-    marginBottom: 10,
-    justifyContent: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: primaryColor,
-  },
-
-  button2: {
-    height: 40,
-    paddingTop: 10,
-    marginBottom: 10,
-    justifyContent: 'center', 
-  },
-  divider: {
-    flex: 1
-  },
-  dividerSm: {
-    width: 30
-  },
-  questionText:{
-    fontSize: 16,
-    color: '#364247',
-    fontFamily: 'System',
   },
   listContainer: {
     flex: 1,
@@ -412,21 +362,6 @@ const s = ReactNative.StyleSheet.create({
     marginLeft: 5,
     marginTop: 16,
   },
-  checkmark: {
-    textAlign: 'center',
-    height: 16,
-    width: 16,
-    marginTop: 4
-  },
-  compose: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-  },
-  composeBox: {
-    marginTop: 20,
-    flex: 1,
-    justifyContent: 'center',
-  },
   circleBox: {
     marginTop:20,
     marginRight: 10,
@@ -440,10 +375,6 @@ const s = ReactNative.StyleSheet.create({
     paddingRight: 8,
     height: 22,
     borderRadius: 50,
-  },
-  sendButtons: {
-    justifyContent: 'center',
-    flex: 1
   },
   counter: {
     justifyContent: 'center',
@@ -460,7 +391,6 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 20,
     marginRight: 10,
     width: 124,
-    backgroundColor: primaryColor,
     height: 42,
     borderRadius: 4,
   },
@@ -475,15 +405,6 @@ const s = ReactNative.StyleSheet.create({
     fontSize: 14,
     color: 'white',
     textAlign: 'center'
-  },
-  dashboardButton: {
-    fontSize: 18,
-    color: '#9B9B9B',
-  },
-  composeText: {
-    flex: 1,
-    fontSize: 18,
-    color: '#9B9B9B',
   },
   radio: {
     height: 20,
