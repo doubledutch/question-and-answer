@@ -15,9 +15,8 @@
  */
 
 import React, { Component } from 'react'
-import './App.css'
 import { CSVLink } from 'react-csv'
-import client, {translate as t} from '@doubledutch/admin-client'
+import {translate as t} from '@doubledutch/admin-client'
 import moment from 'moment'
 import CustomCell from './cell'
 import ModIcon from './modicon'
@@ -79,7 +78,8 @@ export default class Admin extends Component {
   publicUsersRef = () => this.props.fbc.database.public.usersRef()
 
   componentDidMount() {
-    this.props.client.getUsers().then(users => {
+    const {client, currentUser} = this.props
+    client.getAttendees().then(users => {
       this.setState({attendees: users})
       const {fbc} = this.props
       const modRef = fbc.database.public.adminRef('moderators')
@@ -93,11 +93,7 @@ export default class Admin extends Component {
 
       adminableUsersRef().on('value', data => {
         const users = data.val() || {}
-        this.setState(state => {
-          return {
-            admins: Object.keys(users).filter(id => users[id].adminToken)
-          }
-        })
+        this.setState({admins: Object.keys(users).filter(id => users[id].adminToken)})
       })
 
       sessRef.on('child_added', data => {
@@ -110,7 +106,7 @@ export default class Admin extends Component {
           this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }], pinnedQuestions })
 
           fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
-            const userVote = vote.key === client.currentUser.id
+            const userVote = vote.key === currentUser.id
             var questions = this.state.questions.map(question => 
               question.key === data.key ?
               { ...question, myVote: userVote, score: question.score + 1}
@@ -121,7 +117,7 @@ export default class Admin extends Component {
           })
           fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
             var userVote = true
-            if (vote.key === client.currentUser.id){
+            if (vote.key === currentUser.id){
               userVote = false
             }
             var questions = this.state.questions.map(question => 
@@ -278,33 +274,32 @@ export default class Admin extends Component {
   }
 
 
-  renderAdminSelect = () => {
-    return (
-      <div style={{marginRight: 20, marginBottom: 20}}>
-          <div className="cellBoxTop">
-            <h2>Moderators</h2>
-            <div style={{flex:1}}/>
-            <button className="hideButton" onClick={() => this.hideSection("Admins")}>{this.state.hideAdmins ? t('show_section') : t('hide_section') }</button>
-          </div>
-          { this.state.hideAdmins ? null : <div>
-            <p className="modSectionDes">{t('moderator_desc')}</p>
-            <AttendeeSelector 
-              client={client}
-              searchTitle={t('select_admins')}
-              selectedTitle={t('current_admins')}
-              onSelected={this.onAdminSelected}
-              onDeselected={this.onAdminDeselected}
-              selected={this.state.attendees.filter(a => this.isAdmin(a.id))} />
-            </div> }
+  renderAdminSelect = () => (
+    <div style={{marginRight: 20, marginBottom: 20}}>
+      <div className="cellBoxTop">
+        <h2>Moderators</h2>
+        <div style={{flex:1}}/>
+        <button className="hideButton" onClick={() => this.hideSection("Admins")}>{this.state.hideAdmins ? t('show_section') : t('hide_section') }</button>
       </div>
-    )
-  }
+      { !this.state.hideAdmins && <div>
+          <p className="modSectionDes">{t('moderator_desc')}</p>
+          <AttendeeSelector 
+            client={this.props.client}
+            searchTitle={t('select_admins')}
+            selectedTitle={t('current_admins')}
+            onSelected={this.onAdminSelected}
+            onDeselected={this.onAdminDeselected}
+            selected={this.state.attendees.filter(a => this.isAdmin(a.id))} />
+        </div>
+      }
+    </div>
+  )
 
   isAdmin(id) {
     return this.state.admins.includes(id)
   }
 
-  getAttendees = query => client.getAttendees(query)
+  getAttendees = query => this.props.client.getAttendees(query)
 
   renderPresentation = () => {
     const { launchDisabled } = this.state

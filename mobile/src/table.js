@@ -16,80 +16,71 @@
 
 'use strict'
 import React, { Component } from 'react'
-import ReactNative, {
-  Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Modal, Image
+import {
+  FlatList, Image, StyleSheet, TouchableOpacity, Text, View
 } from 'react-native'
-import client, {Color, translate as t} from '@doubledutch/rn-client'
+import {Color, translate as t} from '@doubledutch/rn-client'
 import {thumbsup, checkcircle, deletecircle, checkmark} from './images'
 
 export default class MyList extends Component {
-    constructor(props){
-        super(props)
-        this.newVotes = this.newVotes.bind(this)
-        this.state = {
-          anom: false,
-          showMessage: false,
-        }
-    }
+  constructor(props) {
+    super(props)
+    this.checkmarkSelectedBackground = new Color(props.primaryColor).limitSaturation(0.5).minLightness(0.9).limitLightness(0.9).rgbString()
+  }
+  state = {
+    anom: false,
+    showMessage: false,
+  }
 
   render() {
-    const {moderator, isAdmin, currentSort } = this.props
+    const {moderator, isAdmin, currentSort} = this.props
     var showAnswer = this.props.showAnswer
     let newQuestions = this.props.questions
     if (isAdmin && currentSort === "Answered") showAnswer = true
 
     if (showAnswer === true){
       newQuestions = newQuestions.filter(item => item.answered === true)
-      newQuestions.sort(function (a,b){
-        return b.lastEdit - a.lastEdit
-      })
+      newQuestions.sort((a,b) => b.lastEdit - a.lastEdit)
     }
     if (showAnswer === false){
       newQuestions = newQuestions.filter(item => item.answered === false)
     }
     let testQuestions = newQuestions
-    if (moderator.length > 0 && isAdmin === false){    
-      if (moderator[0].approve === true){
-        testQuestions = testQuestions.filter(item => item.approve === true)
+    if (moderator.length > 0 && isAdmin === false && moderator[0].approve === true) {    
+      testQuestions = testQuestions.filter(item => item.approve === true)
     }
-  }
 
-  return (
-    <View>
-      {this.renderHeader(testQuestions)}
-      {(isAdmin) ? this.renderAdminList(newQuestions) : this.renderAttendeeList(newQuestions)}
-    </View>
-  )
- }
+    return (
+      <View>
+        {this.renderHeader(testQuestions)}
+        {(isAdmin) ? this.renderAdminList(newQuestions) : this.renderAttendeeList(newQuestions)}
+      </View>
+    )
+  }
 
  renderAdminList = (newQuestions) => {
   const { moderator, currentSort } = this.props
   return (
     <FlatList
-    data={newQuestions}
-    ListFooterComponent={<View style={{height: 100}}></View>}
-    renderItem={({item}) => {
-      if (moderator.length > 0){
-        if (currentSort === "Blocked" || currentSort ==="New") {
-          return this.renderCell(item)
-        }
-        if (moderator[0].approve !== true && item.answered === false) {
-          return this.renderCell(item)
-        }
-        if (moderator[0].approve === true && item.approve === true && item.answered === false){
-          return this.renderCell(item)
-        }
-        else {
-          if (item.answered === true){
-             return this.renderCell(item)
+      data={newQuestions}
+      ListFooterComponent={<View style={{height: 100}}></View>}
+      renderItem={({item}) => {
+        if (moderator.length > 0) {
+          if (currentSort === "Blocked" || currentSort ==="New") {
+            return this.renderCell(item)
           }
+          if (moderator[0].approve !== true && item.answered === false) {
+            return this.renderCell(item)
+          }
+          if (moderator[0].approve === true && item.approve === true && item.answered === false){
+            return this.renderCell(item)
+          } else if (item.answered === true) {
+            return this.renderCell(item)
+          }
+        } else {
+          return this.renderCell(item)
         }
-      }
-      else {
-        return this.renderCell(item)
-      }
-    }
-    }
+      }}
     />
    )
  }
@@ -124,7 +115,6 @@ export default class MyList extends Component {
  }
 
  renderCell = (item) => {
-   const { isAdmin } = this.props
    return (
     <View>
       <View style={s.listContainer}>
@@ -153,26 +143,18 @@ export default class MyList extends Component {
     if (allQuestions.length === 0 && isAdmin === false) {
       return (
         <View>
-          {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
+          {this.renderHeaderButtons(this.button1Style(), s.button2, s.button2)}
           <View style={{marginTop: 96}}>
             <Text style={{marginTop: 30, textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5, height: 25}}>Be the First to Ask a Question!</Text>
-            <TouchableOpacity style={{marginTop: 5, height: 25}} onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 18, color: client.primaryColor}}>Tap here to get started</Text></TouchableOpacity>
+            <TouchableOpacity style={{marginTop: 5, height: 25}} onPress={this.props.showModal}><Text style={{textAlign: "center", fontSize: 18, color: this.props.primaryColor}}>Tap here to get started</Text></TouchableOpacity>
           </View>
-        </View>
-      )
-    }
-    if (isAdmin){
-      return (
-        <View>
-          {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
-          {questions.length ? null : this.renderHelpText()}
         </View>
       )
     }
     if (showAnswer) {
       return (
         <View>
-          {this.renderHeaderButtons(s.button2, s.button2, s.button1)}
+          {this.renderHeaderButtons(s.button2, s.button2, this.button1Style())}
           {questions.length ? null : this.renderHelpText()}
         </View>
       )
@@ -180,7 +162,7 @@ export default class MyList extends Component {
     if (showRecent) {
       return (
         <View>
-          {this.renderHeaderButtons(s.button2, s.button1, s.button2)}
+          {this.renderHeaderButtons(s.button2, this.button1Style(), s.button2)}
           {questions.length ? null : this.renderHelpText()}
         </View>
       )
@@ -188,7 +170,7 @@ export default class MyList extends Component {
     else {
       return (
         <View>
-          {this.renderHeaderButtons(s.button1, s.button2, s.button2)}
+          {this.renderHeaderButtons(this.button1Style(), s.button2, s.button2)}
           {questions.length ? null : this.renderHelpText()}
         </View>
       )
@@ -209,8 +191,12 @@ export default class MyList extends Component {
     if (isAdmin) return (
       <View style={{height: 60}}>
         <View style={s.buttonContainer}>
-          <TouchableOpacity style={s.squareHeaderButton1} onPress={this.props.showAdminPanel}><Text style={s.adminDashboardButton}>{this.props.openAdminHeader ? t('hide') : t('open')} Admin Panel</Text></TouchableOpacity>
-          <TouchableOpacity style={s.squareHeaderButton2} onPress={this.props.renderFilterSelect}><Text style={s.adminDashboardButtonTitle}>Filters: </Text><Text style={s.adminDashboardButton}> {this.props.currentSort}</Text></TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton1} onPress={this.props.showAdminPanel}>
+            <Text style={[s.adminDashboardButton, this.primaryColorStyle()]}>{this.props.openAdminHeader ? t('hide') : t('open')} Admin Panel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={s.squareHeaderButton2} onPress={this.props.renderFilterSelect}>
+            <Text style={s.adminDashboardButtonTitle}>Filters: </Text><Text style={[s.adminDashboardButton, this.primaryColorStyle()]}> {this.props.currentSort}</Text>
+          </TouchableOpacity>
         </View>
       </View>
     )
@@ -261,27 +247,25 @@ export default class MyList extends Component {
   renderVoteButton = question => {
     return (
       <TouchableOpacity style={s.leftContainer} onPress={() => this.newVotes(question)}>
-        <Image style={[s.checkmark, question.myVote ? s.checkmarkSelected : null]} source={thumbsup}/>
+        <Image style={[s.checkmark, question.myVote ? this.checkmarkSelectedStyle() : null]} source={thumbsup}/>
         <Text style={s.subText}>{question.score}</Text>
       </TouchableOpacity>
     )
   }
 
-  newVotes(question){
+  newVotes = question => {
     this.props.newVote(question)
   }
+
+  checkmarkSelectedStyle = () => ({backgroundColor: this.checkmarkSelectedBackground})
+  primaryColorStyle = () => ({color: this.props.primaryColor})
+  button1Style = () => [s.button1, {borderBottomColor: this.props.primaryColor}]
 }
 
-const fontSize = 18
-const s = ReactNative.StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#EFEFEF',
-  },
+const s = StyleSheet.create({
   adminDashboardButton: {
     fontSize: 16,
     fontWeight: "bold",
-    color: client.primaryColor
   },
   adminDashboardButtonRed: {
     fontSize: 16,
@@ -324,59 +308,13 @@ const s = ReactNative.StyleSheet.create({
     borderWidth: 1,
     borderColor: '#EFEFEF'
   },
-
-  modHeader: {
-    backgroundColor: 'white', 
-    height: 51, 
-    fontSize: 18, 
-    textAlign: "center", 
-    paddingTop: 15, 
-  },
-  bottomButtons: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    height: 82
-  },
-
-  modal: {
-    marginTop: 65,
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    borderBottomColor: '#EFEFEF',
-    borderBottomWidth: 1, 
-  },
-  modalBottom: {
-    flex: 1,
-    backgroundColor: 'black',
-    opacity: 0.5
-  },
   subText:{
     fontSize: 12,
     color: '#9B9B9B'
-
   },
   nameText:{
     fontSize: 14,
     color: '#9B9B9B',
-
-  },
-  bigButton:{
-    backgroundColor: client.primaryColor,
-    height: 42, 
-    marginTop: 30, 
-    marginBottom: 30, 
-    marginLeft: 21, 
-    marginRight: 21,
-    borderRadius: 4,
-    borderTopWidth: 1,
-    borderTopColor: "#b7b7b7"
-  },
-  button: {
-    width: '25%',
-    height: 40,
-    paddingTop: 10,
-    paddingBottom: 5,
-    justifyContent: 'center',
   },
   button1: {
     height: 40,
@@ -384,7 +322,6 @@ const s = ReactNative.StyleSheet.create({
     marginBottom: 10,
     justifyContent: 'center',
     borderBottomWidth: 2,
-    borderBottomColor: client.primaryColor
   },
 
   button2: {
@@ -427,101 +364,13 @@ const s = ReactNative.StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
   },
-  anomBox: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  rightBox: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  anomText: {
-    flex:1,
-    fontSize: 14,
-    color: '#364247',
-    marginLeft: 5,
-    marginTop: 16,
-  },
   checkmark: {
     height: 16,
     width: 16,
     marginTop: 4
   },
-  checkmarkSelected: {
-    backgroundColor: new Color(client.primaryColor).limitSaturation(0.5).minLightness(0.9).limitLightness(0.9).rgbString()
-  },
-  compose: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-  },
-  composeBox: {
-    marginTop: 20,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  circleBox: {
-    marginTop:20,
-    marginRight: 10,
-    marginLeft: 10,
-    marginBottom: 20,
-    justifyContent: 'center',
-    backgroundColor: '#9B9B9B',
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 8,
-    paddingRight: 8,
-    height: 22,
-    borderRadius: 50,
-  },
-  sendButtons: {
-    justifyContent: 'center',
-    flex: 1
-  },
-  counter: {
-    justifyContent: 'center',
-    marginTop:23,
-    width: 30,
-    fontSize: 14,
-    marginRight: 11,
-    height: 20,
-    color: '#9B9B9B', 
-    textAlign: 'center'
-  },
-  sendButton: {
-    justifyContent: 'center',
-    marginTop: 20,
-    marginRight: 10,
-    width: 124,
-    backgroundColor: client.primaryColor,
-    height: 42,
-    borderRadius: 4,
-  },
-  checkButton: {
-    justifyContent: 'center',
-    marginLeft: 12,
-    marginTop: 15,
-    height: 19,
-    width: 19,
-    borderColor: '#9B9B9B',
-    borderWidth: 1,
-    borderRadius: 2
-  },
-  sendButtonText: {
-    fontSize: 14,
-    color: 'white',
-    textAlign: 'center'
-  },
   dashboardButton: {
     fontSize: 18,
     color: '#9B9B9B'
   },
-  composeText: {
-    flex: 1,
-    fontSize: 18,
-    color: '#9B9B9B',
-  },
-  whiteText: {
-    fontSize: 18,
-    color: 'white',
-  }
 })

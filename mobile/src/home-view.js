@@ -15,26 +15,24 @@
  */
 
 'use strict'
-import React, { Component } from 'react'
-import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, ScrollView, FlatList, Image, Modal
+import React, { PureComponent } from 'react'
+import {
+  KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, Text, TextInput, View, Image
 } from 'react-native'
 import client, { TitleBar, useStrings, translate as t } from '@doubledutch/rn-client'
 import i18n from './i18n'
-import FirebaseConnector from '@doubledutch/firebase-connector'
-import firebase from 'firebase'
+import {provideFirebaseConnectorToReactComponent} from '@doubledutch/firebase-connector'
+import firebase from 'firebase/app'
 import MyList  from './table'
 import CustomModal from './modal'
 import FilterSelect from "./filtersModal"
 import LoadingView from "./LoadingView"
 useStrings(i18n)
 Text.defaultProps.allowFontScaling=false
-const fbc = FirebaseConnector(client, 'questionanswer')
-fbc.initializeAppWithSimpleBackend()
 
-class HomeView extends Component {
-  constructor() {
-    super()
+class HomeView extends PureComponent {
+  constructor(props) {
+    super(props)
     this.state = {
       question: '', 
       vote: '', 
@@ -70,13 +68,16 @@ class HomeView extends Component {
       logInFailed: false,
       isDataLoaded: false
     }
-    this.signin = fbc.signin()
+    this.signin = props.fbc.signin()
       .then(user => this.user = user)
 
     this.signin.catch(err => console.error(err))
   }
 
   componentDidMount() {
+    const {fbc} = this.props
+    client.getCurrentUser().then(currentUser => this.setState({currentUser}))
+    client.getPrimaryColor().then(primaryColor => this.setState({primaryColor}))
     this.signin.then(() => {
       const modRef = fbc.database.public.adminRef('moderators')
       const sessRef = fbc.database.public.adminRef('sessions')
@@ -182,6 +183,9 @@ class HomeView extends Component {
   }
 
   render() {
+    const {currentUser, primaryColor} = this.state
+    if (!currentUser || !primaryColor) return null
+    
     let titleText = this.state.title
     if (this.state.session){
       if (this.state.session.sessionName.length < 30){
@@ -199,15 +203,22 @@ class HomeView extends Component {
         <TitleBar title={titleText} client={client} signin={this.signin} />
         {this.state.isLoggedIn 
           ? this.state.showFilterSelect 
-            ? <FilterSelect session={this.state.session} currentSort={this.state.currentSort} questions={this.state.questions} handleChange={this.handleChange}  openAdminHeader = {this.state.openAdminHeader} findOrder={this.findOrder} findOrderDate={this.findOrderDate}/>
+            ? <FilterSelect
+                session={this.state.session}
+                currentSort={this.state.currentSort}
+                questions={this.state.questions}
+                handleChange={this.handleChange}
+                openAdminHeader={this.state.openAdminHeader}
+                findOrder={this.findOrder}
+                findOrderDate={this.findOrderDate} 
+                primaryColor={primaryColor}
+              />
             : this.renderHome()
-          : <LoadingView LogInFailed={this.state.LogInFailed}/>
+          : <LoadingView logInFailed={this.state.logInFailed}/>
         }
       </KeyboardAvoidingView> 
     )
   }
-
-
 
   renderHome = () => {
     const newStyle = {
@@ -227,7 +238,7 @@ class HomeView extends Component {
       textAlignVertical: 'center'
     }
 
-    const { showRecent, moderator, launch, showAnswer, session, isAdmin} = this.state
+    const { showRecent, moderator, launch, showAnswer, session, isAdmin, primaryColor} = this.state
     const sessions = this.state.sessions.filter(item => item.archive !== true)
     var newQuestions = []
     if (session) newQuestions = this.sortFilter()
@@ -248,21 +259,22 @@ class HomeView extends Component {
           <MyList 
           questions={newQuestions}
           allQuestions={this.state.questions}
-          showModal = {this.showModal}
-          showAnswer = {showAnswer}
-          moderator = {moderator}
-          showRecent = {showRecent}
-          showAnswered = {this.showAnswered}
-          findOrder = {this.findOrder}
-          findOrderDate = {this.findOrderDate}
-          originalOrder = {this.originalOrder}
-          newVote = {this.newVote}
+          showModal={this.showModal}
+          showAnswer={showAnswer}
+          moderator={moderator}
+          showRecent={showRecent}
+          showAnswered={this.showAnswered}
+          findOrder={this.findOrder}
+          findOrderDate={this.findOrderDate}
+          originalOrder={this.originalOrder}
+          newVote={this.newVote}
           isAdmin={isAdmin}
           changeQuestionStatus={this.changeQuestionStatus}
           renderFilterSelect={this.renderFilterSelect}
           currentSort={this.state.currentSort}
-          showAdminPanel = {this.showAdminPanel}
-          openAdminHeader = {this.state.openAdminHeader}
+          showAdminPanel={this.showAdminPanel}
+          openAdminHeader={this.state.openAdminHeader}
+          primaryColor={primaryColor}
           />
         </View>
         {this.renderModal()}
@@ -287,7 +299,8 @@ class HomeView extends Component {
           modalVisible = {this.state.modalVisible}
           questionError = {this.state.questionError}
           style={{flex:1}}
-          isDataLoaded={this.state.isDataLoaded} 
+          isDataLoaded={this.state.isDataLoaded}
+          primaryColor={primaryColor}
         />
       )
     }
@@ -333,10 +346,14 @@ class HomeView extends Component {
 
   renderIcon = (question) => {
     if (question.myVote === true){
-      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Active.png"}}/></TouchableOpacity>
+      return <TouchableOpacity onPress={() => this.newVote(question)}>
+        <Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Active.png"}}/>
+      </TouchableOpacity>
     }
     else {
-      return <TouchableOpacity onPress={() => this.newVote(question)}><Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Inactive.png"}}/></TouchableOpacity>
+      return <TouchableOpacity onPress={() => this.newVote(question)}>
+        <Image style={s.checkmark} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/Inactive.png"}}/>
+      </TouchableOpacity>
     }
   }
 
@@ -354,11 +371,13 @@ class HomeView extends Component {
   }
   
   selectSession = (session) => {
+    const {fbc} = this.props
+    const {currentUser} = this.state
     this.setState({session, disable: false})
       fbc.database.public.allRef('questions').child(session.key).on('child_added', data => {
         this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }]})
         fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
-          const isThisMyVote = vote.key === client.currentUser.id
+          const isThisMyVote = vote.key === currentUser.id
           this.setState(prevState => ({
             questions: prevState.questions.map(question => 
               question.key === data.key
@@ -368,7 +387,7 @@ class HomeView extends Component {
           }))
         })
         fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
-          const wasThisMyVote = vote.key === client.currentUser.id
+          const wasThisMyVote = vote.key === currentUser.id
           this.setState(prevState => ({
             questions: prevState.questions.map(question => 
               question.key === data.key
@@ -390,7 +409,7 @@ class HomeView extends Component {
             var newObject = data.val()
             newObject.score = score
             newObject.myVote = myVote
-            if (data.val().creator.id === client.currentUser.id && oldState !== newObject.approve && !newObject.block && !newObject.answered){
+            if (data.val().creator.id === currentUser.id && oldState !== newObject.approve && !newObject.block && !newObject.answered){
               this.setState({questions: [...newQuestions, {...newObject, key: data.key }], approve: true, questionAsk: true})
             }
             else {
@@ -403,295 +422,183 @@ class HomeView extends Component {
       fbc.database.public.allRef('questions').child(session.key).on('child_removed', data => {
         this.setState({ questions: this.state.questions.filter(x => x.key !== data.key) })
       })
-    }
+  }
 
-    handleChange = (prop, value) => {
-      this.setState({[prop]: value})
-    }
+  handleChange = (prop, value) => {
+    this.setState({[prop]: value})
+  }
 
-    closeSessionModal = () => {
-      this.setState({launch: false})
-      this.hideModal()
-    }
+  closeSessionModal = () => {
+    this.setState({launch: false})
+    this.hideModal()
+  }
 
-    renderModal = () => {
-      var modOn = false
-      if (this.state.moderator.length > 0) {
-        if (this.state.moderator[0]) {
-          modOn = this.state.moderator[0].approve
+  renderModal = () => {
+    var modOn = false
+    if (this.state.moderator.length > 0) {
+      if (this.state.moderator[0]) {
+        modOn = this.state.moderator[0].approve
+      }
+    }
+    if (this.state.questionAsk && modOn && this.state.approve && this.state.openAdminHeader === false) {
+      setTimeout(() => {
+        this.closeConfirm()
         }
-      }
-      if (this.state.questionAsk && modOn && this.state.approve && this.state.openAdminHeader === false) {
-        setTimeout(() => {
-          this.closeConfirm()
-          }
-          ,5000)
-        return (
-          <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
-            <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
-            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>{t('question_approved')}</Text>
-          </TouchableOpacity>
-        )
-      }
-
-      if (this.state.questionAsk && modOn && this.state.approve === false && this.state.openAdminHeader === false) {
-        setTimeout(() => {
-          this.closeConfirm()
-          }
-          ,5000)
-        return (
-          <TouchableOpacity style={s.listContainer} onPress={this.closeConfirm}>
-            <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
-            <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>{t('question_submitted')}</Text>
-          </TouchableOpacity>
-        )
-      }
-
+        ,5000)
+      return (
+        <TouchableOpacity style={[s.listContainer, this.backgroundPrimaryColor()]} onPress={this.closeConfirm}>
+          <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
+          <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>{t('question_approved')}</Text>
+        </TouchableOpacity>
+      )
     }
 
- 
-
-    closeConfirm = () => {
-      this.setState({questionAsk: false, approve: false})
+    if (this.state.questionAsk && modOn && this.state.approve === false && this.state.openAdminHeader === false) {
+      setTimeout(() => {
+        this.closeConfirm()
+        }
+        ,5000)
+      return (
+        <TouchableOpacity style={[s.listContainer, this.backgroundPrimaryColor()]} onPress={this.closeConfirm}>
+          <Image style={{width: 20, height: 20}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/check_circle_white.png"}}/>
+          <Text style={{marginLeft: 5, fontSize: 14, color: "white"}}>{t('question_submitted')}</Text>
+        </TouchableOpacity>
+      )
     }
+  }
 
-    changeQuestionStatus = (question, variable) => {
-      const time = new Date().getTime()
-      if (variable === "approve") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, "answered": false, 'lastEdit': time})
-      if (variable === "answer") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'block': false, 'new': false, 'pin': false, 'lastEdit': time})
-      if (variable === "block") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true,  "answered": false, 'approve': false, 'new': false, 'pin': false, 'lastEdit': time})
-    }
+  closeConfirm = () => {
+    this.setState({questionAsk: false, approve: false})
+  }
 
-    showAdminPanel = () => {
-      const current = this.state.openAdminHeader
-      var currentSort = "Popular"
-      if (current === false) { currentSort = "New" }
-      this.setState({openAdminHeader: !current, currentSort})
-    }
+  changeQuestionStatus = (question, variable) => {
+    const {fbc} = this.props
+    const time = new Date().getTime()
+    if (variable === "approve") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"approve": true, 'block': false, 'new': false, "answered": false, 'lastEdit': time})
+    if (variable === "answer") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"answered": true, 'block': false, 'new': false, 'pin': false, 'lastEdit': time})
+    if (variable === "block") fbc.database.public.allRef('questions').child(question.session).child(question.key).update({"block": true,  "answered": false, 'approve': false, 'new': false, 'pin': false, 'lastEdit': time})
+  }
 
-    originalOrder = (questions) => {
-      if (this.state.showRecent === false) {
-        this.dateSort(questions)
-        questions.sort(function (a,b){ 
-          return b.score - a.score
-        })
-      }
-      if (this.state.showRecent === true) {
-        this.dateSort(questions)
-      }
-    }
+  showAdminPanel = () => {
+    const current = this.state.openAdminHeader
+    var currentSort = "Popular"
+    if (current === false) { currentSort = "New" }
+    this.setState({openAdminHeader: !current, currentSort})
+  }
 
-    dateSort = (questions) => {
-      questions.sort(function (a,b){
-        return b.dateCreate - a.dateCreate
+  originalOrder = (questions) => {
+    if (this.state.showRecent === false) {
+      this.dateSort(questions)
+      questions.sort(function (a,b){ 
+        return b.score - a.score
       })
     }
-
-    renderFilterSelect = () => {
-      const current = this.state.showFilterSelect
-      this.setState({showFilterSelect : !current})
+    if (this.state.showRecent === true) {
+      this.dateSort(questions)
     }
+  }
 
-    findOrder = () => {
-      this.setState({showRecent: false, showAnswer: false})
-    }
+  dateSort = (questions) => {
+    questions.sort(function (a,b){
+      return b.dateCreate - a.dateCreate
+    })
+  }
 
-    findOrderDate = () => {
-      this.setState({showRecent: true, showAnswer: false})
-    }
+  renderFilterSelect = () => {
+    const current = this.state.showFilterSelect
+    this.setState({showFilterSelect : !current})
+  }
 
-    createSharedTask = (question, anom) => this.createQuestion(fbc.database.public.allRef, question, anom)
-  
-    createQuestion = (ref, question, anom) => {
-      var time = new Date().getTime()
-      var questionName = question.trim()
-      if (questionName.length === 0) {
-        this.setState({showError: true})
-      }
-      let approveVar = true
-      let newVar = false
-      if (this.state.moderator[0].approve){
-        approveVar = false
-        newVar = true
-      }
-      if (this.user && questionName.length > 0) {
-        ref('questions').child(this.state.session.key).push({
-          text: questionName,
-          creator: client.currentUser,
-          score : 0,
-          dateCreate: time,
-          anom: anom,
-          approve: approveVar,
-          block: false,
-          new: newVar,
-          answered: false,
-          pin: false,
-          lastEdit: time, 
-          session: this.state.session.key,
-          sessionName: this.state.session.sessionName
-        })
-        .then(() => {
-          this.setState({question: '', showError: false})
-          setTimeout(() => {
-            this.hideModal()
-            this.setState({questionAsk: this.state.moderator[0].approve})
-            }
-            ,250)
-        })
-        .catch(error => this.setState({questionError: t('retry')}))
-      }
-    }
+  findOrder = () => {
+    this.setState({showRecent: false, showAnswer: false})
+  }
 
-    newVote = (question) => {
-      if (question.myVote === true) {
-        fbc.database.public.allRef("votes").child(question.key).child(client.currentUser.id).remove()
-      }
-      else {
-        fbc.database.public.allRef('votes').child(question.key).child(client.currentUser.id).set(1)
-        .then(() => this.setState({vote: ''}))
-        .catch(x => console.error(x))
-      }
+  findOrderDate = () => {
+    this.setState({showRecent: true, showAnswer: false})
+  }
+
+  createSharedTask = (question, anom) => this.createQuestion(this.props.fbc.database.public.allRef, question, anom)
+
+  createQuestion = (ref, question, anom) => {
+    var time = new Date().getTime()
+    var questionName = question.trim()
+    if (questionName.length === 0) {
+      this.setState({showError: true})
     }
+    let approveVar = true
+    let newVar = false
+    if (this.state.moderator[0].approve){
+      approveVar = false
+      newVar = true
+    }
+    if (this.user && questionName.length > 0) {
+      ref('questions').child(this.state.session.key).push({
+        text: questionName,
+        creator: this.state.currentUser,
+        score : 0,
+        dateCreate: time,
+        anom: anom,
+        approve: approveVar,
+        block: false,
+        new: newVar,
+        answered: false,
+        pin: false,
+        lastEdit: time, 
+        session: this.state.session.key,
+        sessionName: this.state.session.sessionName
+      })
+      .then(() => {
+        this.setState({question: '', showError: false})
+        setTimeout(() => {
+          this.hideModal()
+          this.setState({questionAsk: this.state.moderator[0].approve})
+          }
+          ,250)
+      })
+      .catch(error => this.setState({questionError: t('retry')}))
+    }
+  }
+
+  newVote = (question) => {
+    const {fbc} = this.props
+    const {currentUser} = this.state
+    if (question.myVote === true) {
+      fbc.database.public.allRef("votes").child(question.key).child(currentUser.id).remove()
+    } else {
+      fbc.database.public.allRef('votes').child(question.key).child(currentUser.id).set(1)
+      .then(() => this.setState({vote: ''}))
+      .catch(x => console.error(x))
+    }
+  }
+
+  borderBottomPrimaryColor = () => ({borderBottomColor: this.state.primaryColor})
+  backgroundPrimaryColor = () => ({backgroundColor: this.state.primaryColor})
 }
 
-export default HomeView
+export default provideFirebaseConnectorToReactComponent(client, 'questionanswer', (props, fbc) => <HomeView {...props} fbc={fbc} />, PureComponent)
 
-const fontSize = 18
-const s = ReactNative.StyleSheet.create({
+const s = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EFEFEF',
   },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  modHeader: {
-    backgroundColor: 'white', 
-    height: 51, 
-    fontSize: 18, 
-    textAlign: "center", 
-    paddingTop: 15, 
-  },
-  bottomButtons: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    height: 82
-  },
-
   textBox: {
     flexDirection: 'row',
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: '#EFEFEF'
   },
-
-  modal: {
-    marginTop: 65,
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    borderBottomColor: '#EFEFEF',
-    borderBottomWidth: 1, 
-  },
-  modalBottom: {
-    flex: 1,
-    backgroundColor: 'black',
-    opacity: 0.5
-  },
-  subText:{
-    fontSize: 12,
-    color: '#9B9B9B'
-
-  },
-  nameText:{
-    fontSize: 14,
-    color: '#9B9B9B',
-
-  },
-  bigButton:{
-    height: 42, 
-    marginTop: 30, 
-    marginBottom: 30, 
-    marginLeft: 21, 
-    marginRight: 21,
-    borderRadius: 4,
-    borderTopWidth: 1,
-    borderTopColor: "#b7b7b7"
-  },
-
-  button: {
-    width: '25%',
-    height: 40,
-    paddingTop: 10,
-    paddingBottom: 5,
-    justifyContent: 'center',
-  },
-  button1: {
-    height: 40,
-    paddingTop: 10,
-    marginBottom: 10,
-    justifyContent: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: client.primaryColor
-  },
-
-  button2: {
-    height: 40,
-    paddingTop: 10,
-    marginBottom: 10,
-    justifyContent: 'center', 
-  },
-  divider: {
-    flex: 1
-  },
-  dividerSm: {
-    width: 30
-  },
-  questionText:{
-    fontSize: 16,
-    color: '#364247',
-    fontFamily: 'System',
-  },
   listContainer: {
     flexDirection: "row",
-    backgroundColor: client.primaryColor,
     height: 42, 
     alignItems:'center',
     justifyContent: 'center',
     marginBottom: 0,
   },
-
-  anomBox: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  rightBox: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  anomText: {
-    flex:1,
-    fontSize: 14,
-    color: '#364247',
-    marginLeft: 5,
-    marginTop: 16,
-  },
   checkmark: {
     height: 16,
     width: 16,
     marginTop: 4
-  },
-  compose: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: "#ffffff"
-  },
-  composeBox: {
-    marginTop: 20,
-    flex: 1,
-    justifyContent: 'center',
-    padding: 0
   },
   circleBox: {
     marginTop:20,
@@ -706,54 +613,6 @@ const s = ReactNative.StyleSheet.create({
     paddingRight: 8,
     height: 22,
     borderRadius: 50,
-  },
-  sendButtons: {
-    justifyContent: 'center',
-    flex: 1
-  },
-  counter: {
-    justifyContent: 'center',
-    marginTop:23,
-    width: 30,
-    fontSize: 14,
-    marginRight: 11,
-    height: 20,
-    color: '#9B9B9B', 
-    textAlign: 'center'
-  },
-  sendButton: {
-    justifyContent: 'center',
-    marginTop: 20,
-    marginRight: 10,
-    width: 124,
-    backgroundColor: client.primaryColor,
-    height: 42,
-    borderRadius: 4,
-  },
-  checkButton: {
-    justifyContent: 'center',
-    marginLeft: 12,
-    marginTop: 15,
-    height: 19,
-    width: 19,
-    borderColor: '#9B9B9B',
-    borderWidth: 1,
-    borderRadius: 2
-  },
-  sendButtonText: {
-    fontSize: 14,
-    color: 'white',
-    textAlign: 'center'
-  },
-  dashboardButton: {
-    fontSize: 18,
-    color: '#9B9B9B',
-  },
-  composeText: {
-    flex: 1,
-    fontSize: 18,
-    color: '#9B9B9B',
-    paddingTop: 0,
   },
   whiteText: {
     fontSize: 18,

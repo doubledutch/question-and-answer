@@ -1,7 +1,6 @@
 'use strict'
 import React, { Component } from 'react'
-import ReactNative, { TouchableOpacity, Text, View } from 'react-native'
-import client, { } from '@doubledutch/rn-client'
+import { StyleSheet, TouchableOpacity, Text, View } from 'react-native'
 
 export default class FilterSelect extends Component {
   constructor(props){
@@ -34,7 +33,7 @@ export default class FilterSelect extends Component {
         {tableData.map((item, i) => {
           return (
             <TouchableOpacity style={s.row} key={i} onPress={() => this.onSortChange(item)}>
-              <Text style={((item === this.props.currentSort) ? s.rowTextHighlight: s.rowText)}>{item} ({this.findQuestionTotals(item)})</Text>
+              <Text style={((item === this.props.currentSort) ? [s.rowText, this.primaryColor()]: s.rowText)}>{item} ({this.findQuestionTotals(item)})</Text>
             </TouchableOpacity>
           )
         })}
@@ -46,11 +45,11 @@ export default class FilterSelect extends Component {
     return (
       <View style={s.buttonContainer}>
         <TouchableOpacity onPress={this.revertSort}>
-          <Text style={s.closeButton}>X</Text>
+          <Text style={[s.closeButton, this.primaryColor()]}>X</Text>
         </TouchableOpacity>
         <Text style={s.title}>Lists</Text>
         <TouchableOpacity onPress={() => this.props.handleChange("showFilterSelect", false)}>
-          <Text style={s.closeButton}>Save</Text>
+          <Text style={[s.closeButton, this.primaryColor()]}>Save</Text>
         </TouchableOpacity>
       </View>
     )
@@ -87,10 +86,11 @@ export default class FilterSelect extends Component {
         return orderedQuestions.length   
     }
   }
+
+  primaryColor = () => ({color: this.props.primaryColor})
 }
 
-const fontSize = 18
-const s = ReactNative.StyleSheet.create({
+const s = StyleSheet.create({
   table: {
     flexDirection: "column",
   },
@@ -105,10 +105,6 @@ const s = ReactNative.StyleSheet.create({
   rowText: {
     fontSize: 20,
     color: "#404040"
-  },
-  rowTextHighlight: {
-    fontSize: 20,
-    color: client.primaryColor
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -125,7 +121,6 @@ const s = ReactNative.StyleSheet.create({
   },
   closeButton: {
     marginLeft: 5,
-    color: client.primaryColor,
     padding: 15
   }
 })

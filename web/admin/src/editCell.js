@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react'
-import './App.css'
 import {translate as t} from '@doubledutch/admin-client'
 
 export class CellEdit extends Component {
