@@ -20,9 +20,9 @@
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@doubledutch/base-client/-/base-client-4.1.0.tgz#ab32dcd7e1f60689b40d7dd977aa9d6a08db2f40"
 
-"@doubledutch/firebase-connector@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@doubledutch/firebase-connector/-/firebase-connector-4.0.1.tgz#91c0272debbb8c873ddb8c37d93dc8820db9d658"
+"@doubledutch/firebase-connector@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@doubledutch/firebase-connector/-/firebase-connector-4.1.0.tgz#02f5c35e6008531c761a18c309efcbe66bae7df2"
   dependencies:
     babel-runtime "^6.26.0"
     firebase "^5.4.2"

@@ -49,7 +49,7 @@ export class CellEdit extends Component {
           return (
           <div className="rightButtons">
             <button className="borderlessButtonSmall" onClick={this.handleEdit} value="false">{t('edit_verb')}</button>
-            <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? t('diplay_in_app') : t('hide_in_app')}</button>
+            <button className="borderlessButton" onClick={this.handleDelete} value="false">{task.archive ? t('display_in_app') : t('hide_in_app')}</button>
           </div>
           )
         }
