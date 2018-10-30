@@ -1,0 +1,22 @@
+{
+  "q&a" : "Preguntas y respuestas",
+  "approve" : "Aprobar",
+  "answer" : "Responder",
+  "ask_question" : "Preguntar",
+  "block" : "Bloquear",
+  "confirm_session" : "Por favor, confirma tu sesión",
+  "enter_question" : "Por favor, introduce una pregunta",
+  "error_connecting" : "Error al conectarse a la base de datos",
+  "hide" : "Esconder",
+  "join" : "Unirse a preguntas y respuestas",
+  "loading" : "Cargando…",
+  "mod_off" : "La moderación está desactivada",
+  "no_matching_questions" : "No hay preguntas coincidentes",
+  "no_sessions" : "No hay sesiones en vivo disponibles",
+  "open" : "Abrir",
+  "question_approved" : "¡Se ha aprobado tu pregunta!",
+  "question_submitted" : "¡Tu pregunta ha sido enviada para su aprobación!",
+  "retry" : "Volver a intentar",
+  "search" : "Buscar",
+  "type_question" : "Escribe tu pregunta aquí"
+}
