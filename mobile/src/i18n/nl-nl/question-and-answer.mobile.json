@@ -1,0 +1,22 @@
+{
+  "q&a" : "Q&A",
+  "approve" : "Goedkeuren",
+  "answer" : "Beantwoorden",
+  "ask_question" : "Vraag stellen",
+  "block" : "Blokkeren",
+  "confirm_session" : "Bevestig uw sessie",
+  "enter_question" : "Voer een vraag in",
+  "error_connecting" : "Fout bij verbinden met database",
+  "hide" : "Verbergen",
+  "join" : "Meedoen aan Q&A",
+  "loading" : "Laden...",
+  "mod_off" : "Moderatie is uitgeschakeld",
+  "no_matching_questions" : "Geen passende vragen",
+  "no_sessions" : "Geen beschikbare live-sessies",
+  "open" : "Openen",
+  "question_approved" : "Uw vraag is goedgekeurd.",
+  "question_submitted" : "Uw vraag is ingediend ter goedkeuring.",
+  "retry" : "Opnieuw proberen",
+  "search" : "Zoeken",
+  "type_question" : "Typ uw vraag hier"
+}

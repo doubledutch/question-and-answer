@@ -1,0 +1,22 @@
+{
+  "q&a" : "Q＆A",
+  "approve" : "承認",
+  "answer" : "回答",
+  "ask_question" : "質問する",
+  "block" : "ブロック",
+  "confirm_session" : "あなたのセッションを確認してください",
+  "enter_question" : "質問を入力してください",
+  "error_connecting" : "データベースへの接続エラー",
+  "hide" : "非表示にする",
+  "join" : "Q＆Aに参加",
+  "loading" : "読み込んでいます…",
+  "mod_off" : "モデレーションがオフになっています",
+  "no_matching_questions" : "一致する質問がありません",
+  "no_sessions" : "利用可能なライブセッションがありません",
+  "open" : "開く",
+  "question_approved" : "あなたの質問は承認されました。",
+  "question_submitted" : "あなたの質問は承認申請が出されました。",
+  "retry" : "再試行する",
+  "search" : "検索...",
+  "type_question" : "ここにあなたの質問を入力"
+}
