@@ -78,7 +78,7 @@ export default class Admin extends Component {
   publicUsersRef = () => this.props.fbc.database.public.usersRef()
 
   componentDidMount() {
-    const {client, currentUser} = this.props
+    const {client} = this.props
     client.getAttendees().then(users => {
       this.setState({attendees: users})
       const {fbc} = this.props
@@ -106,23 +106,18 @@ export default class Admin extends Component {
           this.setState({ questions: [...this.state.questions, {...data.val(), key: data.key }], pinnedQuestions })
 
           fbc.database.public.allRef('votes').child(data.key).on('child_added', vote => {
-            const userVote = vote.key === currentUser.id
             var questions = this.state.questions.map(question => 
               question.key === data.key ?
-              { ...question, myVote: userVote, score: question.score + 1}
+              { ...question, score: question.score + 1}
               : 
               question
             )
             this.setState({questions})
           })
           fbc.database.public.allRef('votes').child(data.key).on('child_removed', vote => {
-            var userVote = true
-            if (vote.key === currentUser.id){
-              userVote = false
-            }
             var questions = this.state.questions.map(question => 
               question.key === data.key ?
-                { ...question, myVote: userVote, score: question.score - 1}
+                { ...question, score: question.score - 1}
                 : 
                 question
             )
