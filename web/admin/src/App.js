@@ -36,15 +36,12 @@ class App extends PureComponent {
   }
 
   componentDidMount() {
-    client.getCurrentUser().then(currentUser => this.setState({currentUser}))
     this.props.fbc.signinAdmin().then(() => {
       this.setState({isSignedIn: true})
     })
   }
 
   render() {
-    const {currentUser} = this.state
-    if (!currentUser) return null
     const {fbc} = this.props
     if (!this.state.isSignedIn) return <div>{t('loading')}</div>
     const qs = parseQueryString()
@@ -52,7 +49,7 @@ class App extends PureComponent {
       case 'bigScreen':
         return <BigScreen fbc={fbc} session={qs.session} sessionName={qs.sessionName} client={client}/>
       default:
-        return <Admin fbc={fbc} client={client} currentUser={currentUser}/>
+        return <Admin fbc={fbc} client={client} />
     }
   }
 }
