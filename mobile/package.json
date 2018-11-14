@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@doubledutch/firebase-connector": "^4.1.0",
-    "@doubledutch/rn-client": "^4.1.4",
+    "@doubledutch/rn-client": "^4.2.3",
     "babel-plugin-transform-runtime": "^6.23.0",
     "react": "~16.0.0-alpha.12",
     "react-native": "0.46.4",
