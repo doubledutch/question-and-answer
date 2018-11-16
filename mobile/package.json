@@ -22,8 +22,22 @@
     "react-native-youtube": "^1.0.1"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-import-resolver-node": "^0.3.2",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-css-modules": "^2.10.0",
+    "eslint-plugin-flowtype": "^3.2.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-react-native": "^3.5.0",
+    "prettier": "^1.15.2",
     "react-native-cli": "^2.0.1",
     "rnpm": "^1.9.0"
   }

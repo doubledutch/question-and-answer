@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,39 +14,44 @@
  * limitations under the License.
  */
 
-'use strict'
 import React, { Component } from 'react'
 import {
-  FlatList, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View
+  FlatList,
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native'
 import { Color, translate as t } from '@doubledutch/rn-client'
 
 export default class CustomModal extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
-      question: '', 
+      question: '',
       anomStatus: false,
-      color: 'white', 
+      color: 'white',
       borderColor: '#EFEFEF',
       inputHeight: 0,
       search: false,
       session: '',
       newList: [],
-      isError: this.props.showError
+      isError: this.props.showError,
     }
     this.primaryColor = new Color(props.primaryColor).limitLightness(0.9).rgbString()
   }
 
-
   componentWillReceiveProps(nextProps) {
-    if (nextProps.showError !== this.state.isError){
-      this.setState({isError: nextProps.showError})
+    if (nextProps.showError !== this.state.isError) {
+      this.setState({ isError: nextProps.showError })
     }
   }
 
   modalClose() {
-    this.setState({anomStatus: false, color: 'white'})
+    this.setState({ anomStatus: false, color: 'white' })
     this.props.hideModal()
   }
 
@@ -56,7 +61,7 @@ export default class CustomModal extends Component {
 
   makeQuestion = (question, anomStatus) => {
     this.props.createSharedTask(question, anomStatus)
-    this.setState({question: ''})
+    this.setState({ question: '' })
   }
 
   render() {
@@ -69,145 +74,208 @@ export default class CustomModal extends Component {
       height: Math.max(35, this.state.inputHeight),
       paddingTop: 0,
     }
-    
+
     const androidStyle = {
       paddingLeft: 0,
       marginTop: 17,
-      marginBottom: 10
+      marginBottom: 10,
     }
 
     const iosStyle = {
       marginTop: 20,
       marginBottom: 10,
     }
-    
-    var newColor = "#9B9B9B"
-    if (this.props.session){
+
+    let newColor = '#9B9B9B'
+    if (this.props.session) {
       newColor = this.primaryColor
     }
 
     const colorStyle = {
-      backgroundColor: newColor
+      backgroundColor: newColor,
     }
 
     if (this.props.launch === true) {
       let sessions = this.props.sessions
       let displayTable = true
-      if (this.state.search) { 
+      if (this.state.search) {
         sessions = this.state.newList
         if (sessions.length === 0) {
           displayTable = false
         }
       }
       return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           {this.renderModalHeader()}
-          { displayTable ? <FlatList
-          style={{backgroundColor: '#EFEFEF'}}
-          data = {sessions}
-          ListFooterComponent={<View style={{height: 100}}></View>}
-          renderItem={({item}) => (
-            <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
-              <View style={s.leftContainer}>
-                <SessionRadio selected={this.props.session === item} primaryColor={this.primaryColor} />
-              </View>
-              <View style={s.rightContainer}>
-                <Text style={{fontSize: 16, color: '#364247'}}>{item.sessionName}</Text>
-              </View>
-            </TouchableOpacity>
-          )} /> : <Text style={{textAlign: "center", marginTop: 100, fontSize: 20, color: '#9B9B9B', flex: 1, }}>No Search Results</Text> }
-          <View style={{borderTopColor:"#b7b7b7", borderTopWidth: 1, backgroundColor: '#EFEFEF'}}>
-            <TouchableOpacity disabled={this.props.disable} onPress={this.props.closeSessionModal} style={[s.bigButton, colorStyle]}>
-              <Text style={{fontSize: 14, textAlign: "center", marginTop: 13, color: "white"}}>{t('join')}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )
-    } else {
-      var borderColor = this.state.borderColor
-      if (this.state.isError){borderColor = "red"}
-      const borderStyle = {borderColor: borderColor}
-      const allow = this.props.anom[0] ? this.props.anom[0].allow : true
-      return (
-        <View style={{flex: 1}}>
-          <View style={[s.modal, borderStyle]}>
-            <TouchableOpacity style={s.circleBox}><Text style={s.whiteText}>?</Text></TouchableOpacity>
-            <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder={t('type_question')}
-              value={this.state.question}
-              onChangeText={question => this.setState({question, isError: false})} 
-              maxLength={250}
-              autoFocus={true}
-              multiline={true}
-              placeholderTextColor="#9B9B9B"
-              onContentSizeChange={(event) => this._handleSizeChange(event)}
+          {displayTable ? (
+            <FlatList
+              style={{ backgroundColor: '#EFEFEF' }}
+              data={sessions}
+              ListFooterComponent={<View style={{ height: 100 }} />}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => this.sessionSelect(item)} style={s.listContainer}>
+                  <View style={s.leftContainer}>
+                    <SessionRadio
+                      selected={this.props.session === item}
+                      primaryColor={this.primaryColor}
+                    />
+                  </View>
+                  <View style={s.rightContainer}>
+                    <Text style={{ fontSize: 16, color: '#364247' }}>{item.sessionName}</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
             />
-            <Text style={s.counter}>{250 - this.state.question.length} </Text>
+          ) : (
+            <Text
+              style={{
+                textAlign: 'center',
+                marginTop: 100,
+                fontSize: 20,
+                color: '#9B9B9B',
+                flex: 1,
+              }}
+            >
+              No Search Results
+            </Text>
+          )}
+          <View
+            style={{ borderTopColor: '#b7b7b7', borderTopWidth: 1, backgroundColor: '#EFEFEF' }}
+          >
+            <TouchableOpacity
+              disabled={this.props.disable}
+              onPress={this.props.closeSessionModal}
+              style={[s.bigButton, colorStyle]}
+            >
+              <Text style={{ fontSize: 14, textAlign: 'center', marginTop: 13, color: 'white' }}>
+                {t('join')}
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View style={s.bottomButtons}>
-            <View style={s.rightBox}>
-              <Text style={{color: this.state.isError ? "red" : "white", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*{t('enter_question')}</Text>
-              {allow ? <View style={s.anomBox}>
-                {this.renderAnomIcon()}
-                <Text style={s.anomText}>Ask anonymously</Text>
-              </View> : null
-              }
-            </View>
-            <TouchableOpacity style={[s.sendButton, this.backgroundPrimaryColor()]} onPress={() => this.makeQuestion(this.state.question, this.state.anomStatus)}><Text style={s.sendButtonText}>{this.props.questionError}</Text></TouchableOpacity>
-          </View>
-          <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)}></TouchableOpacity> 
         </View>
       )
     }
+    let borderColor = this.state.borderColor
+    if (this.state.isError) {
+      borderColor = 'red'
+    }
+    const borderStyle = { borderColor }
+    const allow = this.props.anom[0] ? this.props.anom[0].allow : true
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={[s.modal, borderStyle]}>
+          <TouchableOpacity style={s.circleBox}>
+            <Text style={s.whiteText}>?</Text>
+          </TouchableOpacity>
+          <TextInput
+            style={Platform.select({
+              ios: [newStyle, iosStyle],
+              android: [newStyle, androidStyle],
+            })}
+            placeholder={t('type_question')}
+            value={this.state.question}
+            onChangeText={question => this.setState({ question, isError: false })}
+            maxLength={250}
+            autoFocus
+            multiline
+            placeholderTextColor="#9B9B9B"
+            onContentSizeChange={event => this._handleSizeChange(event)}
+          />
+          <Text style={s.counter}>{250 - this.state.question.length} </Text>
+        </View>
+        <View style={s.bottomButtons}>
+          <View style={s.rightBox}>
+            <Text
+              style={{
+                color: this.state.isError ? 'red' : 'white',
+                paddingTop: 2,
+                fontSize: 12,
+                marginLeft: 10,
+              }}
+            >
+              *{t('enter_question')}
+            </Text>
+            {allow ? (
+              <View style={s.anomBox}>
+                {this.renderAnomIcon()}
+                <Text style={s.anomText}>Ask anonymously</Text>
+              </View>
+            ) : null}
+          </View>
+          <TouchableOpacity
+            style={[s.sendButton, this.backgroundPrimaryColor()]}
+            onPress={() => this.makeQuestion(this.state.question, this.state.anomStatus)}
+          >
+            <Text style={s.sendButtonText}>{this.props.questionError}</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={s.modalBottom} onPress={this.modalClose.bind(this)} />
+      </View>
+    )
   }
 
-  backgroundPrimaryColor = () => ({backgroundColor: this.primaryColor})
+  backgroundPrimaryColor = () => ({ backgroundColor: this.primaryColor })
 
   renderAnomIcon = () => {
     if (this.state.anomStatus) {
       return (
-        <TouchableOpacity onPress={() => this.makeTrue()}><Image style={s.checkButton} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_active.png"}}/></TouchableOpacity>
-      )
-    } else {
-      return (
-        <TouchableOpacity onPress={() => this.makeTrue()}><Image style={s.checkButton} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_inactive.png"}}/></TouchableOpacity>
+        <TouchableOpacity onPress={() => this.makeTrue()}>
+          <Image
+            style={s.checkButton}
+            source={{
+              uri:
+                'https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_active.png',
+            }}
+          />
+        </TouchableOpacity>
       )
     }
+    return (
+      <TouchableOpacity onPress={() => this.makeTrue()}>
+        <Image
+          style={s.checkButton}
+          source={{
+            uri:
+              'https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_inactive.png',
+          }}
+        />
+      </TouchableOpacity>
+    )
   }
 
   _handleSizeChange = event => {
     this.setState({
-      inputHeight: event.nativeEvent.contentSize.height
-    });
-  };
+      inputHeight: event.nativeEvent.contentSize.height,
+    })
+  }
 
   makeTrue() {
-    if (this.state.anomStatus === false){
-      this.setState({anomStatus: true, color: 'black'})
+    if (this.state.anomStatus === false) {
+      this.setState({ anomStatus: true, color: 'black' })
     }
-    if (this.state.anomStatus === true){
-      this.setState({anomStatus: false, color: 'white'})
+    if (this.state.anomStatus === true) {
+      this.setState({ anomStatus: false, color: 'white' })
     }
   }
 
-  updateList = (value) => {
+  updateList = value => {
     const queryText = value.toLowerCase()
-    if (queryText.length > 0){
-      var queryResult = [];
-      this.props.sessions.forEach(function(content){
-        var title = content.sessionName
+    if (queryText.length > 0) {
+      const queryResult = []
+      this.props.sessions.forEach(content => {
+        const title = content.sessionName
         if (title) {
-          if (title.toLowerCase().indexOf(queryText)!== -1){
-            queryResult.push(content);
+          if (title.toLowerCase().indexOf(queryText) !== -1) {
+            queryResult.push(content)
           }
         }
-      });
-      this.setState({search: true, newList: queryResult, session: value})
-    }
-    else {
-      this.setState({search: false, session: value})
+      })
+      this.setState({ search: true, newList: queryResult, session: value })
+    } else {
+      this.setState({ search: false, session: value })
     }
   }
-  
+
   renderModalHeader = () => {
     const newStyle = {
       flex: 1,
@@ -228,50 +296,77 @@ export default class CustomModal extends Component {
       marginBottom: 10,
     }
     if (this.props.sessions.length > 0) {
-      return ( 
-        <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1}}>
+      return (
+        <View style={{ borderBottomColor: '#b7b7b7', borderBottomWidth: 1 }}>
           <Text style={s.modHeader}>{t('confirm_session')}</Text>
-          <View style={{backgroundColor: '#9B9B9B', padding: 10}}>
-            <View style={{flexDirection: "row", backgroundColor: "#FFFFFF", borderBottomColor: "#b7b7b7", borderBottomWidth: 1, borderRadius: 5, height: 40}}>
-              {this.state.search ? <View style={{width: 40}} /> : <TouchableOpacity style={s.circleBoxMargin}><Text style={s.whiteText}>?</Text></TouchableOpacity>}
-              <TextInput style={Platform.select({ios: [newStyle, iosStyle], android: [newStyle, androidStyle]})} placeholder={t('search')}
+          <View style={{ backgroundColor: '#9B9B9B', padding: 10 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: '#FFFFFF',
+                borderBottomColor: '#b7b7b7',
+                borderBottomWidth: 1,
+                borderRadius: 5,
+                height: 40,
+              }}
+            >
+              {this.state.search ? (
+                <View style={{ width: 40 }} />
+              ) : (
+                <TouchableOpacity style={s.circleBoxMargin}>
+                  <Text style={s.whiteText}>?</Text>
+                </TouchableOpacity>
+              )}
+              <TextInput
+                style={Platform.select({
+                  ios: [newStyle, iosStyle],
+                  android: [newStyle, androidStyle],
+                })}
+                placeholder={t('search')}
                 value={this.state.session}
-                onChangeText={session => this.updateList(session)} 
+                onChangeText={session => this.updateList(session)}
                 maxLength={25}
                 placeholderTextColor="#9B9B9B"
               />
-              {this.state.search ? <TouchableOpacity style={s.circleBoxMargin} onPress={this.resetSearch}><Text style={s.whiteText}>X</Text></TouchableOpacity> : null}
+              {this.state.search ? (
+                <TouchableOpacity style={s.circleBoxMargin} onPress={this.resetSearch}>
+                  <Text style={s.whiteText}>X</Text>
+                </TouchableOpacity>
+              ) : null}
             </View>
           </View>
-        </View >
-      )
-    }
-    else {
-      return (
-        <View>
-          <View style={{borderBottomColor: "#b7b7b7", borderBottomWidth: 1, marginBottom: 150}}>
-            <Text style={s.modHeader}>{t('confirm_session')}</Text>
-          </View >
-            {this.props.isDataLoaded && <Text style={{textAlign: "center", fontSize: 20, color: '#9B9B9B', marginBottom: 5}}>{t('no_sessions')}</Text>}
         </View>
       )
     }
+
+    return (
+      <View>
+        <View style={{ borderBottomColor: '#b7b7b7', borderBottomWidth: 1, marginBottom: 150 }}>
+          <Text style={s.modHeader}>{t('confirm_session')}</Text>
+        </View>
+        {this.props.isDataLoaded && (
+          <Text style={{ textAlign: 'center', fontSize: 20, color: '#9B9B9B', marginBottom: 5 }}>
+            {t('no_sessions')}
+          </Text>
+        )}
+      </View>
+    )
   }
 
   resetSearch = () => {
-    this.setState({session: "", search: false})
+    this.setState({ session: '', search: false })
   }
 }
 
-const SessionRadio = ({selected, primaryColor}) => (
-  <View style={[s.radio, selected ? {borderColor: primaryColor} : null]}>
-    {selected ? <View style={[s.radioDot, {backgroundColor: primaryColor}]} /> : null}
+const SessionRadio = ({ selected, primaryColor }) => (
+  <View style={[s.radio, selected ? { borderColor: primaryColor } : null]}>
+    {selected ? <View style={[s.radioDot, { backgroundColor: primaryColor }]} /> : null}
   </View>
 )
 
 const s = StyleSheet.create({
   circleBoxMargin: {
-    marginTop:10,
+    marginTop: 10,
     marginRight: 10,
     marginLeft: 10,
     marginBottom: 20,
@@ -291,17 +386,17 @@ const s = StyleSheet.create({
   },
 
   modHeader: {
-    backgroundColor: 'white', 
-    height: 51, 
-    fontSize: 18, 
-    textAlign: "center", 
-    paddingTop: 15, 
-    color: '#364247'
+    backgroundColor: 'white',
+    height: 51,
+    fontSize: 18,
+    textAlign: 'center',
+    paddingTop: 15,
+    color: '#364247',
   },
   bottomButtons: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    height: 82
+    height: 82,
   },
 
   modal: {
@@ -312,22 +407,22 @@ const s = StyleSheet.create({
   modalBottom: {
     flex: 1,
     backgroundColor: 'black',
-    opacity: 0.5
+    opacity: 0.5,
   },
-  bigButton:{
-    height: 42, 
-    marginTop: 30, 
-    marginBottom: 30, 
-    marginLeft: 21, 
+  bigButton: {
+    height: 42,
+    marginTop: 30,
+    marginBottom: 30,
+    marginLeft: 21,
     marginRight: 21,
     borderRadius: 4,
     borderTopWidth: 1,
-    borderTopColor: "#b7b7b7"
+    borderTopColor: '#b7b7b7',
   },
   listContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems:'center',
+    alignItems: 'center',
     backgroundColor: 'white',
     marginBottom: 2,
   },
@@ -335,9 +430,9 @@ const s = StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 10,
     backgroundColor: 'white',
-    alignItems:'center',
+    alignItems: 'center',
     height: '100%',
-    paddingTop: 15
+    paddingTop: 15,
   },
   rightContainer: {
     flex: 1,
@@ -356,14 +451,14 @@ const s = StyleSheet.create({
     flexDirection: 'column',
   },
   anomText: {
-    flex:1,
+    flex: 1,
     fontSize: 14,
     color: '#364247',
     marginLeft: 5,
     marginTop: 16,
   },
   circleBox: {
-    marginTop:20,
+    marginTop: 20,
     marginRight: 10,
     marginLeft: 10,
     marginBottom: 20,
@@ -378,13 +473,13 @@ const s = StyleSheet.create({
   },
   counter: {
     justifyContent: 'center',
-    marginTop:23,
+    marginTop: 23,
     width: 30,
     fontSize: 14,
     marginRight: 11,
     height: 20,
-    color: '#9B9B9B', 
-    textAlign: 'center'
+    color: '#9B9B9B',
+    textAlign: 'center',
   },
   sendButton: {
     justifyContent: 'center',
@@ -404,7 +499,7 @@ const s = StyleSheet.create({
   sendButtonText: {
     fontSize: 14,
     color: 'white',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   radio: {
     height: 20,
@@ -419,5 +514,5 @@ const s = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-  }
+  },
 })

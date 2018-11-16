@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,26 +15,33 @@
  */
 
 import React, { Component } from 'react'
-import {translate as t} from '@doubledutch/admin-client'
+import { translate as t } from '@doubledutch/admin-client'
 
 export default class SearchBar extends Component {
   constructor(props) {
     super()
     this.state = {
-      value: ""
+      value: '',
     }
   }
 
-  handleChange = (event) => {
-    this.setState({value: event.target.value})
+  handleChange = event => {
+    this.setState({ value: event.target.value })
     this.props.updateList(event.target.value)
   }
-
 
   render() {
     return (
       <div>
-        <input className={"searchBar" + ((this.props.disable) ? '--gray' : '')} type="text" id="myInput" disabled={this.props.disable} value={this.props.search ? this.state.value : ""} onChange={this.handleChange} placeholder={t('search')}/>
+        <input
+          className={`searchBar${this.props.disable ? '--gray' : ''}`}
+          type="text"
+          id="myInput"
+          disabled={this.props.disable}
+          value={this.props.search ? this.state.value : ''}
+          onChange={this.handleChange}
+          placeholder={t('search')}
+        />
       </div>
     )
   }

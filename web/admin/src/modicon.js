@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,36 +15,40 @@
  */
 
 import React, { Component } from 'react'
-import {translate as t} from '@doubledutch/admin-client'
+import { translate as t } from '@doubledutch/admin-client'
 
 export default class ModIcon extends Component {
   render() {
     const moderator = this.props.moderator
     if (moderator.length > 0) {
-      if (moderator[0].approve === true){
-        return ( 
-          <span className="modIcons">
-            <button className="modButtonAbs">{t('on')}</button>
-            <button className="modButton50Left" onClick={this.props.offApprove}>{t('off')}</button>
-          </span>
-        )
-      }
-      else {
+      if (moderator[0].approve === true) {
         return (
           <span className="modIcons">
-            <button className="modButton50" onClick={this.props.onApprove}>{t('on')}</button>
-            <button className="modButtonLeft">{t('off')}</button>
+            <button className="modButtonAbs">{t('on')}</button>
+            <button className="modButton50Left" onClick={this.props.offApprove}>
+              {t('off')}
+            </button>
           </span>
         )
       }
-    }
-    else {
+
       return (
         <span className="modIcons">
-          <button className="modButton50" onClick={this.props.onApprove}>{t('on')}</button>
+          <button className="modButton50" onClick={this.props.onApprove}>
+            {t('on')}
+          </button>
           <button className="modButtonLeft">{t('off')}</button>
         </span>
       )
-    } 
+    }
+
+    return (
+      <span className="modIcons">
+        <button className="modButton50" onClick={this.props.onApprove}>
+          {t('on')}
+        </button>
+        <button className="modButtonLeft">{t('off')}</button>
+      </span>
+    )
   }
 }
