@@ -201,10 +201,11 @@ class HomeView extends PureComponent {
   }
 
   render() {
+    const { suggestedTitle } = this.props
     const { currentUser, primaryColor } = this.state
     if (!currentUser || !primaryColor) return null
 
-    let titleText = this.state.title
+    let titleText = suggestedTitle || this.state.title
     if (this.state.session) {
       if (this.state.session.sessionName.length < 30) {
         titleText = this.state.session.sessionName
