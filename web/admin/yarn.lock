@@ -7104,9 +7104,10 @@ react-clock@^2.2.1:
     merge-class-names "^1.1.1"
     prop-types "^15.6.0"
 
-react-csv@^1.0.14:
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-1.0.14.tgz#7c9e444fc4c3ca1e1cf73a81129b1ec032838a71"
+react-csv@^1.0.19:
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-1.0.19.tgz#3230dba7877cabaae454425c43e7e2ad90990482"
+  integrity sha512-97TiBtFW0jctu5dmOsPK9BJaWtwF79vaamF3Ld8Iza1lk9s0lMi47FSfMzX9/tWcNhOmmxrXXy1nJLXPEGqh5g==
 
 react-date-picker@^6.10.0:
   version "6.10.1"

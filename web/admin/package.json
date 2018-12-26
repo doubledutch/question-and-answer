@@ -11,7 +11,7 @@
     "moment-timezone": "^0.5.17",
     "react": "^16.5.1",
     "react-beautiful-dnd": "3.0.0",
-    "react-csv": "^1.0.14",
+    "react-csv": "^1.0.19",
     "react-dom": "^16.5.1",
     "react-modal": "^3.1.2",
     "react-scripts": "1.0.14",
