@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
+import { AppRegistry } from 'react-native'
+import { install } from '@doubledutch/rn-client/webShim'
+import HomeView from './src/home-view'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+function runApp(DD) {
+  AppRegistry.registerComponent('questionanswer', () => HomeView)
+  AppRegistry.runApplication('questionanswer', {
+    rootTag: document.getElementById('react-root'),
+    initialProps: { ddOverride: DD },
+  })
+}
+
+if (window.DD && window.DD.Events) {
+  install(runApp)
+} else {
+  runApp(null)
+}

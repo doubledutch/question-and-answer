@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
+const ReactNative = require('react-native')
 
-ReactDOM.render(<App />, document.getElementById('root'))
+module.exports = ReactNative

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
+import { AppRegistry } from 'react-native'
+import HomeView from './src/home-view'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+AppRegistry.registerComponent('questionanswer', () => HomeView)
