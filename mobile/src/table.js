@@ -227,7 +227,7 @@ export default class MyList extends Component {
         </View>
       )
     return (
-      <View style={{ height: 60 }}>
+      <View style={{ height: 52 }}>
         <View style={s.buttonContainer}>
           <View style={s.divider} />
           <TouchableOpacity style={x} onPress={this.props.findOrder}>
