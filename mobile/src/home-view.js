@@ -35,7 +35,6 @@ import FilterSelect from './filtersModal'
 import LoadingView from './LoadingView'
 
 useStrings(i18n)
-Text.defaultProps.allowFontScaling = false
 
 class HomeView extends PureComponent {
   constructor(props) {
