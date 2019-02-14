@@ -285,6 +285,7 @@ export default class CustomModal extends Component {
       maxHeight: 100,
       height: Math.max(35, this.state.inputHeight),
       paddingTop: 0,
+      backgroundColor: 'red',
     }
     const androidStyle = {
       paddingLeft: 0,
@@ -366,10 +367,10 @@ const SessionRadio = ({ selected, primaryColor }) => (
 
 const s = StyleSheet.create({
   circleBoxMargin: {
-    marginTop: 10,
+    // marginTop: 10,
     marginRight: 10,
     marginLeft: 10,
-    marginBottom: 20,
+    // marginBottom: 20,
     justifyContent: 'center',
     backgroundColor: '#9B9B9B',
     paddingLeft: 8,

@@ -108,7 +108,7 @@ class HomeView extends PureComponent {
           })
 
           sessRef.on('child_changed', data => {
-            const sessions = this.state.sessions
+            const sessions = this.state.sessions.slice()
             for (const i in sessions) {
               if (sessions[i].key === data.key) {
                 sessions[i] = data.val()

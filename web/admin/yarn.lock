@@ -132,6 +132,11 @@
     react-dom "^16.3.2"
     react-infinite-calendar "^2.3.1"
 
+"@doubledutch/react-csv@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@doubledutch/react-csv/-/react-csv-1.1.0.tgz#b608f950d0a8f8968102aa74d0fc667ea84a16c1"
+  integrity sha512-OeyUbMT/uabYsR/9fyKy7k75FJqi3c8Ne5hkn1kLELlWKbPaEVV27hbTxHeZKrtijBmrxJtl5EKt5fqz6nHLXg==
+
 "@firebase/app-types@0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@firebase/app-types/-/app-types-0.3.2.tgz#a92dc544290e2893bd8c02a81e684dae3d8e7c85"
@@ -7103,10 +7108,6 @@ react-clock@^2.2.1:
   dependencies:
     merge-class-names "^1.1.1"
     prop-types "^15.6.0"
-
-react-csv@^1.0.14:
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-1.0.14.tgz#7c9e444fc4c3ca1e1cf73a81129b1ec032838a71"
 
 react-date-picker@^6.10.0:
   version "6.10.1"
