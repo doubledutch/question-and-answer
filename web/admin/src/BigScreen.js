@@ -108,24 +108,26 @@ export default class BigScreen extends PureComponent {
   }
 
   renderTable = session => {
-    const pinnedQuestions = this.state.questions.filter(
-      item =>
-        item.pin === true &&
-        item.approve &&
-        item.block === false &&
-        item.answered === false &&
-        item.session === this.props.session,
-    )
-    const otherQuestions = this.state.questions.filter(
-      item =>
-        item.pin === false &&
-        item.approve &&
-        item.block === false &&
-        item.answered === false &&
-        item.session === this.props.session,
-    )
-    pinnedQuestions.sort((a, b) => a.order - b.order)
-    this.originalOrder(otherQuestions)
+    const pinnedQuestions = this.state.questions
+      .filter(
+        item =>
+          item.pin === true &&
+          item.approve &&
+          item.block === false &&
+          item.answered === false &&
+          item.session === this.props.session,
+      )
+      .sort((a, b) => a.order - b.order)
+    const otherQuestions = this.state.questions
+      .filter(
+        item =>
+          item.pin === false &&
+          item.approve &&
+          item.block === false &&
+          item.answered === false &&
+          item.session === this.props.session,
+      )
+      .sort((a, b) => b.score - a.score)
     const newQuestions = pinnedQuestions.concat(otherQuestions)
     return (
       <ul className="box">
@@ -152,20 +154,6 @@ export default class BigScreen extends PureComponent {
         ))}
       </ul>
     )
-  }
-
-  originalOrder = questions => {
-    if (this.state.showRecent === false) {
-      this.dateSort(questions)
-      questions.sort((a, b) => b.score - a.score)
-    }
-    if (this.state.showRecent === true) {
-      this.dateSort(questions)
-    }
-  }
-
-  dateSort = questions => {
-    questions.sort((a, b) => b.dateCreate - a.dateCreate)
   }
 
   renderNonexistent = () => (
