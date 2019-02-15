@@ -35,7 +35,6 @@ import FilterSelect from './filtersModal'
 import LoadingView from './LoadingView'
 
 useStrings(i18n)
-Text.defaultProps.allowFontScaling = false
 
 class HomeView extends PureComponent {
   constructor(props) {
@@ -760,8 +759,6 @@ const s = StyleSheet.create({
     marginBottom: 20,
     justifyContent: 'center',
     backgroundColor: '#9B9B9B',
-    paddingTop: 8,
-    paddingBottom: 8,
     paddingLeft: 8,
     paddingRight: 8,
     height: 22,

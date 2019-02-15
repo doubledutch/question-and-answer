@@ -15,9 +15,8 @@
  */
 
 import React, { Component } from 'react'
-import ReactNative, { Text, View, ActivityIndicator } from 'react-native'
-import Spinner from 'react-native-loading-spinner-overlay'
-import { translate as t } from '@doubledutch/rn-client'
+import ReactNative, {Text, View, ActivityIndicator} from 'react-native'
+import {translate as t} from '@doubledutch/rn-client'
 
 export default class LoadingView extends Component {
   render() {

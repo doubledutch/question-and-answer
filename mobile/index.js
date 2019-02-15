@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
-const Bazaar = require('bazaar-client')
+import { AppRegistry } from 'react-native'
+import HomeView from './src/home-view'
 
-module.exports = Bazaar
+console.ignoredYellowBox = ['Warning: View.propTypes has been deprecated']
+AppRegistry.registerComponent('questionanswer', () => HomeView)
+AppRegistry.registerComponent('section', () => HomeView)
