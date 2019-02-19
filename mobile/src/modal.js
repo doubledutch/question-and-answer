@@ -285,7 +285,7 @@ export default class CustomModal extends Component {
       maxHeight: 100,
       height: Math.max(35, this.state.inputHeight),
       paddingTop: 0,
-      backgroundColor: 'red',
+      backgroundColor: 'white',
     }
     const androidStyle = {
       paddingLeft: 0,
@@ -375,6 +375,7 @@ const s = StyleSheet.create({
     paddingRight: 8,
     height: 22,
     borderRadius: 50,
+    marginTop: 10,
   },
 
   whiteText: {
