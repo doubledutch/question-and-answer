@@ -426,9 +426,15 @@ class HomeView extends PureComponent {
   }
 
   selectSession = session => {
+    this.setState({ session, disable: false })
+    if (!this.state.questions.some(question => question.session === session.key)) {
+      this.sessionListeners(session)
+    }
+  }
+
+  sessionListeners = session => {
     const { fbc } = this.props
     const { currentUser } = this.state
-    this.setState({ session, disable: false })
     fbc.database.public
       .allRef('questions')
       .child(session.key)
