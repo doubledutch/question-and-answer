@@ -15,8 +15,8 @@
  */
 
 import React, { Component } from 'react'
-import { CSVLink } from '@doubledutch/react-csv'
-import { translate as t } from '@doubledutch/admin-client'
+import { CSVLink, CSVDownload } from '@doubledutch/react-csv'
+import client, { translate as t } from '@doubledutch/admin-client'
 import moment from 'moment'
 import Select from 'react-select'
 import { AttendeeSelector } from '@doubledutch/react-components'
@@ -75,6 +75,8 @@ export default class Admin extends Component {
       hideAdmins: false,
       message: 'enter_valid_session_name',
       backgroundUrl: '',
+      isExporting: false,
+      exportList: [],
     }
   }
 
@@ -265,14 +267,13 @@ export default class Admin extends Component {
             {this.renderLeft(newQuestions, sessions)}
             {this.renderRight(newQuestions, pinnedQuestions)}
           </div>
-          <div>
-            <CSVLink
-              className="csvButton"
-              data={this.questionsInCurrentSession(questions).map(questionForCsv)}
-              filename="questions.csv"
-            >
+          <div className="csvLinkBox">
+            <button className="csvButton" onClick={this.formatDataForExport}>
               Export Questions
-            </CSVLink>
+            </button>
+            {this.state.isExporting ? (
+              <CSVDownload data={this.state.exportList} filename="results.csv" target="_blank" />
+            ) : null}
           </div>
         </div>
         {this.state.hideSettings ? (
@@ -313,6 +314,22 @@ export default class Admin extends Component {
         <div className="containerSmall">{this.renderAdminSelect()}</div>
       </div>
     )
+  }
+
+  formatDataForExport = () => {
+    const originalQuestions = this.questionsInCurrentSession(this.state.questions)
+    const attendeeClickPromises = originalQuestions.map(question =>
+      client
+        .getAttendee(question.creator.id)
+        .then(attendee => ({ ...question, ...attendee }))
+        .catch(err => question),
+    )
+
+    Promise.all(attendeeClickPromises).then(questions => {
+      const exportList = questions.map(questionForCsv)
+      this.setState({ exportList, isExporting: true })
+      setTimeout(() => this.setState({ isExporting: false }), 3000)
+    })
   }
 
   renderAdminSelect = () => (
@@ -1103,9 +1120,9 @@ function questionForCsv(q) {
     Question: q.text,
     Status,
     Session: q.sessionName,
-    First_Name: creator.firstName,
-    Last_Name: creator.lastName,
-    Email: creator.email,
+    First_Name: q.firstName,
+    Last_Name: q.lastName,
+    Email: q.email,
     Votes: q.score,
   }
 }
