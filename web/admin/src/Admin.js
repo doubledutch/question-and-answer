@@ -318,14 +318,14 @@ export default class Admin extends Component {
 
   formatDataForExport = () => {
     const originalQuestions = this.questionsInCurrentSession(this.state.questions)
-    const attendeeClickPromises = originalQuestions.map(question =>
+    const attendeeQuestionPromises = originalQuestions.map(question =>
       client
         .getAttendee(question.creator.id)
         .then(attendee => ({ ...question, ...attendee }))
         .catch(err => question),
     )
 
-    Promise.all(attendeeClickPromises).then(questions => {
+    Promise.all(attendeeQuestionPromises).then(questions => {
       const exportList = questions.map(questionForCsv)
       this.setState({ exportList, isExporting: true })
       setTimeout(() => this.setState({ isExporting: false }), 3000)

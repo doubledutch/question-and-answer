@@ -162,8 +162,6 @@ html, body, input, button, select, form{
   align-items: flex-end; 
   justify-content: flex-end;
   display: flex;
-  /* margin-top: 10px; */
-  /* margin-right: 50px; */
 }
 
 .topBox {
@@ -898,20 +896,6 @@ h2 {
   display: flex;
   margin-bottom: 16px;
 }
-
-/* .csvButton{
-  text-decoration: none;
-  background-color: #FFFFFF;
-  border: 1px solid #4A90E2;
-  border-radius: 5px;
-  text-align: center;
-  color: #4A90E2;
-  font-size: 14px;
-  margin: 100px 25px 0px 0px;
-  padding: 10px;
-  float: right;
-  width: 140px;
-} */
 
 .background-url {
   flex: 1;
