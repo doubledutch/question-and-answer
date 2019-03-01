@@ -48,7 +48,7 @@
   "move_answered" : "Gehe zu Beantwortet",
   "move_approved" : "Zu Bewilligt wechseln",
   "move_blocked" : "Gehe zu Blockiert",
-  "name" : "Name",
+  "name" : "Sitzungsname:",
   "no_sessions" : "Keine verfügbaren Sitzungen",
   "off" : "AUS",
   "on" : "AN",
