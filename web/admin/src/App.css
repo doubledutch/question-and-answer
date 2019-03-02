@@ -144,6 +144,26 @@ html, body, input, button, select, form{
   margin: 20px 0px;
 }
 
+.csvButton{
+  float: right;
+  text-decoration: none;
+  border: 1px solid #73aaf3;
+  color: #73aaf3;
+  border-radius: 5px;
+  padding: 10px;
+  margin-left: 20px;
+  margin-right: 0px;
+  background-color: white;
+  margin: 100px 15px 0px 0px;
+}
+
+.csvLinkBox{
+  flex-direction: row;
+  align-items: flex-end; 
+  justify-content: flex-end;
+  display: flex;
+}
+
 .topBox {
   background-color: white;
   width: 50%;
@@ -875,20 +895,6 @@ h2 {
   height: 24px;
   display: flex;
   margin-bottom: 16px;
-}
-
-.csvButton{
-  text-decoration: none;
-  background-color: #FFFFFF;
-  border: 1px solid #4A90E2;
-  border-radius: 5px;
-  text-align: center;
-  color: #4A90E2;
-  font-size: 14px;
-  margin: 100px 25px 0px 0px;
-  padding: 10px;
-  float: right;
-  width: 140px;
 }
 
 .background-url {
