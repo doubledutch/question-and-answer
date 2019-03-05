@@ -1114,15 +1114,14 @@ export default class Admin extends Component {
 }
 
 function questionForCsv(q) {
-  const creator = q.creator || {}
   const Status = findStatus(q)
   return {
     Question: q.text,
     Status,
     Session: q.sessionName,
-    First_Name: q.firstName,
-    Last_Name: q.lastName,
-    Email: q.email,
+    First_Name: q.anom ? 'Anonymous' : q.firstName,
+    Last_Name: q.anom ? 'Anonymous' : q.lastName,
+    Email: q.anom ? 'N/A' : q.email,
     Votes: q.score,
   }
 }
