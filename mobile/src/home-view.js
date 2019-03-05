@@ -679,7 +679,9 @@ class HomeView extends PureComponent {
         .child(this.state.session.key)
         .push({
           text: questionName,
-          creator: this.state.currentUser,
+          creator: anom
+            ? { firstName: '', lastName: 'Anonymous', email: '', id: '' }
+            : this.state.currentUser,
           score: 0,
           dateCreate: time,
           anom,
