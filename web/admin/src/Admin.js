@@ -15,7 +15,7 @@
  */
 
 import React, { Component } from 'react'
-import { CSVLink, CSVDownload } from '@doubledutch/react-csv'
+import { CSVDownload } from '@doubledutch/react-csv'
 import client, { translate as t } from '@doubledutch/admin-client'
 import moment from 'moment'
 import Select from 'react-select'

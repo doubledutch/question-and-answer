@@ -1,7 +1,7 @@
 {
   "name": "questionanswer",
   "version": "2.1.0",
-  "baseBundleVersion": "0.57.5",
+  "baseBundleVersion": "0.59.1",
   "private": true,
   "scripts": {
     "start": "pushd mobile && npm run ios && popd && pushd web/admin && npm start && popd"

@@ -4,19 +4,19 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@doubledutch/admin-client": "^2.0.1",
-    "@doubledutch/firebase-connector": "^4.1.0",
-    "@doubledutch/react-components": "^0.1.0",
+    "@doubledutch/admin-client": "^2.1.2",
+    "@doubledutch/firebase-connector": "^4.1.2",
+    "@doubledutch/react-components": "^0.2.1",
     "@doubledutch/react-csv": "^1.1.0",
-    "moment": "^2.22.2",
-    "moment-timezone": "^0.5.17",
-    "react": "^16.5.1",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.23",
+    "react": "^16.8.4",
     "react-beautiful-dnd": "3.0.0",
-    "react-dom": "^16.5.1",
-    "react-modal": "^3.1.2",
-    "react-scripts": "1.0.14",
+    "react-dom": "^16.8.4",
+    "react-modal": "^3.8.1",
+    "react-scripts": "2.1.8",
     "react-select": "^1.2.1",
-    "react-tooltip": "^3.5.1"
+    "react-tooltip": "^3.10.0"
   },
   "scripts": {
     "start": "node emulator",
@@ -25,18 +25,22 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.9.0",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-prettier": "^3.3.0",
+    "eslint-config-prettier": "^4.1.0",
     "eslint-import-resolver-node": "^0.3.2",
-    "eslint-loader": "^2.1.1",
-    "eslint-plugin-css-modules": "^2.10.0",
-    "eslint-plugin-flowtype": "^3.2.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-prettier": "^3.0.0",
-    "eslint-plugin-react": "^7.11.1",
-    "prettier": "^1.15.2"
-  }
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-css-modules": "^2.11.0",
+    "eslint-plugin-flowtype": "^3.4.2",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.12.4",
+    "prettier": "^1.16.4"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
