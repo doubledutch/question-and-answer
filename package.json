@@ -6,7 +6,7 @@
   "scripts": {
     "start": "pushd mobile && npm run ios && popd && pushd web/admin && npm start && popd"
   },
-  "license": "apache-2.0",
+  "license": "Apache-2.0",
   "doubledutch": {
     "extension": true
   }
