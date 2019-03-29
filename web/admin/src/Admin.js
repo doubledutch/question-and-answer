@@ -882,7 +882,6 @@ export default class Admin extends Component {
       .adminRef('sessions')
       .child(task.key)
       .update({ archive: !status })
-    this.setState({ session: 'All' })
   }
 
   handleClick = () => {
