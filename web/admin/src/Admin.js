@@ -24,7 +24,6 @@ import CustomCell from './cell'
 import ModIcon from './modicon'
 import AnomIcon from './anomicon'
 import CustomHeader from './header'
-import CustomHeaderOff from './headeroff'
 import CustomButtons from './buttons'
 import SortableTable from './sortableTable'
 import PresentationDriver from './PresentationDriver'
@@ -77,6 +76,7 @@ export default class Admin extends Component {
       backgroundUrl: '',
       isExporting: false,
       exportList: [],
+      headerStatus: 'recent',
     }
   }
 
@@ -389,7 +389,7 @@ export default class Admin extends Component {
     )
   }
 
-  renderLeft = (questions, sessions) => {
+  renderLeft = questions => {
     let totalQuestions = questions.filter(item => item.approve === false && item.new === true)
     if (totalQuestions === undefined) {
       totalQuestions = ['']
@@ -679,25 +679,27 @@ export default class Admin extends Component {
     </div>
   )
 
-  renderRight = (questions, pinnedQuestions) => {
-    if (this.state.moderator.length > 0) {
-      if (this.state.moderator[0].approve === false) {
-        if (this.state.showBlock === false && this.state.showAnswer === false) {
+  renderRight = (otherQuestions, pinnedQuestions) => {
+    const { moderator, showBlock, showAnswer, headerStatus } = this.state
+    const questions =
+      headerStatus === 'popular' ? otherQuestions.sort((a, b) => b.score - a.score) : otherQuestions
+    if (moderator.length > 0) {
+      if (moderator[0].approve === false) {
+        if (!showBlock && !showAnswer) {
           const approve = true
           return (
             <div className="questionContainer">
-              <CustomHeaderOff
+              <CustomHeader
                 questions={questions}
                 handleClick={this.handleClick}
                 handleAnswer={this.handleAnswer}
                 answerAll={this.answerAll}
-                showBlock={this.state.showBlock}
-                showAnswer={this.state.showAnswer}
+                status={headerStatus}
                 handleApproved={this.handleApproved}
+                modOff
               />
               <span className="questionBox2">
-                {questions.filter(task => task.block === false && task.answered === false)
-                  .length ? (
+                {questions.filter(task => !task.block && !task.answered).length ? (
                   <ul className="listBox">
                     {this.renderPinned(pinnedQuestions)}
                     {questions
@@ -732,41 +734,24 @@ export default class Admin extends Component {
           )
         }
 
-        if (this.state.showAnswer === true) {
-          return (
-            <div className="questionContainer">
-              <CustomHeaderOff
-                questions={questions}
-                handleClick={this.handleClick}
-                handleAnswer={this.handleAnswer}
-                answerAll={this.answerAll}
-                showBlock={this.state.showBlock}
-                showAnswer={this.state.showAnswer}
-                handleApproved={this.handleApproved}
-              />
-              {this.renderAnswered(questions)}
-            </div>
-          )
-        }
-
         return (
           <div className="questionContainer">
-            <CustomHeaderOff
+            <CustomHeader
               questions={questions}
               handleClick={this.handleClick}
               handleAnswer={this.handleAnswer}
               answerAll={this.answerAll}
-              showBlock={this.state.showBlock}
-              showAnswer={this.state.showAnswer}
+              status={headerStatus}
               handleApproved={this.handleApproved}
+              modOff
             />
-            {this.renderBlocked(questions)}
+            {showAnswer ? this.renderAnswered(questions) : this.renderBlocked(questions)}
           </div>
         )
       }
 
-      if (this.state.moderator[0].approve === true) {
-        if (this.state.showBlock === false && this.state.showAnswer === false) {
+      if (moderator[0].approve === true) {
+        if (showBlock === false && showAnswer === false) {
           return (
             <div className="questionContainer">
               <CustomHeader
@@ -774,16 +759,13 @@ export default class Admin extends Component {
                 handleClick={this.handleClick}
                 handleAnswer={this.handleAnswer}
                 answerAll={this.answerAll}
-                showBlock={this.state.showBlock}
-                showAnswer={this.state.showAnswer}
+                handleApproved={this.handleApprovedRecent}
+                handleApprovedPop={this.handleApprovedPop}
+                status={headerStatus}
               />
               <span className="questionBox2">
                 {questions.filter(
-                  task =>
-                    task.block === false &&
-                    task.answered === false &&
-                    task.approve === true &&
-                    task.new === false,
+                  task => !task.block && !task.answered && task.approve && !task.new,
                 ).length ? (
                   <ul className="listBox">
                     {this.renderPinned(pinnedQuestions)}
@@ -815,24 +797,6 @@ export default class Admin extends Component {
             </div>
           )
         }
-
-        if (this.state.showAnswer === true) {
-          return (
-            <div className="questionContainer">
-              <CustomHeader
-                questions={questions}
-                handleClick={this.handleClick}
-                handleAnswer={this.handleAnswer}
-                answerAll={this.answerAll}
-                showBlock={this.state.showBlock}
-                showAnswer={this.state.showAnswer}
-                handleApproved={this.handleApproved}
-              />
-              {this.renderAnswered(questions)}
-            </div>
-          )
-        }
-
         return (
           <div className="questionContainer">
             <CustomHeader
@@ -840,11 +804,11 @@ export default class Admin extends Component {
               handleClick={this.handleClick}
               handleAnswer={this.handleAnswer}
               answerAll={this.answerAll}
-              showBlock={this.state.showBlock}
-              showAnswer={this.state.showAnswer}
-              handleApproved={this.handleApproved}
+              handleApproved={this.handleApprovedRecent}
+              handleApprovedPop={this.handleApprovedPop}
+              status={headerStatus}
             />
-            {this.renderBlocked(questions)}
+            {this.state.showAnswer ? this.renderAnswered(questions) : this.renderBlocked(questions)}
           </div>
         )
       }
@@ -856,9 +820,9 @@ export default class Admin extends Component {
             handleClick={this.handleClick}
             handleAnswer={this.handleAnswer}
             answerAll={this.answerAll}
-            showBlock={this.state.showBlock}
-            showAnswer={this.state.showAnswer}
-            handleApproved={this.handleApproved}
+            handleApproved={this.handleApprovedRecent}
+            handleApprovedPop={this.handleApprovedPop}
+            status={headerStatus}
           />
           {this.renderBlocked(questions)}
         </div>
@@ -888,6 +852,7 @@ export default class Admin extends Component {
     this.setState({
       showAnswer: false,
       showBlock: true,
+      headerStatus: 'blocked',
     })
   }
 
@@ -895,13 +860,23 @@ export default class Admin extends Component {
     this.setState({
       showAnswer: true,
       showBlock: false,
+      headerStatus: 'answered',
     })
   }
 
-  handleApproved = () => {
+  handleApprovedPop = () => {
     this.setState({
       showAnswer: false,
       showBlock: false,
+      headerStatus: 'popular',
+    })
+  }
+
+  handleApprovedRecent = () => {
+    this.setState({
+      showAnswer: false,
+      showBlock: false,
+      headerStatus: 'recent',
     })
   }
 
