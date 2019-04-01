@@ -49,6 +49,12 @@ export class CellEdit extends Component {
           {this.state.action === 'edit' ? (
             <p className="grayText">{250 - this.state.value.length}</p>
           ) : null}
+          <input
+            className="ddLink"
+            id={task.key}
+            type="text"
+            value={`dd://extensions/questionanswer?sessionId=${task.key}`}
+          />
           {this.renderIcons(task)}
         </div>
         <p className="errorText" style={{ height: this.state.height }}>

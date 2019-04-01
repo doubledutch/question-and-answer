@@ -81,6 +81,7 @@ class HomeView extends PureComponent {
 
   componentDidMount() {
     const { fbc } = this.props
+    const sessionId = '-LYcXBVUAUQ548YnE2Kv'
     client.getCurrentUser().then(currentUser => this.setState({ currentUser }))
     client.getPrimaryColor().then(primaryColor => this.setState({ primaryColor }))
     this.signin
@@ -92,6 +93,13 @@ class HomeView extends PureComponent {
         const wireListeners = () => {
           sessRef.on('child_added', data => {
             this.setState({ sessions: [...this.state.sessions, { ...data.val(), key: data.key }] })
+            if (sessionId) {
+              const directSession = data.key === sessionId ? { ...data.val(), key: data.key } : null
+              if (directSession) {
+                this.selectSession(directSession)
+                this.hideModal()
+              }
+            }
           })
 
           sessRef.on('child_removed', data => {
@@ -149,7 +157,7 @@ class HomeView extends PureComponent {
           })
 
           modRef.on('child_changed', data => {
-            const moderator = this.state.moderator
+            const { moderator } = this.state
             for (const i in moderator) {
               if (moderator[i].key === data.key) {
                 moderator[i].approve = data.val().approve
@@ -163,7 +171,7 @@ class HomeView extends PureComponent {
           })
 
           anomRef.on('child_changed', data => {
-            const anom = this.state.anom
+            const { anom } = this.state
             for (const i in anom) {
               if (anom[i].key === data.key) {
                 anom[i] = data.val()
@@ -480,11 +488,11 @@ class HomeView extends PureComponent {
       .allRef('questions')
       .child(session.key)
       .on('child_changed', data => {
-        const questions = this.state.questions
+        const { questions } = this.state
         for (const i in questions) {
           if (questions[i].key === data.key) {
-            const score = questions[i].score
-            const myVote = questions[i].myVote
+            const { score } = questions[i]
+            const { myVote } = questions[i]
             const oldState = questions[i].approve
             const newQuestions = questions.filter(x => x.key !== data.key)
             const newObject = data.val()
