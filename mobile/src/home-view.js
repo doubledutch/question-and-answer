@@ -80,8 +80,7 @@ class HomeView extends PureComponent {
   }
 
   componentDidMount() {
-    const { fbc } = this.props
-    const sessionId = '-LYcXBVUAUQ548YnE2Kv'
+    const { fbc, sessionId } = this.props
     client.getCurrentUser().then(currentUser => this.setState({ currentUser }))
     client.getPrimaryColor().then(primaryColor => this.setState({ primaryColor }))
     this.signin
