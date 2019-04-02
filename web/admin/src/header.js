@@ -19,89 +19,60 @@ import { translate as t } from '@doubledutch/admin-client'
 
 export default class CustomHeader extends Component {
   render() {
-    const newQuestions = this.props.questions
-    const showBlock = this.props.showBlock
-    const showAnswer = this.props.showAnswer
-    const approveQuestions = newQuestions.filter(
-      item => item.approve === true && item.new === false && item.answered === false,
+    const {
+      questions,
+      status,
+      modOff,
+      handleApproved,
+      handleApprovedPop,
+      handleClick,
+      handleAnswer,
+    } = this.props
+    const newQuestions = questions
+
+    const approveQuestions = modOff
+      ? newQuestions.filter(item => !item.block && !item.answered)
+      : newQuestions.filter(item => !item.block && !item.answered)
+    const blockedQuestions = modOff
+      ? newQuestions.filter(item => item.block && !item.new)
+      : newQuestions.filter(item => item.block && !item.new && !item.answered)
+    const answeredQuestions = newQuestions.filter(item => item.answered)
+
+    return (
+      <span className="buttonSpan2">
+        <button
+          className={status === 'recent' ? 'listButton' : 'listButton2'}
+          onClick={handleApproved}
+        >
+          {t('header_approved_recent', { count: approveQuestions.length })}
+        </button>
+        <button
+          className={status === 'popular' ? 'listButton' : 'listButton2'}
+          onClick={handleApprovedPop}
+        >
+          {t('header_approved_pop', { count: approveQuestions.length })}
+        </button>
+        <button
+          className={status === 'blocked' ? 'listButton' : 'listButton2'}
+          onClick={handleClick}
+        >
+          {t('header_blocked', { count: blockedQuestions.length })}
+        </button>
+        <button
+          className={status === 'answered' ? 'listButton' : 'listButton2'}
+          onClick={handleAnswer}
+        >
+          {t('header_answered', { count: answeredQuestions.length })}
+        </button>
+        <span className="spacer" />
+        <button
+          className="answerButton"
+          disabled={approveQuestions.length === 0}
+          onClick={this.props.answerAll}
+        >
+          {t('mark_all_answered')}
+        </button>
+      </span>
     )
-    const blockedQuestions = newQuestions.filter(
-      item => item.block === true && item.new === false && item.answered === false,
-    )
-    const answeredQuestions = newQuestions.filter(item => item.answered === true)
-
-    if (showBlock === false && showAnswer === false) {
-      if (approveQuestions.length === 0) {
-        return (
-          <span className="buttonSpan2">
-            <button className="listButton">
-              {t('header_approved', { count: approveQuestions.length })}
-            </button>
-            <button className="listButton2" onClick={this.props.handleClick}>
-              {t('header_blocked', { count: blockedQuestions.length })}
-            </button>
-            <button className="listButton2" onClick={this.props.handleAnswer}>
-              {t('header_answered', { count: answeredQuestions.length })}
-            </button>
-            <span className="spacer" />
-            <button className="answerButton2">{t('mark_all_answered')}</button>
-          </span>
-        )
-      }
-
-      return (
-        <span className="buttonSpan2">
-          <button className="listButton">
-            {t('header_approved', { count: approveQuestions.length })}
-          </button>
-          <button className="listButton2" onClick={this.props.handleClick}>
-            {t('header_blocked', { count: blockedQuestions.length })}
-          </button>
-          <button className="listButton2" onClick={this.props.handleAnswer}>
-            {t('header_answered', { count: answeredQuestions.length })}
-          </button>
-          <span className="spacer" />
-          <button className="answerButton" onClick={this.props.answerAll}>
-            {t('mark_all_answered')}
-          </button>
-        </span>
-      )
-    }
-
-    if ((showAnswer === true) & (showBlock === false)) {
-      return (
-        <span className="buttonSpan2">
-          <button className="listButton2" onClick={this.props.handleApproved}>
-            {t('header_approved', { count: approveQuestions.length })}
-          </button>
-          <button className="listButton2" onClick={this.props.handleClick}>
-            {t('header_blocked', { count: blockedQuestions.length })}
-          </button>
-          <button className="listButton">
-            {t('header_answered', { count: answeredQuestions.length })}
-          </button>
-          <span className="spacer" />
-          <button className="answerButton2">{t('mark_all_answered')}</button>
-        </span>
-      )
-    }
-
-    if (showBlock === true && showAnswer === false) {
-      return (
-        <span className="buttonSpan2">
-          <button className="listButton2" onClick={this.props.handleApproved}>
-            {t('header_approved', { count: approveQuestions.length })}
-          </button>
-          <button className="listButton">
-            {t('header_blocked', { count: blockedQuestions.length })}
-          </button>
-          <button className="listButton2" onClick={this.props.handleAnswer}>
-            {t('header_answered', { count: answeredQuestions.length })}
-          </button>
-          <span className="spacer" />
-          <button className="answerButton2">{t('mark_all_answered')}</button>
-        </span>
-      )
-    }
   }
 }

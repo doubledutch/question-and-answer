@@ -169,6 +169,7 @@ html, body, input, button, select, form{
   width: 50%;
   margin-bottom: 20px;
 }
+
 .questionContainer {
   display: flex;
   flex-flow: row wrap;
@@ -176,6 +177,16 @@ html, body, input, button, select, form{
   flex-grow: 1;
   padding-right: 0px;
   width: 50%;
+}
+
+.ddLink {
+  border: none;
+  display: flex;
+  width: 300px;
+  font-size: 12px;
+  color: #ADADAD;
+  margin: 0px;
+  align-items: center;
 }
 
 .questionBox {
