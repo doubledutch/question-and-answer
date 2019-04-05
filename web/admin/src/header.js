@@ -14,65 +14,59 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react'
+import React, { memo } from 'react'
 import { translate as t } from '@doubledutch/admin-client'
 
-export default class CustomHeader extends Component {
-  render() {
-    const {
-      questions,
-      status,
-      modOff,
-      handleApproved,
-      handleApprovedPop,
-      handleClick,
-      handleAnswer,
-    } = this.props
-    const newQuestions = questions
+const CustomHeader = props => {
+  const {
+    questions,
+    status,
+    modOff,
+    handleApproved,
+    handleApprovedPop,
+    handleClick,
+    handleAnswer,
+    answerAll,
+  } = props
 
-    const approveQuestions = modOff
-      ? newQuestions.filter(item => !item.block && !item.answered)
-      : newQuestions.filter(item => !item.block && !item.answered)
-    const blockedQuestions = modOff
-      ? newQuestions.filter(item => item.block && !item.new)
-      : newQuestions.filter(item => item.block && !item.new && !item.answered)
-    const answeredQuestions = newQuestions.filter(item => item.answered)
+  const newQuestions = questions
+  const approveQuestions = modOff
+    ? newQuestions.filter(item => !item.block && !item.answered)
+    : newQuestions.filter(item => !item.block && !item.answered)
+  const blockedQuestions = modOff
+    ? newQuestions.filter(item => item.block && !item.new)
+    : newQuestions.filter(item => item.block && !item.new && !item.answered)
+  const answeredQuestions = newQuestions.filter(item => item.answered)
 
-    return (
-      <span className="buttonSpan2">
-        <button
-          className={status === 'recent' ? 'listButton' : 'listButton2'}
-          onClick={handleApproved}
-        >
-          {t('header_approved_recent', { count: approveQuestions.length })}
-        </button>
-        <button
-          className={status === 'popular' ? 'listButton' : 'listButton2'}
-          onClick={handleApprovedPop}
-        >
-          {t('header_approved_pop', { count: approveQuestions.length })}
-        </button>
-        <button
-          className={status === 'blocked' ? 'listButton' : 'listButton2'}
-          onClick={handleClick}
-        >
-          {t('header_blocked', { count: blockedQuestions.length })}
-        </button>
-        <button
-          className={status === 'answered' ? 'listButton' : 'listButton2'}
-          onClick={handleAnswer}
-        >
-          {t('header_answered', { count: answeredQuestions.length })}
-        </button>
-        <span className="spacer" />
-        <button
-          className="answerButton"
-          disabled={approveQuestions.length === 0}
-          onClick={this.props.answerAll}
-        >
-          {t('mark_all_answered')}
-        </button>
-      </span>
-    )
-  }
+  return (
+    <span className="buttonSpan2">
+      <button
+        className={status === 'recent' ? 'listButton' : 'listButton2'}
+        onClick={handleApproved}
+      >
+        {t('header_approved_recent', { count: approveQuestions.length })}
+      </button>
+      <button
+        className={status === 'popular' ? 'listButton' : 'listButton2'}
+        onClick={handleApprovedPop}
+      >
+        {t('header_approved_pop', { count: approveQuestions.length })}
+      </button>
+      <button className={status === 'blocked' ? 'listButton' : 'listButton2'} onClick={handleClick}>
+        {t('header_blocked', { count: blockedQuestions.length })}
+      </button>
+      <button
+        className={status === 'answered' ? 'listButton' : 'listButton2'}
+        onClick={handleAnswer}
+      >
+        {t('header_answered', { count: answeredQuestions.length })}
+      </button>
+      <span className="spacer" />
+      <button className="answerButton" disabled={approveQuestions.length === 0} onClick={answerAll}>
+        {t('mark_all_answered')}
+      </button>
+    </span>
+  )
 }
+
+export default memo(CustomHeader)
