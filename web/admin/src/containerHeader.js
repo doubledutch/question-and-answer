@@ -22,9 +22,7 @@ import PresentationDriver from './PresentationDriver'
 
 const ContainerHeader = props => {
   const {
-    // sessionName,
     handleSessionChange,
-    // sessions,
     disabled,
     moderator,
     offApprove,

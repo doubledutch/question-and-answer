@@ -60,7 +60,7 @@ export default class Admin extends Component {
       modalVisible: false,
       color: 'white',
       marginTop: 18,
-      moderator: [],
+      moderator: null,
       anom: [],
       showBlock: false,
       showAnswer: false,
@@ -194,27 +194,21 @@ export default class Admin extends Component {
       })
 
       modRef.on('child_added', data => {
-        this.setState({ moderator: [...this.state.moderator, { ...data.val(), key: data.key }] })
+        this.setState({ moderator: { ...data.val(), key: data.key } })
       })
 
       modRef.on('child_changed', data => {
-        const moderator = this.state.moderator
         const questions = this.state.questions
-        for (const i in moderator) {
-          if (moderator[i].key === data.key) {
-            moderator[i] = data.val()
-            moderator[i].key = data.key
-            if (data.val().approve === false) {
-              for (const q in questions) {
-                if (questions[q].approve === false && questions[q].new === true) {
-                  this.makeApprove(questions[q])
-                }
-              }
+        if (!data.val().approve) {
+          questions.forEach((item, i) => {
+            if (!questions[i].approve && questions[i].new) {
+              this.makeApprove(questions[i])
             }
-            this.setState({ moderator })
-          }
+          })
         }
+        this.setState({ moderator: { ...data.val(), key: data.key } })
       })
+
       anomRef.on('child_added', data => {
         this.setState({ anom: [...this.state.anom, { ...data.val(), key: data.key }] })
       })
@@ -356,8 +350,8 @@ export default class Admin extends Component {
       totalQuestions = ['']
     }
     const header = true
-    if (this.state.moderator.length > 0) {
-      if (this.state.moderator[0].approve === true) {
+    if (this.state.moderator) {
+      if (this.state.moderator.approve === true) {
         return (
           <div className="questionContainer">
             <span className="buttonSpan">
@@ -586,8 +580,8 @@ export default class Admin extends Component {
     const { moderator, showBlock, showAnswer, headerStatus } = this.state
     const questions =
       headerStatus === 'popular' ? otherQuestions.sort((a, b) => b.score - a.score) : otherQuestions
-    if (moderator.length > 0) {
-      if (moderator[0].approve === false) {
+    if (moderator) {
+      if (moderator.approve === false) {
         if (!showBlock && !showAnswer) {
           const approve = true
           return (
@@ -653,7 +647,7 @@ export default class Admin extends Component {
         )
       }
 
-      if (moderator[0].approve === true) {
+      if (moderator.approve === true) {
         if (showBlock === false && showAnswer === false) {
           return (
             <div className="questionContainer">
@@ -827,9 +821,9 @@ export default class Admin extends Component {
 
   onApprove = () => {
     if (this.state.moderator.length === 0) {
-      this.propsfbc.database.public.adminRef('moderators').push({ approve: true })
+      this.props.fbc.database.public.adminRef('moderators').push({ approve: true })
     } else {
-      const mod = this.state.moderator[0]
+      const mod = this.state.moderator
       this.props.fbc.database.public
         .adminRef('moderators')
         .child(mod.key)
@@ -838,10 +832,10 @@ export default class Admin extends Component {
   }
 
   offApprove = () => {
-    const anom = this.state.moderator[0]
+    const mod = this.state.moderator
     this.props.fbc.database.public
       .adminRef('moderators')
-      .child(anom.key)
+      .child(mod.key)
       .update({ approve: false })
   }
 
@@ -941,9 +935,9 @@ export default class Admin extends Component {
   answerAll = () => {
     const questions = this.state.questions
     let modOn = false
-    if (this.state.moderator.length > 0) {
-      if (this.state.moderator[0]) {
-        modOn = this.state.moderator[0].approve
+    if (this.state.moderator) {
+      if (this.state.moderator.approve) {
+        modOn = true
       }
     }
     if (questions) {
