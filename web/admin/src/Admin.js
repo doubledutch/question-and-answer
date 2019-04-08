@@ -18,15 +18,13 @@ import React, { Component } from 'react'
 import { CSVDownload } from '@doubledutch/react-csv'
 import client, { translate as t } from '@doubledutch/admin-client'
 import moment from 'moment'
-import Select from 'react-select'
 import { AttendeeSelector } from '@doubledutch/react-components'
 import CustomCell from './cell'
-import ModIcon from './modicon'
-import AnomIcon from './anomicon'
-import CustomHeader from './header'
+import SettingsContainer from './settingsContainer'
+import TableHeader from './tableHeader'
+import ContainerHeader from './containerHeader'
 import CustomButtons from './buttons'
 import SortableTable from './sortableTable'
-import PresentationDriver from './PresentationDriver'
 import SessionBox from './SessionBox'
 import 'react-select/dist/react-select.css'
 import { openTab } from './utils'
@@ -262,7 +260,22 @@ export default class Admin extends Component {
           />
         </div>
         <div className="container">
-          {this.renderLeftHeader()}
+          <ContainerHeader
+            questions={newQuestions}
+            handleSessionChange={this.handleSessionChange}
+            sessions={this.state.sessions}
+            disabled={this.state.disabled}
+            moderator={this.state.moderator}
+            offApprove={this.offApprove}
+            onApprove={this.onApprove}
+            session={this.state.session}
+            fbc={this.props.fbc}
+            answerAll={this.answerAll}
+            launchPresentation={this.launchPresentation}
+            launchDisabled={this.state.launchDisabled}
+            bigScreenUrl={this.bigScreenUrl}
+            currentSession={this.state.currentSession}
+          />
           <div className="questionsContainer">
             {this.renderLeft(newQuestions, sessions)}
             {this.renderRight(newQuestions, pinnedQuestions)}
@@ -276,41 +289,15 @@ export default class Admin extends Component {
             ) : null}
           </div>
         </div>
-        {this.state.hideSettings ? (
-          <div className="containerSmallRow">
-            <div className="buttonSpan">
-              <h2>Settings</h2>
-              <div style={{ flex: 1 }} />
-              <button className="hideButton" onClick={() => this.hideSection('Settings')}>
-                Show Section
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="containerSmallRow">
-            <div className="cellBoxTop">
-              <h2>Settings</h2>
-              <div style={{ flex: 1 }} />
-              <button className="hideButton" onClick={() => this.hideSection('Settings')}>
-                {t('hide_section')}
-              </button>
-            </div>
-            <div className="topBox">
-              <p className="boxTitleBold">{t('allow_anon_title')}</p>
-              <AnomIcon anom={this.state.anom} offApprove={this.offAnom} onApprove={this.onAnom} />
-            </div>
-            <div className="topBox">
-              <p className="boxTitleBold">{t('background_image_title')}</p>
-              <input
-                type="text"
-                value={backgroundUrl}
-                onChange={this.onBackgroundUrlChange}
-                placeholder={t('background_image_placeholder')}
-                className="background-url"
-              />
-            </div>
-          </div>
-        )}
+        <SettingsContainer
+          hideSettings={this.state.hideSettings}
+          hideSection={this.hideSection}
+          anom={this.state.anom}
+          offApprove={this.offAnom}
+          onApprove={this.onAnom}
+          backgroundUrl={backgroundUrl}
+          onBackgroundUrlChange={this.onBackgroundUrlChange}
+        />
         <div className="containerSmall">{this.renderAdminSelect()}</div>
       </div>
     )
@@ -362,32 +349,6 @@ export default class Admin extends Component {
   }
 
   getAttendees = query => this.props.client.getAttendees(query)
-
-  renderPresentation = () => {
-    const { launchDisabled } = this.state
-    return (
-      <div className="presentation-container">
-        <div className="presentation-side">
-          <iframe className="big-screen-container" src={this.bigScreenUrl()} title="presentation" />
-          <div className="presentation-overlays">
-            <div>
-              {t('presentation_screen')}{' '}
-              <button
-                className="overlay-button"
-                onClick={this.launchPresentation}
-                disabled={launchDisabled || !this.bigScreenUrl()}
-              >
-                {t('launch_tab')}
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="presentation-side">
-          <PresentationDriver fbc={this.props.fbc} session={this.state.session} />
-        </div>
-      </div>
-    )
-  }
 
   renderLeft = questions => {
     let totalQuestions = questions.filter(item => item.approve === false && item.new === true)
@@ -463,64 +424,6 @@ export default class Admin extends Component {
           </div>
         </span>
       </div>
-    )
-  }
-
-  renderLeftHeader = () => {
-    const sample = { value: t('all'), label: t('all_sessions'), className: 'dropdownText' }
-    const sessions = []
-    const sessionName = this.state.currentSession
-      ? { value: '', label: this.state.currentSession.sessionName || '', className: 'dropdownText' }
-      : sample
-    sessions.push(sample)
-    this.state.sessions.forEach(session =>
-      sessions.push(
-        Object.assign(
-          {},
-          { value: session.key, label: session.sessionName, className: 'dropdownText' },
-        ),
-      ),
-    )
-    return (
-      <span className="buttonSpan">
-        <h2 className="noPadding">{t('moderation')}</h2>
-        <Select
-          className="dropdownMenu"
-          name="session"
-          value={sessionName}
-          onSelectResetsInput={false}
-          onBlurResetsInput
-          onChange={this.handleSessionChange}
-          clearable={false}
-          options={sessions}
-          disabled={this.state.disabled}
-        />
-        <p className="boxTitleBoldMargin">{t('moderation')}: </p>
-        <ModIcon
-          moderator={this.state.moderator}
-          offApprove={this.offApprove}
-          onApprove={this.onApprove}
-        />
-        {this.state.session === 'All' ? (
-          <span className="buttonSpanMargin">
-            <div style={{ flex: 1 }} />
-            <button className="overlay-button-opaque" disabled>
-              {t('launch_tab')}
-            </button>
-          </span>
-        ) : (
-          <span className="buttonSpanMargin">
-            <PresentationDriver fbc={this.props.fbc} session={this.state.session} />
-            <button
-              className="overlay-button"
-              onClick={this.launchPresentation}
-              disabled={this.state.launchDisabled || !this.bigScreenUrl()}
-            >
-              {t('launch_tab')}
-            </button>
-          </span>
-        )}
-      </span>
     )
   }
 
@@ -689,7 +592,7 @@ export default class Admin extends Component {
           const approve = true
           return (
             <div className="questionContainer">
-              <CustomHeader
+              <TableHeader
                 questions={questions}
                 handleClick={this.handleClick}
                 handleAnswer={this.handleAnswer}
@@ -736,7 +639,7 @@ export default class Admin extends Component {
 
         return (
           <div className="questionContainer">
-            <CustomHeader
+            <TableHeader
               questions={questions}
               handleClick={this.handleClick}
               handleAnswer={this.handleAnswer}
@@ -754,7 +657,7 @@ export default class Admin extends Component {
         if (showBlock === false && showAnswer === false) {
           return (
             <div className="questionContainer">
-              <CustomHeader
+              <TableHeader
                 questions={questions}
                 handleClick={this.handleClick}
                 handleAnswer={this.handleAnswer}
@@ -799,7 +702,7 @@ export default class Admin extends Component {
         }
         return (
           <div className="questionContainer">
-            <CustomHeader
+            <TableHeader
               questions={questions}
               handleClick={this.handleClick}
               handleAnswer={this.handleAnswer}
@@ -815,7 +718,7 @@ export default class Admin extends Component {
     } else {
       return (
         <div className="questionContainer">
-          <CustomHeader
+          <TableHeader
             questions={questions}
             handleClick={this.handleClick}
             handleAnswer={this.handleAnswer}

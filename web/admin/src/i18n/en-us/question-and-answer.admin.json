@@ -30,7 +30,7 @@
   "full_name": "${firstName} ${lastName}",
   "inactive": "inactive",
   "initialize": "Initialize",
-  "header_approved_pop": "Most Popular (${count})",
+  "header_approved_pop": "Popular (${count})",
   "header_approved_recent": "Recent (${count})",
   "header_answered": "Answered (${count})",
   "header_blocked": "Blocked (${count})",
@@ -70,6 +70,7 @@
   "session_start": "Start Session",
   "session_uninitialized": "This session has not been initialized for viewing",
   "sessions": "Sessions",
+  "settings": "Settings",
   "show_section": "Show Section",
   "unavailable": "Unavailable"
 }

@@ -17,7 +17,7 @@
 import React, { memo } from 'react'
 import { translate as t } from '@doubledutch/admin-client'
 
-const CustomHeader = props => {
+const TableHeader = props => {
   const {
     questions,
     status,
@@ -26,7 +26,6 @@ const CustomHeader = props => {
     handleApprovedPop,
     handleClick,
     handleAnswer,
-    answerAll,
   } = props
 
   const newQuestions = questions
@@ -62,11 +61,8 @@ const CustomHeader = props => {
         {t('header_answered', { count: answeredQuestions.length })}
       </button>
       <span className="spacer" />
-      <button className="answerButton" disabled={approveQuestions.length === 0} onClick={answerAll}>
-        {t('mark_all_answered')}
-      </button>
     </span>
   )
 }
 
-export default memo(CustomHeader)
+export default memo(TableHeader)
