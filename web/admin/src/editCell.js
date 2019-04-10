@@ -53,7 +53,7 @@ export class CellEdit extends Component {
             className="ddLink"
             id={task.key}
             type="text"
-            onChange={e => console.log('edit')}
+            disabled
             value={`dd://extensions/questionanswer?sessionId=${task.key}`}
           />
           {this.renderIcons(task)}
