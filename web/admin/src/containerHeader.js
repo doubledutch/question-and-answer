@@ -24,7 +24,7 @@ const ContainerHeader = props => {
   const {
     handleSessionChange,
     disabled,
-    moderator,
+    moderation,
     offApprove,
     onApprove,
     session,
@@ -69,7 +69,7 @@ const ContainerHeader = props => {
         disabled={disabled}
       />
       <p className="boxTitleBoldMargin">{t('moderation')}: </p>
-      <ModIcon moderator={moderator} offApprove={offApprove} onApprove={onApprove} />
+      <ModIcon moderation={moderation} offApprove={offApprove} onApprove={onApprove} />
       {session === 'All' ? (
         <span className="buttonSpanMargin">
           <div style={{ flex: 1 }} />

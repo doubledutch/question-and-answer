@@ -19,9 +19,9 @@ import { translate as t } from '@doubledutch/admin-client'
 
 export default class ModIcon extends Component {
   render() {
-    const moderator = this.props.moderator
-    if (moderator) {
-      if (moderator.approve) {
+    const moderation = this.props.moderation
+    if (moderation) {
+      if (moderation.approve) {
         return (
           <span className="modIcons">
             <button className="modButtonAbs">{t('on')}</button>

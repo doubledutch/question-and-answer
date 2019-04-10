@@ -21,8 +21,8 @@ import moment from 'moment'
 import { AttendeeSelector } from '@doubledutch/react-components'
 import CustomCell from './cell'
 import SettingsContainer from './settingsContainer'
-import TableHeader from './tableHeader'
-import ContainerHeader from './containerHeader'
+import TableHeader from './TableHeader'
+import ContainerHeader from './ContainerHeader'
 import CustomButtons from './buttons'
 import SortableTable from './sortableTable'
 import SessionBox from './SessionBox'
@@ -60,7 +60,7 @@ export default class Admin extends Component {
       modalVisible: false,
       color: 'white',
       marginTop: 18,
-      moderator: null,
+      moderation: null,
       anom: [],
       showBlock: false,
       showAnswer: false,
@@ -194,7 +194,7 @@ export default class Admin extends Component {
       })
 
       modRef.on('child_added', data => {
-        this.setState({ moderator: { ...data.val(), key: data.key } })
+        this.setState({ moderation: { ...data.val(), key: data.key } })
       })
 
       modRef.on('child_changed', data => {
@@ -206,7 +206,7 @@ export default class Admin extends Component {
             }
           })
         }
-        this.setState({ moderator: { ...data.val(), key: data.key } })
+        this.setState({ moderation: { ...data.val(), key: data.key } })
       })
 
       anomRef.on('child_added', data => {
@@ -259,7 +259,7 @@ export default class Admin extends Component {
             handleSessionChange={this.handleSessionChange}
             sessions={this.state.sessions}
             disabled={this.state.disabled}
-            moderator={this.state.moderator}
+            moderation={this.state.moderation}
             offApprove={this.offApprove}
             onApprove={this.onApprove}
             session={this.state.session}
@@ -350,8 +350,8 @@ export default class Admin extends Component {
       totalQuestions = ['']
     }
     const header = true
-    if (this.state.moderator) {
-      if (this.state.moderator.approve === true) {
+    if (this.state.moderation) {
+      if (this.state.moderation.approve === true) {
         return (
           <div className="questionContainer">
             <span className="buttonSpan">
@@ -647,7 +647,7 @@ export default class Admin extends Component {
         )
       }
 
-      if (moderator.approve === true) {
+      if (this.state.moderation.approve) {
         if (showBlock === false && showAnswer === false) {
           return (
             <div className="questionContainer">
@@ -808,7 +808,7 @@ export default class Admin extends Component {
   }
 
   newSession = newSession => {
-    if (this.state.moderator.length === 0) {
+    if (!this.state.moderation) {
       this.props.fbc.database.public.adminRef('moderators').push({ approve: false })
     }
     this.props.fbc.database.public
@@ -820,10 +820,10 @@ export default class Admin extends Component {
   }
 
   onApprove = () => {
-    if (this.state.moderator.length === 0) {
+    if (!this.state.moderation) {
       this.props.fbc.database.public.adminRef('moderators').push({ approve: true })
     } else {
-      const mod = this.state.moderator
+      const mod = this.state.moderation
       this.props.fbc.database.public
         .adminRef('moderators')
         .child(mod.key)
@@ -832,7 +832,7 @@ export default class Admin extends Component {
   }
 
   offApprove = () => {
-    const mod = this.state.moderator
+    const mod = this.state.moderation
     this.props.fbc.database.public
       .adminRef('moderators')
       .child(mod.key)
@@ -935,8 +935,8 @@ export default class Admin extends Component {
   answerAll = () => {
     const questions = this.state.questions
     let modOn = false
-    if (this.state.moderator) {
-      if (this.state.moderator.approve) {
+    if (this.state.moderation) {
+      if (this.state.moderation.approve) {
         modOn = true
       }
     }

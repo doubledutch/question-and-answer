@@ -17,17 +17,15 @@
 import React, { memo } from 'react'
 import { translate as t } from '@doubledutch/admin-client'
 
-const TableHeader = props => {
-  const {
-    questions,
-    status,
-    modOff,
-    handleApproved,
-    handleApprovedPop,
-    handleClick,
-    handleAnswer,
-  } = props
-
+const TableHeader = ({
+  questions,
+  status,
+  modOff,
+  handleApproved,
+  handleApprovedPop,
+  handleClick,
+  handleAnswer,
+}) => {
   const newQuestions = questions
   const approveQuestions = modOff
     ? newQuestions.filter(item => !item.block && !item.answered)
