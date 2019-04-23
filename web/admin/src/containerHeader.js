@@ -17,26 +17,24 @@
 import React, { memo } from 'react'
 import { translate as t } from '@doubledutch/admin-client'
 import Select from 'react-select'
-import ModIcon from './modicon'
+import ModIcon from './Modicon'
 import PresentationDriver from './PresentationDriver'
 
-const ContainerHeader = props => {
-  const {
-    handleSessionChange,
-    disabled,
-    moderation,
-    offApprove,
-    onApprove,
-    session,
-    fbc,
-    answerAll,
-    launchPresentation,
-    launchDisabled,
-    bigScreenUrl,
-    currentSession,
-    questions,
-  } = props
-
+const ContainerHeader = ({
+  handleSessionChange,
+  disabled,
+  moderation,
+  offApprove,
+  onApprove,
+  session,
+  fbc,
+  answerAll,
+  launchPresentation,
+  launchDisabled,
+  bigScreenUrl,
+  currentSession,
+  questions,
+}) => {
   const sample = { value: t('all'), label: t('all_sessions'), className: 'dropdownText' }
   const sessions = []
   const sessionName = currentSession
