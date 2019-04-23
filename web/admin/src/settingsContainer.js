@@ -18,17 +18,15 @@ import React, { memo } from 'react'
 import { translate as t } from '@doubledutch/admin-client'
 import AnomIcon from './anomicon'
 
-const SettingsContainer = props => {
-  const {
-    hideSettings,
-    hideSection,
-    anom,
-    offApprove,
-    onApprove,
-    backgroundUrl,
-    onBackgroundUrlChange,
-  } = props
-
+const SettingsContainer = ({
+  hideSettings,
+  hideSection,
+  anom,
+  offApprove,
+  onApprove,
+  backgroundUrl,
+  onBackgroundUrlChange,
+}) => {
   return (
     <div>
       {hideSettings ? (
