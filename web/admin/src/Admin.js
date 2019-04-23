@@ -577,11 +577,11 @@ export default class Admin extends Component {
   )
 
   renderRight = (otherQuestions, pinnedQuestions) => {
-    const { moderator, showBlock, showAnswer, headerStatus } = this.state
+    const { moderation, showBlock, showAnswer, headerStatus } = this.state
     const questions =
       headerStatus === 'popular' ? otherQuestions.sort((a, b) => b.score - a.score) : otherQuestions
-    if (moderator) {
-      if (moderator.approve === false) {
+    if (moderation) {
+      if (moderation.approve === false) {
         if (!showBlock && !showAnswer) {
           const approve = true
           return (
@@ -592,7 +592,8 @@ export default class Admin extends Component {
                 handleAnswer={this.handleAnswer}
                 answerAll={this.answerAll}
                 status={headerStatus}
-                handleApproved={this.handleApproved}
+                handleApproved={this.handleApprovedRecent}
+                handleApprovedPop={this.handleApprovedPop}
                 modOff
               />
               <span className="questionBox2">
@@ -639,7 +640,8 @@ export default class Admin extends Component {
               handleAnswer={this.handleAnswer}
               answerAll={this.answerAll}
               status={headerStatus}
-              handleApproved={this.handleApproved}
+              handleApproved={this.handleApprovedRecent}
+              handleApprovedPop={this.handleApprovedPop}
               modOff
             />
             {showAnswer ? this.renderAnswered(questions) : this.renderBlocked(questions)}
@@ -647,7 +649,7 @@ export default class Admin extends Component {
         )
       }
 
-      if (this.state.moderation.approve) {
+      if (moderation.approve) {
         if (showBlock === false && showAnswer === false) {
           return (
             <div className="questionContainer">
