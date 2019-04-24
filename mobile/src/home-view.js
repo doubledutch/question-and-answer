@@ -97,6 +97,7 @@ class HomeView extends PureComponent {
               if (directSession) {
                 this.selectSession(directSession)
                 this.hideModal()
+                this.setState({ launch: false })
               }
             }
           })
@@ -268,11 +269,20 @@ class HomeView extends PureComponent {
       textAlignVertical: 'center',
     }
 
-    const { showRecent, moderator, launch, showAnswer, session, isAdmin, primaryColor } = this.state
+    const {
+      showRecent,
+      moderator,
+      launch,
+      showAnswer,
+      session,
+      isAdmin,
+      primaryColor,
+      modalVisible,
+    } = this.state
     const sessions = this.state.sessions.filter(item => item.archive !== true)
     let newQuestions = []
     if (session) newQuestions = this.sortFilter()
-    if (this.state.modalVisible === false) {
+    if (!modalVisible) {
       return (
         <View style={{ flex: 1 }}>
           <View style={s.textBox}>
