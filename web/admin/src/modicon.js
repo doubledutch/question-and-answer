@@ -19,9 +19,9 @@ import { translate as t } from '@doubledutch/admin-client'
 
 export default class ModIcon extends Component {
   render() {
-    const moderator = this.props.moderator
-    if (moderator.length > 0) {
-      if (moderator[0].approve === true) {
+    const moderation = this.props.moderation
+    if (moderation) {
+      if (moderation.approve) {
         return (
           <span className="modIcons">
             <button className="modButtonAbs">{t('on')}</button>
@@ -31,15 +31,6 @@ export default class ModIcon extends Component {
           </span>
         )
       }
-
-      return (
-        <span className="modIcons">
-          <button className="modButton50" onClick={this.props.onApprove}>
-            {t('on')}
-          </button>
-          <button className="modButtonLeft">{t('off')}</button>
-        </span>
-      )
     }
 
     return (
