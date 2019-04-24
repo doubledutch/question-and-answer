@@ -214,7 +214,7 @@ export default class Admin extends Component {
       })
 
       anomRef.on('child_changed', data => {
-        const anom = this.state.anom
+        const anom = this.state.anom.slice()
         for (const i in anom) {
           if (anom[i].key === data.key) {
             anom[i] = data.val()

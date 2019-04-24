@@ -34,15 +34,16 @@ const ContainerHeader = ({
   bigScreenUrl,
   currentSession,
   questions,
+  sessions,
 }) => {
   const sample = { value: t('all'), label: t('all_sessions'), className: 'dropdownText' }
-  const sessions = []
+  const localSessions = []
   const sessionName = currentSession
     ? { value: '', label: currentSession.sessionName || '', className: 'dropdownText' }
     : sample
-  sessions.push(sample)
-  props.sessions.forEach(session =>
-    sessions.push(
+  localSessions.push(sample)
+  sessions.forEach(session =>
+    localSessions.push(
       Object.assign(
         {},
         { value: session.key, label: session.sessionName, className: 'dropdownText' },
@@ -63,7 +64,7 @@ const ContainerHeader = ({
         onBlurResetsInput
         onChange={handleSessionChange}
         clearable={false}
-        options={sessions}
+        options={localSessions}
         disabled={disabled}
       />
       <p className="boxTitleBoldMargin">{t('moderation')}: </p>
