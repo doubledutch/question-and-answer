@@ -143,7 +143,9 @@ export default class Admin extends Component {
           .allRef('questions')
           .child(session.key)
           .on('child_changed', data => {
-            const { questions, pinnedQuestions } = this.state
+            let { questions, pinnedQuestions } = this.state
+            questions = questions.slice()
+            pinnedQuestions = pinnedQuestions.slice()
             const isInPinned = pinnedQuestions.find(question => question.key === data.key)
             for (const q in questions) {
               if (questions[q].key === data.key) {
