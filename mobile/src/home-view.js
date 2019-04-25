@@ -130,7 +130,7 @@ class HomeView extends PureComponent {
                   if (changeLaunch && changeModalView) {
                     newSession = ''
                   }
-                  if (data.val().archive) {
+                  if (data.val().archive && !sessionId) {
                     changeModalView = true
                     changeLaunch = true
                     newSession = ''
