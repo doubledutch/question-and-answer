@@ -187,6 +187,7 @@ html, body, input, button, select, form{
   color: #ADADAD;
   margin: 0px;
   align-items: center;
+  background-color: white;
 }
 
 .questionBox {
