@@ -888,7 +888,10 @@ export default class Admin extends Component {
   canPin = () => {
     if (this.state.session === 'All') return false
     const pinned = this.state.pinnedQuestions.filter(
-      question => question.answered === false && question.block === false,
+      question =>
+        question.answered === false &&
+        question.block === false &&
+        this.state.session === question.session,
     )
     return pinned.length < 5
   }
