@@ -143,7 +143,7 @@ export default class Admin extends Component {
             .allRef('questions')
             .child(session.key)
             .on('child_changed', data => {
-              this.setState((prevState, props) => {
+              this.setState((prevState) => {
                 let { questions, pinnedQuestions } = prevState
                 questions = questions.slice()
                 pinnedQuestions = pinnedQuestions.slice()
@@ -356,7 +356,6 @@ export default class Admin extends Component {
     const header = true
     if (this.state.moderation) {
       if (this.state.moderation.approve) {
-        console.log("render")
         return (
           <div className="questionContainer">
             <span className="buttonSpan">
