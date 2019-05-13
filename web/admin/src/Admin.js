@@ -139,45 +139,47 @@ export default class Admin extends Component {
                 this.setState({ questions })
               })
           })
-        fbc.database.public
-          .allRef('questions')
-          .child(session.key)
-          .on('child_changed', data => {
-            let { questions, pinnedQuestions } = this.state
-            questions = questions.slice()
-            pinnedQuestions = pinnedQuestions.slice()
-            const isInPinned = pinnedQuestions.find(question => question.key === data.key)
-            for (const q in questions) {
-              if (questions[q].key === data.key) {
-                const score = questions[q].score
-                questions[q] = data.val()
-                questions[q].score = score
-                questions[q].key = data.key
-                this.setState({ questions })
-              }
-            }
-            for (const i in pinnedQuestions) {
-              if (pinnedQuestions[i].key === data.key) {
-                const score = questions[i].score
-                pinnedQuestions[i] = data.val()
-                pinnedQuestions[i].score = score
-                pinnedQuestions[i].key = data.key
-                pinnedQuestions.sort((a, b) => a.order - b.order)
-                this.setState({ pinnedQuestions })
-              }
-            }
-            if (data.val().pin && !isInPinned) {
-              this.setState({
-                pinnedQuestions: [...this.state.pinnedQuestions, { ...data.val(), key: data.key }],
+          fbc.database.public
+            .allRef('questions')
+            .child(session.key)
+            .on('child_changed', data => {
+              this.setState((prevState, props) => {
+                let { questions, pinnedQuestions } = prevState
+                questions = questions.slice()
+                pinnedQuestions = pinnedQuestions.slice()
+                const isInPinned = pinnedQuestions.find(question => question.key === data.key) 
+                for (const q in questions) {
+                  if (questions[q].key === data.key) {
+                    const score = questions[q].score
+                    questions[q] = data.val()
+                    questions[q].score = score
+                    questions[q].key = data.key
+                    return { questions }
+                  }
+                }
+                for (const i in pinnedQuestions) {
+                  if (pinnedQuestions[i].key === data.key) {
+                    const score = questions[i].score
+                    pinnedQuestions[i] = data.val()
+                    pinnedQuestions[i].score = score
+                    pinnedQuestions[i].key = data.key
+                    pinnedQuestions.sort((a, b) => a.order - b.order)
+                    return { pinnedQuestions }
+                  }
+                }
+                if (data.val().pin && !isInPinned) {
+                  this.setState({
+                    pinnedQuestions: [...this.state.pinnedQuestions, { ...data.val(), key: data.key }],
+                  })
+                }
+                if (data.val().pin === false && isInPinned) {
+                  return {
+                    pinnedQuestions: this.state.pinnedQuestions.filter(x => x.key !== data.key),
+                  }
+                }
               })
-            }
-            if (data.val().pin === false && isInPinned) {
-              this.setState({
-                pinnedQuestions: this.state.pinnedQuestions.filter(x => x.key !== data.key),
-              })
-            }
           })
-      })
+        })
 
       sessRef.on('child_changed', data => {
         const sessions = this.state.sessions
@@ -347,13 +349,14 @@ export default class Admin extends Component {
   getAttendees = query => this.props.client.getAttendees(query)
 
   renderLeft = questions => {
-    let totalQuestions = questions.filter(item => item.approve === false && item.new === true)
+    let totalQuestions = questions.filter(item => !item.approve && item.new)
     if (totalQuestions === undefined) {
       totalQuestions = ['']
     }
     const header = true
     if (this.state.moderation) {
-      if (this.state.moderation.approve === true) {
+      if (this.state.moderation.approve) {
+        console.log("render")
         return (
           <div className="questionContainer">
             <span className="buttonSpan">
@@ -425,7 +428,7 @@ export default class Admin extends Component {
 
   renderBlocked = questions => (
     <span className="questionBox2">
-      {questions.filter(task => task.new === false && task.block === true).length ? (
+      {questions.filter(task => !task.new && task.block).length ? (
         <ul className="listBox">
           {questions
             .filter(task => task.block)
@@ -494,7 +497,7 @@ export default class Admin extends Component {
 
   renderPinned = questions => {
     questions = questions.filter(
-      question => question.answered === false && question.block === false,
+      question => !question.answered && !question.block,
     )
     if (this.state.session !== 'All') {
       return (
@@ -583,7 +586,7 @@ export default class Admin extends Component {
     const questions =
       headerStatus === 'popular' ? otherQuestions.sort((a, b) => b.score - a.score) : otherQuestions
     if (moderation) {
-      if (moderation.approve === false) {
+      if (!moderation.approve) {
         if (!showBlock && !showAnswer) {
           const approve = true
           return (
