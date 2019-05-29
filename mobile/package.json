@@ -7,7 +7,7 @@
     "clean": "watchman watch-del-all && rm -rf node_modules && rm -rf /tmp/metro-bundler-cache-* && rm -rf /tmp/haste-map-react-native-packager-* && npm i"
   },
   "dependencies": {
-    "@doubledutch/firebase-connector": "^4.1.0",
+    "@doubledutch/firebase-connector": "^4.2.1",
     "@doubledutch/rn-client": "^5.0.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "react": "^16.8.3",

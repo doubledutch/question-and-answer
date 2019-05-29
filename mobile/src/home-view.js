@@ -27,7 +27,6 @@ import {
 } from 'react-native'
 import client, { TitleBar, useStrings, translate as t } from '@doubledutch/rn-client'
 import { provideFirebaseConnectorToReactComponent } from '@doubledutch/firebase-connector'
-import firebase from 'firebase/app'
 import i18n from './i18n'
 import MyList from './table'
 import CustomModal from './modal'
@@ -195,7 +194,7 @@ class HomeView extends PureComponent {
           const longLivedToken = data.val()
           if (longLivedToken) {
             console.log('Attendee appears to be admin.  Logging out and logging in w/ admin token.')
-            await firebase.auth().signOut()
+            await fbc.firebase.auth().signOut()
             client.longLivedToken = longLivedToken
             await fbc.signinAdmin()
             console.log('Re-logged in as admin')
