@@ -418,6 +418,11 @@ html, body, input, button, select, form{
   align-items: center;
 }
 
+.attendeeSelector {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
 .sessionCell{
   display: flex;
   flex-direction: column;
@@ -515,10 +520,144 @@ h2 {
   white-space: nowrap;
 }
 
+.space {
+  margin-right: 5px;
+}
+
+.Modal {
+  position: absolute;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+  background-color: #FFFFFF;
+  border-radius: 5px;
+}
+
+.Overlay {
+  position: fixed;
+  left: 29%;
+  top: 20px; 
+  background-color: gray;
+}
+
+.modalTitle{
+  font-weight: 300;
+}
+
+
+.closeModalButton {
+  color: lightgray;
+  background-color: #ffffff;
+  border: none;
+  font-family: Helvetica;
+  font-weight: 600;
+}
+
+.formButtonWhite{
+  border-radius: 5px;
+  width: 100px;
+  height: 37px;
+  color: #4E91E0;
+  background-color: white;
+  margin: 15px 20px 15px 0px;
+  float: right;
+  border: 1px;
+  border-style: solid;
+  border-color:#4E91E0;
+}
+
+.formButton{
+  border-radius: 5px;
+  width: 100px;
+  height: 37px;
+  color: white;
+  background-color: #4E91E0;
+  margin: 15px 20px 15px 0px;
+  float: right;
+  border: none;
+}
+
+.modalBottom {
+  flex: 1;
+  flex-flow: nowrap;
+  border-top: 1px solid #E3ECF8;
+  padding: 0px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end
+}
+
+.modalTop {
+  display: flex;
+  flex: 1;
+  flex-flow: nowrap;
+  border-bottom: 1px solid #E3ECF8;
+  padding: 10px;
+  align-items: center;
+}
+
+.modalCenter {
+  padding: 10px;
+}
+
+ul.modalList {
+  height: 250px;
+  padding: 0px;
+  border: 1px solid #E3ECF8;
+  border-radius: 5px;
+  background-color: #FCFCFC;
+  overflow: auto;
+  margin: 0px;
+}
+
+.modalListCell {
+  height: 39px;
+  padding: 0px 3px 0px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E3ECF8;
+  border-radius: 5px;
+}
+
+.adminCell {
+  display: flex;
+  flex: 1;
+  height: 39px;
+  padding: 0px 20px 0px 20px;
+  flex-direction: row;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E3ECF8;
+  border-radius: 5px;
+}
+
+.cellTitle {
+  width: 200px;
+  margin-right: 20px;
+}
+
+.cellAssignments {
+  flex: 1
+}
+
+
 .spacer{
   flex: 1;
   height: 25px;
   min-width: 0px;
+}
+
+.selectAllButton{
+  border: none;
+  border-radius: 0;
+  font-size: 14px;
+  color: #85B650;
+  text-align: right;
+  white-space: nowrap;
+  background-color: #ffffff;
+  padding: 0;
+  margin-right: 10px;
 }
 
 .approveButton{
@@ -583,6 +722,10 @@ h2 {
   color: #898989;
 }
 
+.margin-right {
+  margin-right: 10px;
+}
+
 .test {
   fill:#85B650;
 }
@@ -637,6 +780,12 @@ h2 {
   margin-Left: 5px;
   margin-Right: 5px;
   border-radius: 50%;
+}
+
+.buttonCell {
+  height: 25px;
+  width: 25px;
+  margin-right: 20px;
 }
 
 .sortIcon {
@@ -789,6 +938,28 @@ h2 {
   margin-top: 5px;
 }
 
+.modTitle{
+  font-size: 14px;
+  white-space: nowrap;
+  margin-right: 5px;
+  font-weight: bold;
+  margin-left: 20px;
+  margin-bottom: 7px;
+  width: 200px;
+  margin-top: 5px;
+}
+
+.modDes{
+  font-size: 14px;
+  white-space: nowrap;
+  margin-right: 5px;
+  font-weight: bold;
+  margin-left: 15px;
+  width: 200px;
+  margin-top: 5px;
+  margin-bottom: 7px;
+}
+
 .boxTitleBoldMargin{
   font-size: 14px;
   height: 20px;
@@ -800,7 +971,7 @@ h2 {
 }
 
 .modalTitle {
-  font-size: 16px;
+  font-size: 18px;
   height: 20px;
   margin-bottom: 5px;
   white-space: nowrap;
@@ -848,6 +1019,11 @@ h2 {
   height: 40px;
   color: #4A4A4A;
   align-items: center;
+}
+
+.row {
+  flex-direction: row;
+  display: flex;
 }
 
 .box {

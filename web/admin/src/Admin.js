@@ -26,6 +26,8 @@ import ContainerHeader from './ContainerHeader'
 import CustomButtons from './buttons'
 import SortableTable from './sortableTable'
 import SessionBox from './SessionBox'
+import Moderator from './Moderator'
+import ModeratorModal from './ModeratorModal'
 import 'react-select/dist/react-select.css'
 import { openTab } from './utils'
 
@@ -54,6 +56,7 @@ export default class Admin extends Component {
       questions: [],
       pinnedQuestions: [],
       admins: [],
+      adminData: {},
       attendees: [],
       sessions: [],
       showRecent: false,
@@ -70,11 +73,13 @@ export default class Admin extends Component {
       hideSessions: false,
       hideSettings: false,
       hideAdmins: false,
+      showModal: false,
       message: 'enter_valid_session_name',
       backgroundUrl: '',
       isExporting: false,
       exportList: [],
       headerStatus: 'recent',
+      selectedAdmin: null,
     }
   }
 
@@ -100,7 +105,10 @@ export default class Admin extends Component {
 
       adminableUsersRef().on('value', data => {
         const users = data.val() || {}
-        this.setState({ admins: Object.keys(users).filter(id => users[id].adminToken) })
+        this.setState({
+          admins: Object.keys(users).filter(id => users[id].adminToken),
+          adminData: users,
+        })
       })
 
       sessRef.on('child_added', data => {
@@ -139,47 +147,50 @@ export default class Admin extends Component {
                 this.setState({ questions })
               })
           })
-          fbc.database.public
-            .allRef('questions')
-            .child(session.key)
-            .on('child_changed', data => {
-              this.setState((prevState) => {
-                let { questions, pinnedQuestions } = prevState
-                questions = questions.slice()
-                pinnedQuestions = pinnedQuestions.slice()
-                const isInPinned = pinnedQuestions.find(question => question.key === data.key) 
-                for (const q in questions) {
-                  if (questions[q].key === data.key) {
-                    const score = questions[q].score
-                    questions[q] = data.val()
-                    questions[q].score = score
-                    questions[q].key = data.key
-                    return { questions }
-                  }
+        fbc.database.public
+          .allRef('questions')
+          .child(session.key)
+          .on('child_changed', data => {
+            this.setState(prevState => {
+              let { questions, pinnedQuestions } = prevState
+              questions = questions.slice()
+              pinnedQuestions = pinnedQuestions.slice()
+              const isInPinned = pinnedQuestions.find(question => question.key === data.key)
+              for (const q in questions) {
+                if (questions[q].key === data.key) {
+                  const score = questions[q].score
+                  questions[q] = data.val()
+                  questions[q].score = score
+                  questions[q].key = data.key
+                  return { questions }
                 }
-                for (const i in pinnedQuestions) {
-                  if (pinnedQuestions[i].key === data.key) {
-                    const score = questions[i].score
-                    pinnedQuestions[i] = data.val()
-                    pinnedQuestions[i].score = score
-                    pinnedQuestions[i].key = data.key
-                    pinnedQuestions.sort((a, b) => a.order - b.order)
-                    return { pinnedQuestions }
-                  }
+              }
+              for (const i in pinnedQuestions) {
+                if (pinnedQuestions[i].key === data.key) {
+                  const score = questions[i].score
+                  pinnedQuestions[i] = data.val()
+                  pinnedQuestions[i].score = score
+                  pinnedQuestions[i].key = data.key
+                  pinnedQuestions.sort((a, b) => a.order - b.order)
+                  return { pinnedQuestions }
                 }
-                if (data.val().pin && !isInPinned) {
-                  this.setState({
-                    pinnedQuestions: [...this.state.pinnedQuestions, { ...data.val(), key: data.key }],
-                  })
+              }
+              if (data.val().pin && !isInPinned) {
+                this.setState({
+                  pinnedQuestions: [
+                    ...this.state.pinnedQuestions,
+                    { ...data.val(), key: data.key },
+                  ],
+                })
+              }
+              if (data.val().pin === false && isInPinned) {
+                return {
+                  pinnedQuestions: this.state.pinnedQuestions.filter(x => x.key !== data.key),
                 }
-                if (data.val().pin === false && isInPinned) {
-                  return {
-                    pinnedQuestions: this.state.pinnedQuestions.filter(x => x.key !== data.key),
-                  }
-                }
-              })
+              }
+            })
           })
-        })
+      })
 
       sessRef.on('child_changed', data => {
         const sessions = this.state.sessions
@@ -237,12 +248,21 @@ export default class Admin extends Component {
   }
 
   render() {
-    const { questions, sessions, backgroundUrl } = this.state
+    const { questions, sessions, backgroundUrl, showModal } = this.state
     questions.sort((a, b) => b.dateCreate - a.dateCreate)
     const newQuestions = this.questionsInCurrentSession(questions)
     const pinnedQuestions = this.questionsInCurrentSession(this.state.pinnedQuestions)
     return (
       <div className="App">
+        <ModeratorModal
+          isOpen={showModal}
+          closeModal={() => this.setState({ showModal: false, selectedAdmin: null })}
+          sessions={sessions || []}
+          admin={this.state.selectedAdmin || {}}
+          adminData={this.state.adminData}
+          onDeselected={this.onAdminDeselected}
+          saveModerator={this.saveModerator}
+        />
         <div className="containerSmall">
           <SessionBox
             openVar={this.state.openVar}
@@ -296,7 +316,12 @@ export default class Admin extends Component {
           backgroundUrl={backgroundUrl}
           onBackgroundUrlChange={this.onBackgroundUrlChange}
         />
-        <div className="containerSmall">{this.renderAdminSelect()}</div>
+        <Moderator
+          adminData={this.state.adminData}
+          moderators={this.state.attendees.filter(a => this.isAdmin(a.id))}
+          openModal={() => this.setState({ showModal: true })}
+          selectMod={user => this.setState({ selectedAdmin: user, showModal: true })}
+        />
       </div>
     )
   }
@@ -316,31 +341,6 @@ export default class Admin extends Component {
       setTimeout(() => this.setState({ isExporting: false }), 3000)
     })
   }
-
-  renderAdminSelect = () => (
-    <div style={{ marginRight: 20, marginBottom: 20 }}>
-      <div className="cellBoxTop">
-        <h2>Moderators</h2>
-        <div style={{ flex: 1 }} />
-        <button className="hideButton" onClick={() => this.hideSection('Admins')}>
-          {this.state.hideAdmins ? t('show_section') : t('hide_section')}
-        </button>
-      </div>
-      {!this.state.hideAdmins && (
-        <div>
-          <p className="modSectionDes">{t('moderator_desc')}</p>
-          <AttendeeSelector
-            client={this.props.client}
-            searchTitle={t('select_admins')}
-            selectedTitle={t('current_admins')}
-            onSelected={this.onAdminSelected}
-            onDeselected={this.onAdminDeselected}
-            selected={this.state.attendees.filter(a => this.isAdmin(a.id))}
-          />
-        </div>
-      )}
-    </div>
-  )
 
   isAdmin(id) {
     return this.state.admins.includes(id)
@@ -495,9 +495,7 @@ export default class Admin extends Component {
   }
 
   renderPinned = questions => {
-    questions = questions.filter(
-      question => !question.answered && !question.block,
-    )
+    questions = questions.filter(question => !question.answered && !question.block)
     if (this.state.session !== 'All') {
       return (
         <span>
@@ -538,13 +536,16 @@ export default class Admin extends Component {
     })
   }
 
-  setAdmin(userId, isAdmin, fbc) {
-    const tokenRef = fbc.database.private.adminableUsersRef(userId).child('adminToken')
-    if (isAdmin) {
-      fbc.getLongLivedAdminToken().then(token => tokenRef.set(token))
-    } else {
-      tokenRef.remove()
-    }
+  saveModerator = (host, sessions) => {
+    console.log(sessions)
+    console.log(host)
+    const tokenRef = this.props.fbc.database.private.adminableUsersRef(host.id).child('adminToken')
+    const sessionsRef = this.props.fbc.database.private
+      .adminableUsersRef(host.id)
+      .child('adminSessions')
+    this.props.fbc.getLongLivedAdminToken().then(token => tokenRef.set(token))
+    sessionsRef.set(sessions)
+    this.setState({ showModal: false, selectedAdmin: null })
   }
 
   onAdminSelected = attendee => {
@@ -559,7 +560,12 @@ export default class Admin extends Component {
     const tokenRef = this.props.fbc.database.private
       .adminableUsersRef(attendee.id)
       .child('adminToken')
+    const sessionsRef = this.props.fbc.database.private
+      .adminableUsersRef(attendee.id)
+      .child('adminSessions')
     tokenRef.remove()
+    sessionsRef.remove()
+    this.setState({ selectedAdmin: null })
   }
 
   onDragEnd = result => {
