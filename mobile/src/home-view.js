@@ -72,6 +72,7 @@ class HomeView extends PureComponent {
       isLoggedIn: false,
       logInFailed: false,
       isDataLoaded: false,
+      adminSessions: [],
     }
     this.signin = props.fbc.signin().then(user => (this.user = user))
 
@@ -190,15 +191,15 @@ class HomeView extends PureComponent {
             this.setState({ isLoggedIn: true })
           }, 500)
         }
-        fbc.database.private.adminableUserRef('adminToken').once('value', async data => {
-          const longLivedToken = data.val()
-          if (longLivedToken) {
+        fbc.database.private.adminableUserRef().once('value', async data => {
+          const { adminSessions, adminToken } = data.val() || {}
+          if (adminToken) {
             console.log('Attendee appears to be admin.  Logging out and logging in w/ admin token.')
             await fbc.firebase.auth().signOut()
-            client.longLivedToken = longLivedToken
+            client.longLivedToken = adminToken
             await fbc.signinAdmin()
             console.log('Re-logged in as admin')
-            this.setState({ isAdmin: true })
+            this.setState({ isAdmin: true, adminSessions })
           }
           wireListeners()
         })
@@ -277,6 +278,7 @@ class HomeView extends PureComponent {
       isAdmin,
       primaryColor,
       modalVisible,
+      adminSessions,
     } = this.state
     const sessions = this.state.sessions.filter(item => item.archive !== true)
     let newQuestions = []
@@ -301,6 +303,7 @@ class HomeView extends PureComponent {
           </View>
           <View style={{ flex: 1 }}>
             <MyList
+              session={this.state.session}
               questions={newQuestions}
               allQuestions={this.state.questions}
               showModal={this.showModal}
@@ -313,6 +316,7 @@ class HomeView extends PureComponent {
               originalOrder={this.originalOrder}
               newVote={this.newVote}
               isAdmin={isAdmin}
+              adminSessions={adminSessions}
               changeQuestionStatus={this.changeQuestionStatus}
               renderFilterSelect={this.renderFilterSelect}
               currentSort={this.state.currentSort}

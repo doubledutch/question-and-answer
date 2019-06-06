@@ -1,5 +1,6 @@
 {
   "add_session": "Add Session",
+  "remove_session": "Remove Session",
   "all": "All",
   "allow_anon_title": "Allow Attendees to Ask Anonymous Questions",
   "all_sessions": "All Sessions",
@@ -42,6 +43,7 @@
   "mark_all_approved": "Mark All as Approved",
   "mark_all_answered": "Mark All as Answered",
   "moderation": "Moderation",
+  "moderators": "Moderators",
   "moderation_off": "Moderation is turned off",
   "moderation_off_desc_1": "All submitted questions will appear in the",
   "moderation_off_desc_2": "approved questions list",
@@ -69,8 +71,11 @@
   "session_name_taken": "This session name already exists. Please enter a valid session name",
   "session_start": "Start Session",
   "session_uninitialized": "This session has not been initialized for viewing",
-  "sessions": "Sessions",
+  "sessions": "Assigned Sessions",
+  "session": "Session",
   "settings": "Settings",
   "show_section": "Show Section",
-  "unavailable": "Unavailable"
+  "unavailable": "Unavailable",
+  "add_moderator": "Add Moderator",
+  "select_all": "Select All"
 }

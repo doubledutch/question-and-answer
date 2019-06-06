@@ -35,10 +35,11 @@ export default class MyList extends Component {
   }
 
   render() {
-    const { moderator, isAdmin, currentSort } = this.props
-    let showAnswer = this.props.showAnswer
+    const { moderator, currentSort, adminSessions, session } = this.props
+    let { showAnswer } = this.props
     let newQuestions = this.props.questions
-    if (isAdmin && currentSort === 'Answered') showAnswer = true
+    const isSessionAdmin = !!adminSessions.find(item => item.key === session.key)
+    if (isSessionAdmin && currentSort === 'Answered') showAnswer = true
 
     if (showAnswer === true) {
       newQuestions = newQuestions.filter(item => item.answered === true)
@@ -48,14 +49,16 @@ export default class MyList extends Component {
       newQuestions = newQuestions.filter(item => item.answered === false)
     }
     let testQuestions = newQuestions
-    if (moderator.length > 0 && isAdmin === false && moderator[0].approve === true) {
+    if (moderator.length > 0 && !isSessionAdmin && moderator[0].approve === true) {
       testQuestions = testQuestions.filter(item => item.approve === true)
     }
 
     return (
       <View>
-        {this.renderHeader(testQuestions)}
-        {isAdmin ? this.renderAdminList(newQuestions) : this.renderAttendeeList(newQuestions)}
+        {this.renderHeader(testQuestions, isSessionAdmin)}
+        {isSessionAdmin
+          ? this.renderAdminList(newQuestions)
+          : this.renderAttendeeList(newQuestions)}
       </View>
     )
   }
@@ -131,12 +134,12 @@ export default class MyList extends Component {
     </View>
   )
 
-  renderHeader = questions => {
-    const { isAdmin, showAnswer, showRecent, allQuestions } = this.props
-    if (allQuestions.length === 0 && isAdmin === false) {
+  renderHeader = (questions, isSessionAdmin) => {
+    const { showAnswer, showRecent, allQuestions } = this.props
+    if (allQuestions.length === 0 && !isSessionAdmin) {
       return (
         <View>
-          {this.renderHeaderButtons(this.button1Style(), s.button2, s.button2)}
+          {this.renderHeaderButtons(this.button1Style(), s.button2, s.button2, isSessionAdmin)}
           <View style={{ marginTop: 96 }}>
             <Text
               style={{
@@ -162,7 +165,7 @@ export default class MyList extends Component {
     if (showAnswer) {
       return (
         <View>
-          {this.renderHeaderButtons(s.button2, s.button2, this.button1Style())}
+          {this.renderHeaderButtons(s.button2, s.button2, this.button1Style(), isSessionAdmin)}
           {questions.length ? null : this.renderHelpText()}
         </View>
       )
@@ -170,14 +173,14 @@ export default class MyList extends Component {
     if (showRecent) {
       return (
         <View>
-          {this.renderHeaderButtons(s.button2, this.button1Style(), s.button2)}
+          {this.renderHeaderButtons(s.button2, this.button1Style(), s.button2, isSessionAdmin)}
           {questions.length ? null : this.renderHelpText()}
         </View>
       )
     }
     return (
       <View>
-        {this.renderHeaderButtons(this.button1Style(), s.button2, s.button2)}
+        {this.renderHeaderButtons(this.button1Style(), s.button2, s.button2, isSessionAdmin)}
         {questions.length ? null : this.renderHelpText()}
       </View>
     )
@@ -205,9 +208,8 @@ export default class MyList extends Component {
     )
   }
 
-  renderHeaderButtons = (x, y, z) => {
-    const { isAdmin } = this.props
-    if (isAdmin)
+  renderHeaderButtons = (popularStyle, recentStyle, answeredStyle, isSessionAdmin) => {
+    if (isSessionAdmin)
       return (
         <View style={{ height: 60 }}>
           <View style={s.buttonContainer}>
@@ -230,15 +232,15 @@ export default class MyList extends Component {
       <View style={{ height: 52 }}>
         <View style={s.buttonContainer}>
           <View style={s.divider} />
-          <TouchableOpacity style={x} onPress={this.props.findOrder}>
+          <TouchableOpacity style={popularStyle} onPress={this.props.findOrder}>
             <Text style={s.dashboardButton}>Popular</Text>
           </TouchableOpacity>
           <View style={s.dividerSm} />
-          <TouchableOpacity style={y} onPress={this.props.findOrderDate}>
+          <TouchableOpacity style={recentStyle} onPress={this.props.findOrderDate}>
             <Text style={s.dashboardButton}>Recent</Text>
           </TouchableOpacity>
           <View style={s.dividerSm} />
-          <TouchableOpacity style={z} onPress={this.props.showAnswered}>
+          <TouchableOpacity style={answeredStyle} onPress={this.props.showAnswered}>
             <Text style={s.dashboardButton}>Answered</Text>
           </TouchableOpacity>
           <View style={s.divider} />
