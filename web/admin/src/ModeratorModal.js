@@ -14,9 +14,10 @@ const ModeratorModal = ({
   onDeselected,
   saveModerator,
   adminData,
+  moderators,
 }) => {
   const userSessions = returnUserData(admin, adminData)
-  const [assignedSessions, setSessions] = useState([])
+  const [assignedSessions, setSessions] = useState(null)
   const [selectedHost, setHost] = useState([])
   const origAdmin = admin.id ? [admin] : selectedHost
   return (
@@ -44,9 +45,15 @@ const ModeratorModal = ({
         <div className="row">
           <p className="modTitle">{t('session')}</p>
           <div className="cellAssignments" />
-          <button className="selectAllButton" onClick={() => setSessions(sessions)}>
-            {t('select_all')}
-          </button>
+          {(assignedSessions || userSessions).length === sessions.length ? (
+            <button className="removeAllButton" onClick={() => setSessions([])}>
+              {t('remove_all')}
+            </button>
+          ) : (
+            <button className="selectAllButton" onClick={() => setSessions(sessions)}>
+              {t('select_all')}
+            </button>
+          )}
         </div>
         <ul className="modalList">
           {sessions.map(session => (
@@ -54,18 +61,28 @@ const ModeratorModal = ({
               key={session.key}
               session={session}
               setSessions={setSessions}
-              assignedSessions={assignedSessions.length ? assignedSessions : userSessions}
+              assignedSessions={assignedSessions || userSessions}
             />
           ))}
         </ul>
       </div>
       <div className="modalBottom">
-        <button onClick={closeModal} className="formButtonWhite">
+        <button
+          onClick={() => {
+            closeModal()
+            setHost([])
+            setSessions(null)
+          }}
+          className="formButtonWhite"
+        >
           {t('cancel')}
         </button>
         <button
-          onClick={() => saveModerator(origAdmin[0], assignedSessions)}
-          disabled={!selectedHost.length && !assignedSessions.length}
+          onClick={() => {
+            setHost([])
+            saveModerator(origAdmin[0], assignedSessions)
+          }}
+          disabled={!selectedHost.length && !(assignedSessions || []).length}
           className="formButton"
         >
           {t('save')}
@@ -74,19 +91,9 @@ const ModeratorModal = ({
     </Modal>
   )
 
-  // function returnUserData() {
-  //   if (adminData && admin.id) {
-  //     if (adminData[admin.id]) {
-  //       if (adminData[admin.id].adminSessions) {
-  //         return adminData[admin.id].adminSessions
-  //       }
-  //     }
-  //   }
-  //   return []
-  // }
-
   function onAdminSelected(attendee) {
-    if (!admin.id) {
+    const isAdmin = !!moderators.find(attendee => attendee.id === attendee.id)
+    if (!admin.id && !isAdmin) {
       setHost([attendee])
     }
   }

@@ -660,6 +660,18 @@ ul.modalList {
   margin-right: 10px;
 }
 
+.removeAllButton{
+  border: none;
+  border-radius: 0;
+  font-size: 14px;
+  color: #ed4634;
+  text-align: right;
+  white-space: nowrap;
+  background-color: #ffffff;
+  padding: 0;
+  margin-right: 10px;
+}
+
 .approveButton{
   border: none;
   border-radius: 0;

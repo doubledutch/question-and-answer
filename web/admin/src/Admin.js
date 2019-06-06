@@ -262,6 +262,7 @@ export default class Admin extends Component {
           adminData={this.state.adminData}
           onDeselected={this.onAdminDeselected}
           saveModerator={this.saveModerator}
+          moderators={this.state.attendees.filter(a => this.isAdmin(a.id))}
         />
         <div className="containerSmall">
           <SessionBox

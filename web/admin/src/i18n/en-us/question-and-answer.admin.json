@@ -77,5 +77,7 @@
   "show_section": "Show Section",
   "unavailable": "Unavailable",
   "add_moderator": "Add Moderator",
-  "select_all": "Select All"
+  "select_all": "Select All",
+  "remove_all": "Remove All",
+  "deleteConfirm": "Are you sure you want to remove this user as a moderator?"
 }
