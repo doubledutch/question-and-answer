@@ -1,6 +1,7 @@
 import React, { useEffect, useState, PureComponent } from 'react'
 import './App.css'
 import { translate as t } from '@doubledutch/admin-client'
+import { returnUserData } from './ModeratorModal'
 
 const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
   const [hideAdmins, setHide] = useState()
@@ -11,7 +12,7 @@ const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
         <button className="dd-bordered" onClick={openModal}>
           {t('add_moderator')}
         </button>
-        <div style={{ flex: 1 }} />
+        <div className="cellAssignments" />
         <button className="hideButton" onClick={() => setHide(!hideAdmins)}>
           {hideAdmins ? t('show_section') : t('hide_section')}
         </button>
@@ -35,7 +36,7 @@ const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
 }
 
 const ModeratorCell = ({ admin, selectMod, adminData }) => {
-  const userData = returnUserData()
+  const userData = returnUserData(admin, adminData)
   return (
     <div className="adminCell">
       <p className="cellTitle">{`${admin.firstName} ${admin.lastName}`}</p>
@@ -47,17 +48,6 @@ const ModeratorCell = ({ admin, selectMod, adminData }) => {
       </button>
     </div>
   )
-
-  function returnUserData() {
-    if (adminData && admin.id) {
-      if (adminData[admin.id]) {
-        if (adminData[admin.id].adminSessions) {
-          return adminData[admin.id].adminSessions
-        }
-      }
-    }
-    return []
-  }
 }
 
 export default Moderator

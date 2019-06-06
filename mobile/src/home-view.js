@@ -192,12 +192,12 @@ class HomeView extends PureComponent {
           }, 500)
         }
         fbc.database.private.adminableUserRef().once('value', async data => {
-          const longLivedToken = data.val().adminToken
-          const { adminSessions } = data.val()
-          if (longLivedToken) {
+          //   const longLivedToken = (data.val() || {}).adminToken
+          const { adminSessions, adminToken } = data.val()
+          if (adminToken) {
             console.log('Attendee appears to be admin.  Logging out and logging in w/ admin token.')
             await fbc.firebase.auth().signOut()
-            client.longLivedToken = longLivedToken
+            client.longLivedToken = adminToken
             await fbc.signinAdmin()
             console.log('Re-logged in as admin')
             this.setState({ isAdmin: true, adminSessions })

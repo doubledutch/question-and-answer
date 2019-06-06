@@ -537,8 +537,6 @@ export default class Admin extends Component {
   }
 
   saveModerator = (host, sessions) => {
-    console.log(sessions)
-    console.log(host)
     const tokenRef = this.props.fbc.database.private.adminableUsersRef(host.id).child('adminToken')
     const sessionsRef = this.props.fbc.database.private
       .adminableUsersRef(host.id)

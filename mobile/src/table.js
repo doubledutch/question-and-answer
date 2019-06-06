@@ -135,7 +135,6 @@ export default class MyList extends Component {
   )
 
   renderHeader = (questions, isSessionAdmin) => {
-    console.log(isSessionAdmin)
     const { showAnswer, showRecent, allQuestions } = this.props
     if (allQuestions.length === 0 && !isSessionAdmin) {
       return (

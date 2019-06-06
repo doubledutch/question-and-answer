@@ -15,7 +15,7 @@ const ModeratorModal = ({
   saveModerator,
   adminData,
 }) => {
-  const userSessions = returnUserData()
+  const userSessions = returnUserData(admin, adminData)
   const [assignedSessions, setSessions] = useState([])
   const [selectedHost, setHost] = useState([])
   const origAdmin = admin.id ? [admin] : selectedHost
@@ -74,16 +74,16 @@ const ModeratorModal = ({
     </Modal>
   )
 
-  function returnUserData() {
-    if (adminData && admin.id) {
-      if (adminData[admin.id]) {
-        if (adminData[admin.id].adminSessions) {
-          return adminData[admin.id].adminSessions
-        }
-      }
-    }
-    return []
-  }
+  // function returnUserData() {
+  //   if (adminData && admin.id) {
+  //     if (adminData[admin.id]) {
+  //       if (adminData[admin.id].adminSessions) {
+  //         return adminData[admin.id].adminSessions
+  //       }
+  //     }
+  //   }
+  //   return []
+  // }
 
   function onAdminSelected(attendee) {
     if (!admin.id) {
@@ -103,6 +103,17 @@ const ModeratorModal = ({
       onDeselected(host)
     }
   }
+}
+
+export const returnUserData = (admin, adminData) => {
+  if (adminData && admin.id) {
+    if (adminData[admin.id]) {
+      if (adminData[admin.id].adminSessions) {
+        return adminData[admin.id].adminSessions
+      }
+    }
+  }
+  return []
 }
 
 const SessionAddCell = ({ session, setSessions, assignedSessions }) => {
