@@ -208,7 +208,7 @@ export default class MyList extends Component {
     )
   }
 
-  renderHeaderButtons = (x, y, z, isSessionAdmin) => {
+  renderHeaderButtons = (popularStyle, recentStyle, answeredStyle, isSessionAdmin) => {
     if (isSessionAdmin)
       return (
         <View style={{ height: 60 }}>
@@ -232,15 +232,15 @@ export default class MyList extends Component {
       <View style={{ height: 52 }}>
         <View style={s.buttonContainer}>
           <View style={s.divider} />
-          <TouchableOpacity style={x} onPress={this.props.findOrder}>
+          <TouchableOpacity style={popularStyle} onPress={this.props.findOrder}>
             <Text style={s.dashboardButton}>Popular</Text>
           </TouchableOpacity>
           <View style={s.dividerSm} />
-          <TouchableOpacity style={y} onPress={this.props.findOrderDate}>
+          <TouchableOpacity style={recentStyle} onPress={this.props.findOrderDate}>
             <Text style={s.dashboardButton}>Recent</Text>
           </TouchableOpacity>
           <View style={s.dividerSm} />
-          <TouchableOpacity style={z} onPress={this.props.showAnswered}>
+          <TouchableOpacity style={answeredStyle} onPress={this.props.showAnswered}>
             <Text style={s.dashboardButton}>Answered</Text>
           </TouchableOpacity>
           <View style={s.divider} />
