@@ -22,7 +22,7 @@ const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
           <p className="modSectionDes">{t('moderator_desc')}</p>
           <div className="row">
             <p className="modTitle">{t('name')}</p>
-            <p className="modDes">{t('sessions')}</p>
+            <p className="modDes">{t('assigned_sessions')}</p>
           </div>
           <ul className="sessionListBox">
             {moderators.map(mod => (
