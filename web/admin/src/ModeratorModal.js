@@ -92,11 +92,12 @@ const ModeratorModal = ({
   )
 
   function onAdminSelected(attendee) {
-    const isAdmin = !!moderators.find(attendee => attendee.id === attendee.id)
+    const isAdmin = !!moderators.find(search => search.id === attendee.id)
     if (!admin.id && !isAdmin) {
       setHost([attendee])
     }
   }
+
   function onAdminDeselected(attendee) {
     if (!admin.id) {
       setHost([])
@@ -109,6 +110,7 @@ const ModeratorModal = ({
     if (window.confirm(t('deleteConfirm'))) {
       onDeselected(host)
     }
+    closeModal()
   }
 }
 
@@ -135,8 +137,7 @@ const SessionAddCell = ({ session, setSessions, assignedSessions }) => {
   }
   return (
     <li className="modalListCell" key={session.key}>
-      <p className="cellName">{session.sessionName}</p>&nbsp;
-      <div style={{ flex: 1 }} />
+      <p className="modalCellName">{session.sessionName}</p>&nbsp;
       {isAssigned === -1 ? (
         <img
           className="buttonCell"
