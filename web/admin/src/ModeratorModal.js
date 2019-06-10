@@ -20,7 +20,6 @@ const ModeratorModal = ({
   const [assignedSessions, setSessions] = useState(null)
   const [selectedHost, setHost] = useState([])
   const origAdmin = admin.id ? [admin] : selectedHost
-  console.log(selectedHost)
   return (
     <Modal
       ariaHideApp={false}
