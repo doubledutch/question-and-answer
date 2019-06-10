@@ -193,8 +193,6 @@ class HomeView extends PureComponent {
         }
         fbc.database.private.adminableUserRef().once('value', async data => {
           const { adminSessions, adminToken } = data.val() || {}
-          console.log(adminToken)
-          console.log(adminSessions)
           if (adminToken) {
             console.log('Attendee appears to be admin.  Logging out and logging in w/ admin token.')
             await fbc.firebase.auth().signOut()
