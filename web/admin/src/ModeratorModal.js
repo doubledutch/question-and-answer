@@ -82,7 +82,7 @@ const ModeratorModal = ({
             setHost([])
             saveModerator(origAdmin[0], assignedSessions)
           }}
-          disabled={!selectedHost.length && !(assignedSessions || []).length}
+          disabled={!selectedHost.length || !(assignedSessions || userSessions).length}
           className="dd-bordered margin-right"
         >
           {t('save')}
