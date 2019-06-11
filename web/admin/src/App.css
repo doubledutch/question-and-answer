@@ -695,6 +695,13 @@ ul.modalList {
   margin-top: 10px;
 }
 
+.modsHelpText {
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+  margin-top: 100px;
+}
+
 .answerButton{
   border: none;
   border-radius: 0;

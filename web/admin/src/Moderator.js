@@ -30,6 +30,7 @@ const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
             {moderators.map(mod => (
               <ModeratorCell admin={mod} key={mod.id} selectMod={selectMod} adminData={adminData} />
             ))}
+            {!moderators.length && <p className="modsHelpText">{t('mods_help')}</p>}
           </ul>
         </div>
       )}
