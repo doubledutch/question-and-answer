@@ -83,7 +83,7 @@ const ModeratorModal = ({
             saveModerator(origAdmin[0], assignedSessions)
           }}
           disabled={!selectedHost.length && !(assignedSessions || []).length}
-          className="formButton"
+          className="dd-bordered margin-right"
         >
           {t('save')}
         </button>

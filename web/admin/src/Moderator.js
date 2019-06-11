@@ -13,9 +13,11 @@ const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
           {t('add_moderator')}
         </button>
         <div className="cellAssignments" />
-        <button className="hideButton" onClick={() => setHide(!hideAdmins)}>
-          {hideAdmins ? t('show_section') : t('hide_section')}
-        </button>
+        {!hideAdmins && (
+          <button className="hideButton" onClick={() => setHide(!hideAdmins)}>
+            {hideAdmins ? t('show_section') : t('hide_section')}
+          </button>
+        )}
       </div>
       {!hideAdmins && (
         <div>
@@ -28,6 +30,7 @@ const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
             {moderators.map(mod => (
               <ModeratorCell admin={mod} key={mod.id} selectMod={selectMod} adminData={adminData} />
             ))}
+            {!moderators.length && <p className="modsHelpText">{t('mods_help')}</p>}
           </ul>
         </div>
       )}

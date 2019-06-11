@@ -80,5 +80,6 @@
   "add_moderator": "Add Moderator",
   "select_all": "Select All",
   "remove_all": "Remove All",
-  "deleteConfirm": "Are you sure you want to remove this user as a moderator?"
+  "deleteConfirm": "Are you sure you want to remove this user as a moderator?",
+  "mods_help": "Assigned Moderators will appear here"
 }
