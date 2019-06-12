@@ -80,6 +80,7 @@ const ModeratorModal = ({
         <button
           onClick={() => {
             setHost([])
+            setSessions(null)
             saveModerator(origAdmin[0], assignedSessions)
           }}
           disabled={!selectedHost.length || !(assignedSessions || userSessions).length}
