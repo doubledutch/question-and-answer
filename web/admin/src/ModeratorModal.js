@@ -20,6 +20,7 @@ const ModeratorModal = ({
   const [assignedSessions, setSessions] = useState(null)
   const [selectedHost, setHost] = useState([])
   const origAdmin = admin.id ? [admin] : selectedHost
+  console.log(origAdmin || selectedHost)
   return (
     <Modal
       ariaHideApp={false}
@@ -83,7 +84,9 @@ const ModeratorModal = ({
             setSessions(null)
             saveModerator(origAdmin[0], assignedSessions)
           }}
-          disabled={!selectedHost.length || !(assignedSessions || userSessions).length}
+          disabled={
+            !(origAdmin || selectedHost).length || !(assignedSessions || userSessions).length
+          }
           className="dd-bordered margin-right"
         >
           {t('save')}
