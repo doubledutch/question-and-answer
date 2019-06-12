@@ -9,15 +9,15 @@ const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
     <div className="containerSmall">
       <div className="cellBoxTop">
         <h2 className="margin-right">{t('moderators')}</h2>
-        <button className="dd-bordered" onClick={openModal}>
-          {t('add_moderator')}
-        </button>
-        <div className="cellAssignments" />
         {!hideAdmins && (
-          <button className="hideButton" onClick={() => setHide(!hideAdmins)}>
-            {hideAdmins ? t('show_section') : t('hide_section')}
+          <button className="dd-bordered" onClick={openModal}>
+            {t('add_moderator')}
           </button>
         )}
+        <div className="cellAssignments" />
+        <button className="hideButton" onClick={() => setHide(!hideAdmins)}>
+          {hideAdmins ? t('show_section') : t('hide_section')}
+        </button>
       </div>
       {!hideAdmins && (
         <div>
