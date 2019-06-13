@@ -20,6 +20,7 @@ const ModeratorModal = ({
   const [assignedSessions, setSessions] = useState(null)
   const [selectedHost, setHost] = useState([])
   const origAdmin = admin.id ? [admin] : selectedHost
+  const isSessionEdits = (assignedSessions || userSessions).toString() !== userSessions.toString()
   return (
     <Modal
       ariaHideApp={false}
@@ -84,7 +85,9 @@ const ModeratorModal = ({
             saveModerator(origAdmin[0], assignedSessions)
           }}
           disabled={
-            !(origAdmin || selectedHost).length || !(assignedSessions || userSessions).length
+            !(origAdmin || selectedHost).length ||
+            !(assignedSessions || userSessions).length ||
+            !isSessionEdits
           }
           className="dd-bordered margin-right"
         >
