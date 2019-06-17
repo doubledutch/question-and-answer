@@ -378,14 +378,18 @@ html, body, input, button, select, form{
   width: 650px;
   border: 1px solid #CDCDCD;
   border-radius: 4px;
-  background-color: #FAFAFA;
+  top: 5%;
+  left: 20%;
+  background-color: #ffffff;
 }
 
 .Overlay {
   position: fixed;
-  top: 20%;
-  left: 20%;
-  background-color: #ffffff;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .sessionList {
@@ -523,25 +527,6 @@ h2 {
 .space {
   margin-right: 5px;
 }
-
-.Modal {
-  position: absolute;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
-  background-color: #FFFFFF;
-  border-radius: 5px;
-}
-
-.Overlay {
-  position: fixed;
-  left: 29%;
-  top: 20px; 
-  background-color: gray;
-}
-
-.modalTitle{
-  font-weight: 300;
-}
-
 
 .closeModalButton {
   color: lightgray;

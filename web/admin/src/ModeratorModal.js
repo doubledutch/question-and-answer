@@ -23,9 +23,9 @@ const ModeratorModal = ({
   const isSessionEdits = (assignedSessions || userSessions).toString() !== userSessions.toString()
   return (
     <Modal
-      ariaHideApp={false}
+      // ariaHideApp={false}
       isOpen={isOpen}
-      contentLabel="Modal"
+      // contentLabel="Modal"
       className="Modal"
       overlayClassName="Overlay"
     >
