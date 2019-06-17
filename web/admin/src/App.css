@@ -317,7 +317,7 @@ html, body, input, button, select, form{
 }
 
 .searchBar {
-  margin: 3px 5px 5px 30px;
+  margin: 3px 5px 5px 0px;
   background-color: white;
   padding-left: 10px;
   border-radius: 5px;

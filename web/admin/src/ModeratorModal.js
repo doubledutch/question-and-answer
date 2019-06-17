@@ -3,6 +3,7 @@ import './App.css'
 import client, { translate as t } from '@doubledutch/admin-client'
 import { AttendeeSelector } from '@doubledutch/react-components'
 import Modal from 'react-modal'
+import SearchBar from './SearchBar'
 import checkocircle from './icons/checkocircle.svg'
 import deleteocircle from './icons/deleteocircle.svg'
 
@@ -18,17 +19,13 @@ const ModeratorModal = ({
 }) => {
   const userSessions = returnUserData(admin, adminData)
   const [assignedSessions, setSessions] = useState(null)
+  const [search, setSearch] = useState('')
   const [selectedHost, setHost] = useState([])
   const origAdmin = admin.id ? [admin] : selectedHost
+  const filteredSessions = filterList()
   const isSessionEdits = (assignedSessions || userSessions).toString() !== userSessions.toString()
   return (
-    <Modal
-      // ariaHideApp={false}
-      isOpen={isOpen}
-      // contentLabel="Modal"
-      className="Modal"
-      overlayClassName="Overlay"
-    >
+    <Modal isOpen={isOpen} className="Modal" overlayClassName="Overlay" ariaHideApp={false}>
       <div className="modalTop">
         <h1 className="modalTitle">Moderator Assignment</h1>
       </div>
@@ -43,6 +40,7 @@ const ModeratorModal = ({
             selected={selectedHost.length ? selectedHost : origAdmin}
           />
         </div>
+        <SearchBar updateList={setSearch} search={search} />
         <div className="row">
           <p className="modTitle">{t('session')}</p>
           <div className="cellAssignments" />
@@ -57,7 +55,7 @@ const ModeratorModal = ({
           )}
         </div>
         <ul className="modalList">
-          {sessions.map(session => (
+          {filteredSessions.map(session => (
             <SessionAddCell
               key={session.key}
               session={session}
@@ -96,6 +94,18 @@ const ModeratorModal = ({
       </div>
     </Modal>
   )
+
+  function filterList() {
+    const queryText = search.toLowerCase()
+    if (queryText.length > 0) {
+      const queryResult = sessions.filter(
+        s => s.sessionName && s.sessionName.toLowerCase().includes(queryText),
+      )
+      return queryResult
+    }
+
+    return sessions
+  }
 
   function onAdminSelected(attendee) {
     const isAdmin = !!moderators.find(search => search.id === attendee.id)
