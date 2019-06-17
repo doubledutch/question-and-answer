@@ -3,7 +3,7 @@ import './App.css'
 import { translate as t } from '@doubledutch/admin-client'
 import { returnUserData } from './ModeratorModal'
 
-const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
+const Moderator = ({ moderators, openModal, selectMod, adminData, onDeselected }) => {
   const [hideAdmins, setHide] = useState()
   return (
     <div className="containerSmall">
@@ -28,7 +28,13 @@ const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
           </div>
           <ul className="sessionListBox">
             {moderators.map(mod => (
-              <ModeratorCell admin={mod} key={mod.id} selectMod={selectMod} adminData={adminData} />
+              <ModeratorCell
+                admin={mod}
+                key={mod.id}
+                selectMod={selectMod}
+                adminData={adminData}
+                onDeselected={onDeselected}
+              />
             ))}
             {!moderators.length && <p className="modsHelpText">{t('mods_help')}</p>}
           </ul>
@@ -38,7 +44,7 @@ const Moderator = ({ moderators, openModal, selectMod, adminData }) => {
   )
 }
 
-const ModeratorCell = ({ admin, selectMod, adminData }) => {
+const ModeratorCell = ({ admin, selectMod, adminData, onDeselected }) => {
   const userData = returnUserData(admin, adminData)
   return (
     <div className="adminCell">
@@ -49,8 +55,17 @@ const ModeratorCell = ({ admin, selectMod, adminData }) => {
       <button className="borderlessButtonSmall" onClick={() => selectMod(admin)}>
         {t('edit_verb')}
       </button>
+      <button className="borderlessButtonSmall" onClick={() => handleDelete(admin)}>
+        {t('delete_verb')}
+      </button>
     </div>
   )
+
+  function handleDelete(admin) {
+    if (window.confirm(t('deleteConfirm'))) {
+      onDeselected(admin)
+    }
+  }
 }
 
 export default Moderator
