@@ -118,7 +118,7 @@ export default class Admin extends Component {
           .allRef('questions')
           .child(session.key)
           .on('child_added', data => {
-            let pinnedQuestions = this.state.pinnedQuestions
+            let {pinnedQuestions} = this.state
             if (data.val().pin) {
               pinnedQuestions = [...this.state.pinnedQuestions, { ...data.val(), key: data.key }]
             }
@@ -158,7 +158,7 @@ export default class Admin extends Component {
               const isInPinned = pinnedQuestions.find(question => question.key === data.key)
               for (const q in questions) {
                 if (questions[q].key === data.key) {
-                  const score = questions[q].score
+                  const {score} = questions[q]
                   questions[q] = data.val()
                   questions[q].score = score
                   questions[q].key = data.key
@@ -167,7 +167,7 @@ export default class Admin extends Component {
               }
               for (const i in pinnedQuestions) {
                 if (pinnedQuestions[i].key === data.key) {
-                  const score = questions[i].score
+                  const {score} = questions[i]
                   pinnedQuestions[i] = data.val()
                   pinnedQuestions[i].score = score
                   pinnedQuestions[i].key = data.key
@@ -193,7 +193,7 @@ export default class Admin extends Component {
       })
 
       sessRef.on('child_changed', data => {
-        const sessions = this.state.sessions
+        const {sessions} = this.state
         for (const i in sessions) {
           if (sessions[i].key === data.key) {
             sessions[i] = data.val()
@@ -213,7 +213,7 @@ export default class Admin extends Component {
       })
 
       modRef.on('child_changed', data => {
-        const questions = this.state.questions
+        const {questions} = this.state
         if (!data.val().approve) {
           questions.forEach((item, i) => {
             if (!questions[i].approve && questions[i].new) {
@@ -319,6 +319,7 @@ export default class Admin extends Component {
         />
         <Moderator
           adminData={this.state.adminData}
+          onDeselected={this.onAdminDeselected}
           moderators={this.state.attendees.filter(a => this.isAdmin(a.id))}
           openModal={() => this.setState({ showModal: true })}
           selectMod={user => this.setState({ selectedAdmin: user, showModal: true })}
@@ -947,7 +948,7 @@ export default class Admin extends Component {
   }
 
   answerAll = () => {
-    const questions = this.state.questions
+    const {questions} = this.state
     let modOn = false
     if (this.state.moderation) {
       if (this.state.moderation.approve) {

@@ -26,6 +26,7 @@
   "display_in_app": "Display in App",
   "done": "Done",
   "edit_verb": "Edit",
+  "delete_verb": "Delete",
   "enter_session_name": "Please enter a session name",
   "enter_valid_session_name": "Please enter a valid session name",
   "full_name": "${firstName} ${lastName}",
