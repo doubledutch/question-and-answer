@@ -10,7 +10,7 @@
     "@doubledutch/firebase-connector": "^4.2.1",
     "@doubledutch/rn-client": "^5.0.1",
     "babel-plugin-transform-runtime": "^6.23.0",
-    "react": "^16.8.3",
+    "react": "16.8.3",
     "react-native": "0.59.4",
     "react-native-camera": "2.5.0",
     "react-native-loading-spinner-overlay": "^0.5.2",
