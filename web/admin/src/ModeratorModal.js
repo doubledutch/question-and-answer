@@ -73,6 +73,7 @@ const ModeratorModal = ({
             closeModal()
             setHost([])
             setSessions(null)
+            setSearch('')
           }}
           className="formButtonWhite"
         >
@@ -83,6 +84,7 @@ const ModeratorModal = ({
             setHost([])
             setSessions(null)
             saveModerator(origAdmin[0], assignedSessions)
+            setSearch('')
           }}
           disabled={
             !(origAdmin || selectedHost).length ||
@@ -131,6 +133,7 @@ const ModeratorModal = ({
     closeModal()
     setHost([])
     setSessions(null)
+    setSearch('')
   }
 }
 
