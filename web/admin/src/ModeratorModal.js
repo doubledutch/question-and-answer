@@ -129,6 +129,8 @@ const ModeratorModal = ({
       onDeselected(host)
     }
     closeModal()
+    setHost([])
+    setSessions(null)
   }
 }
 
