@@ -181,6 +181,11 @@ class HomeView extends PureComponent {
             }
           })
 
+          fbc.database.private.adminableUserRef().on('value', data => {
+            const { adminSessions } = data.val() || {}
+            this.setState({ adminSessions: adminSessions || [] })
+          })
+
           fbc.database.private.adminableUserRef('dummy').once('value', data => {
             // We don't expect data. This is just to capture whether we are done loading data.
             this.setState({ isDataLoaded: true })
@@ -191,6 +196,7 @@ class HomeView extends PureComponent {
             this.setState({ isLoggedIn: true })
           }, 500)
         }
+
         fbc.database.private.adminableUserRef().once('value', async data => {
           const { adminSessions, adminToken } = data.val() || {}
           if (adminToken) {
