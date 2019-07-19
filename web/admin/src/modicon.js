@@ -19,7 +19,7 @@ import { translate as t } from '@doubledutch/admin-client'
 
 export default class ModIcon extends Component {
   render() {
-    const moderation = this.props.moderation
+    const { moderation } = this.props
     if (moderation) {
       if (moderation.approve) {
         return (
