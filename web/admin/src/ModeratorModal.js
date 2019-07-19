@@ -40,7 +40,9 @@ const ModeratorModal = ({
             selected={selectedHost.length ? selectedHost : origAdmin}
           />
         </div>
-        <SearchBar updateList={setSearch} search={search} />
+        <div className="searchBarPadding">
+          <SearchBar updateList={setSearch} search={search} />
+        </div>
         <div className="row">
           <p className="modTitle">{t('session')}</p>
           <div className="cellAssignments" />

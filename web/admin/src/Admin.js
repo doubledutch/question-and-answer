@@ -18,7 +18,6 @@ import React, { Component } from 'react'
 import { CSVDownload } from '@doubledutch/react-csv'
 import client, { translate as t } from '@doubledutch/admin-client'
 import moment from 'moment'
-import { AttendeeSelector } from '@doubledutch/react-components'
 import CustomCell from './cell'
 import SettingsContainer from './SettingsContainer'
 import TableHeader from './TableHeader'
@@ -118,7 +117,7 @@ export default class Admin extends Component {
           .allRef('questions')
           .child(session.key)
           .on('child_added', data => {
-            let {pinnedQuestions} = this.state
+            let { pinnedQuestions } = this.state
             if (data.val().pin) {
               pinnedQuestions = [...this.state.pinnedQuestions, { ...data.val(), key: data.key }]
             }
@@ -158,7 +157,7 @@ export default class Admin extends Component {
               const isInPinned = pinnedQuestions.find(question => question.key === data.key)
               for (const q in questions) {
                 if (questions[q].key === data.key) {
-                  const {score} = questions[q]
+                  const { score } = questions[q]
                   questions[q] = data.val()
                   questions[q].score = score
                   questions[q].key = data.key
@@ -167,7 +166,7 @@ export default class Admin extends Component {
               }
               for (const i in pinnedQuestions) {
                 if (pinnedQuestions[i].key === data.key) {
-                  const {score} = questions[i]
+                  const { score } = questions[i]
                   pinnedQuestions[i] = data.val()
                   pinnedQuestions[i].score = score
                   pinnedQuestions[i].key = data.key
@@ -193,7 +192,7 @@ export default class Admin extends Component {
       })
 
       sessRef.on('child_changed', data => {
-        const {sessions} = this.state
+        const { sessions } = this.state
         for (const i in sessions) {
           if (sessions[i].key === data.key) {
             sessions[i] = data.val()
@@ -213,7 +212,7 @@ export default class Admin extends Component {
       })
 
       modRef.on('child_changed', data => {
-        const {questions} = this.state
+        const { questions } = this.state
         if (!data.val().approve) {
           questions.forEach((item, i) => {
             if (!questions[i].approve && questions[i].new) {
@@ -948,7 +947,7 @@ export default class Admin extends Component {
   }
 
   answerAll = () => {
-    const {questions} = this.state
+    const { questions } = this.state
     let modOn = false
     if (this.state.moderation) {
       if (this.state.moderation.approve) {

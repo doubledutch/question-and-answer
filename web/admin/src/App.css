@@ -316,6 +316,10 @@ html, body, input, button, select, form{
   border-radius: 2px;
 }
 
+.searchBarPadding {
+  margin-left: 20px;
+}
+
 .searchBar {
   margin: 3px 5px 5px 0px;
   background-color: white;
@@ -323,6 +327,10 @@ html, body, input, button, select, form{
   border-radius: 5px;
   height: 37px;
   border: 1px solid #abbac9;
+}
+
+::placeholder{
+  color: #abbac9;
 }
 
 .searchBar--gray {
