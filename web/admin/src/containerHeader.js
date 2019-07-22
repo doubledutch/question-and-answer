@@ -17,7 +17,7 @@
 import React, { memo } from 'react'
 import { translate as t } from '@doubledutch/admin-client'
 import Select from 'react-select'
-import ModIcon from './Modicon'
+import ModIcon from './ModIcon'
 import PresentationDriver from './PresentationDriver'
 
 const ContainerHeader = ({

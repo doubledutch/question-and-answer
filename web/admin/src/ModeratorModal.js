@@ -40,7 +40,9 @@ const ModeratorModal = ({
             selected={selectedHost.length ? selectedHost : origAdmin}
           />
         </div>
-        <SearchBar updateList={setSearch} search={search} />
+        <div className="searchBarPadding">
+          <SearchBar updateList={setSearch} search={search} />
+        </div>
         <div className="row">
           <p className="modTitle">{t('session')}</p>
           <div className="cellAssignments" />
@@ -71,6 +73,7 @@ const ModeratorModal = ({
             closeModal()
             setHost([])
             setSessions(null)
+            setSearch('')
           }}
           className="formButtonWhite"
         >
@@ -81,6 +84,7 @@ const ModeratorModal = ({
             setHost([])
             setSessions(null)
             saveModerator(origAdmin[0], assignedSessions)
+            setSearch('')
           }}
           disabled={
             !(origAdmin || selectedHost).length ||
@@ -127,6 +131,9 @@ const ModeratorModal = ({
       onDeselected(host)
     }
     closeModal()
+    setHost([])
+    setSessions(null)
+    setSearch('')
   }
 }
 

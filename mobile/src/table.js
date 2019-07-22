@@ -35,17 +35,17 @@ export default class MyList extends Component {
   }
 
   render() {
-    const { moderator, currentSort, adminSessions, session } = this.props
+    const { moderator, currentSort, adminSessions, session, allQuestions, questions } = this.props
     let { showAnswer } = this.props
-    let newQuestions = this.props.questions
+    let newQuestions = questions
     const isSessionAdmin = !!adminSessions.find(item => item.key === session.key)
     if (isSessionAdmin && currentSort === 'Answered') showAnswer = true
 
-    if (showAnswer === true) {
-      newQuestions = newQuestions.filter(item => item.answered === true)
+    if (showAnswer) {
+      newQuestions = allQuestions.filter(item => item.answered === true)
       newQuestions.sort((a, b) => b.lastEdit - a.lastEdit)
     }
-    if (showAnswer === false) {
+    if (!showAnswer) {
       newQuestions = newQuestions.filter(item => item.answered === false)
     }
     let testQuestions = newQuestions
