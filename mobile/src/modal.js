@@ -96,7 +96,7 @@ export default class CustomModal extends Component {
     }
 
     if (this.props.launch === true) {
-      let sessions = this.props.sessions
+      let { sessions } = this.props
       let displayTable = true
       if (this.state.search) {
         sessions = this.state.newList
@@ -155,7 +155,7 @@ export default class CustomModal extends Component {
         </View>
       )
     }
-    let borderColor = this.state.borderColor
+    let { borderColor } = this.state
     if (this.state.isError) {
       borderColor = 'red'
     }
@@ -174,7 +174,10 @@ export default class CustomModal extends Component {
             })}
             placeholder={t('type_question')}
             value={this.state.question}
-            onChangeText={question => this.setState({ question, isError: false })}
+            onChangeText={question => {
+              this.setState({ question })
+              this.props.resetError()
+            }}
             maxLength={250}
             autoFocus
             multiline

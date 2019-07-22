@@ -348,6 +348,7 @@ class HomeView extends PureComponent {
         disable={this.state.disable}
         question={this.state.question}
         showError={this.state.showError}
+        resetError={() => this.setState({ showError: false })}
         session={this.state.session}
         hideModal={this.hideModal}
         modalVisible={this.state.modalVisible}
