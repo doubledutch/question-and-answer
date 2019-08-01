@@ -289,6 +289,12 @@ html, body, input, button, select, form{
   color: white;
 }
 
+.helpTextModal {
+  margin: 0px;
+  padding: 0px;
+  font-size: 12px;
+}
+
 .hideButton{
   color: #4A90E2;
   border: none;

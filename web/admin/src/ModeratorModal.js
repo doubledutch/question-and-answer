@@ -39,6 +39,7 @@ const ModeratorModal = ({
             onDeselected={onAdminDeselected}
             selected={selectedHost.length ? selectedHost : origAdmin}
           />
+          <p className="helpTextModal">*Note that moderators are selected individually</p>
         </div>
         <div className="modalRow">
           <p className="modalSessTitle">{t('session')}</p>
