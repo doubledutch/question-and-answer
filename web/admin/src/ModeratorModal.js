@@ -64,6 +64,7 @@ const ModeratorModal = ({
               assignedSessions={assignedSessions || userSessions}
             />
           ))}
+          {filteredSessions.length === 0 && <p className="modalBoxHelpText">No Sessions Found</p>}
         </ul>
       </div>
       <div className="modalBottom">
