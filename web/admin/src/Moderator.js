@@ -27,7 +27,7 @@ const Moderator = ({ moderators, openModal, selectMod, adminData, onDeselected }
             <p className="modDes">{t('assigned_sessions')}</p>
           </div>
           <ul className="sessionListBox">
-            {moderators.map(mod => (
+            {moderators.sort(byFirstThenLast).map(mod => (
               <ModeratorCell
                 admin={mod}
                 key={mod.id}
@@ -66,6 +66,14 @@ const ModeratorCell = ({ admin, selectMod, adminData, onDeselected }) => {
       onDeselected(admin)
     }
   }
+}
+
+function byFirstThenLast(a, b) {
+  if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) return -1
+  if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1
+  if (a.lastName.toLowerCase() < b.lastName.toLowerCase()) return -1
+  if (a.lastName.toLowerCase() > b.lastName.toLowerCase()) return 1
+  return 0
 }
 
 export default Moderator
