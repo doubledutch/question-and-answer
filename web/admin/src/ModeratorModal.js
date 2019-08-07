@@ -39,12 +39,11 @@ const ModeratorModal = ({
             onDeselected={onAdminDeselected}
             selected={selectedHost.length ? selectedHost : origAdmin}
           />
+          <p className="helpTextModal">*Note that moderators are selected individually</p>
         </div>
-        <div className="searchBarPadding">
+        <div className="modalRow">
+          <p className="modalSessTitle">{t('session')}</p>
           <SearchBar updateList={setSearch} search={search} />
-        </div>
-        <div className="row">
-          <p className="modTitle">{t('session')}</p>
           <div className="cellAssignments" />
           {(assignedSessions || userSessions).length === sessions.length ? (
             <button className="removeAllButton" onClick={() => setSessions([])}>
@@ -65,6 +64,7 @@ const ModeratorModal = ({
               assignedSessions={assignedSessions || userSessions}
             />
           ))}
+          {filteredSessions.length === 0 && <p className="modalBoxHelpText">No Sessions Found</p>}
         </ul>
       </div>
       <div className="modalBottom">

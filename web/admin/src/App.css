@@ -289,6 +289,12 @@ html, body, input, button, select, form{
   color: white;
 }
 
+.helpTextModal {
+  margin: 0px;
+  padding: 0px;
+  font-size: 12px;
+}
+
 .hideButton{
   color: #4A90E2;
   border: none;
@@ -606,6 +612,12 @@ ul.modalList {
   background-color: #FCFCFC;
   overflow: auto;
   margin: 0px;
+}
+
+.modalBoxHelpText {
+  flex: 1;
+  text-align: center;
+  margin-top: 120px;
 }
 
 .modalListCell {
@@ -970,6 +982,16 @@ ul.modalList {
   margin-top: 5px;
 }
 
+.modalSessTitle{
+  font-size: 14px;
+  white-space: nowrap;
+  margin-right: 10px;
+  font-weight: bold;
+  margin-left: 20px;
+  margin-bottom: 7px;
+  margin-top: 5px;
+}
+
 .modDes{
   font-size: 14px;
   white-space: nowrap;
@@ -1045,6 +1067,12 @@ ul.modalList {
 .row {
   flex-direction: row;
   display: flex;
+}
+
+.modalRow {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
 }
 
 .box {
