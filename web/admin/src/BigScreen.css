@@ -26,12 +26,36 @@
   font: 400 2vh -apple-system, BlinkMacSystemFont, 'Fira Sans', 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+body {
+  padding: 0px;
+}
+
 .cellName {
   flex-flow: row wrap;
   flex: 1;
   display: flex;
   align-items: center;
   margin: 0em 0em;
+}
+
+.listSelectButton {
+  border: none;
+  color: white;
+  width: 10vw;
+  background-color: black;
+  opacity: 0.6;
+  border-radius: 5px;
+  padding: 2vh;
+  margin: 1vh;
+}
+
+.center-margin {
+  padding-left: 12vw !important;
+  align-self: center;
+}
+
+.flex {
+  flex: 1
 }
 
 .name {
@@ -44,7 +68,32 @@
   flex-direction: column;
   overflow: auto;
 }
+
+.big-screen .single-box {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  margin: 0px;
+  font-size: 13px;
+  width: 90%;
+  padding-left: 10px;
+  color: #4A4A4A
+}
+
 .big-screen .box-content {
+  padding: 2vh 4vh;
+  margin: 2vh 1vh;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 1em;
+  min-height: 5em;
+}
+
+.big-screen .empty-box-content {
   padding: 2vh 4vh;
   margin: 2vh 1vh;
   display: flex;
@@ -52,6 +101,8 @@
   background-color: white;
   border-radius: 1em;
   min-height: 5em;
+  justify-content: center;
+  align-items: center;
 }
 
 .big-screen .box-icon {
