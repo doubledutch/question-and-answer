@@ -18,9 +18,13 @@ import React, { PureComponent } from 'react'
 import './BigScreen.css'
 import { Avatar } from '@doubledutch/react-components'
 import { translate as t } from '@doubledutch/admin-client'
+import HighlightedQuestion from './HighlightedQuestion'
 
 export default class BigScreen extends PureComponent {
-  state = { questions: [] }
+  state = {
+    questions: [],
+    showHighlight: false,
+  }
 
   componentDidMount() {
     const { session } = this.props
@@ -40,7 +44,15 @@ export default class BigScreen extends PureComponent {
       >
         {this.renderState(session)}
         <div className="big-screen-bottom">
-          <h2>{t('select_session', { sessionName })}</h2>
+          <div className="flex" />
+          <h2 className="center-margin">{t('select_session', { sessionName })}</h2>
+          <div className="flex" />
+          <button
+            className="listSelectButton"
+            onClick={() => this.setState({ showHighlight: !this.state.showHighlight })}
+          >
+            {this.state.showHighlight ? 'Show List' : 'Show Highlight'}
+          </button>
         </div>
       </div>
     )
@@ -78,10 +90,10 @@ export default class BigScreen extends PureComponent {
       .allRef('questions')
       .child(session)
       .on('child_changed', data => {
-        const questions = this.state.questions
+        const { questions } = this.state
         for (const i in questions) {
           if (questions[i].key === data.key) {
-            const score = questions[i].score
+            const { score } = questions[i]
             const newQuestions = questions.filter(x => x.key !== data.key)
             const newObject = data.val()
             newObject.score = score
@@ -101,13 +113,17 @@ export default class BigScreen extends PureComponent {
   renderState(session) {
     switch (session.state) {
       case 'LIVE':
-        return this.renderTable()
+        return this.state.showHighlight ? (
+          <HighlightedQuestion session={this.props.session} questions={this.state.questions} />
+        ) : (
+          this.renderTable()
+        )
       default:
         return this.renderNonexistent()
     }
   }
 
-  renderTable = session => {
+  renderTable = () => {
     const pinnedQuestions = this.state.questions
       .filter(
         item =>
