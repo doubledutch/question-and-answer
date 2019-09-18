@@ -36,8 +36,7 @@ export default class CustomModal extends Component {
       color: 'white',
       borderColor: '#EFEFEF',
       inputHeight: 0,
-      search: false,
-      session: '',
+      search: '',
       newList: [],
       isError: this.props.showError,
     }
@@ -95,15 +94,9 @@ export default class CustomModal extends Component {
       backgroundColor: newColor,
     }
 
-    if (this.props.launch === true) {
-      let { sessions } = this.props
-      let displayTable = true
-      if (this.state.search) {
-        sessions = this.state.newList
-        if (sessions.length === 0) {
-          displayTable = false
-        }
-      }
+    if (this.props.launch) {
+      const sessions = this.updateList()
+      const displayTable = !!sessions.length
       return (
         <View style={{ flex: 1 }}>
           {this.renderModalHeader()}
@@ -253,16 +246,13 @@ export default class CustomModal extends Component {
   }
 
   makeTrue() {
-    if (this.state.anomStatus === false) {
-      this.setState({ anomStatus: true, color: 'black' })
-    }
-    if (this.state.anomStatus === true) {
+    if (this.state.anomStatus) {
       this.setState({ anomStatus: false, color: 'white' })
-    }
+    } else this.setState({ anomStatus: true, color: 'black' })
   }
 
-  updateList = value => {
-    const queryText = value.toLowerCase()
+  updateList = () => {
+    const queryText = this.state.search.toLowerCase().trim()
     if (queryText.length > 0) {
       const queryResult = []
       this.props.sessions.forEach(content => {
@@ -273,10 +263,9 @@ export default class CustomModal extends Component {
           }
         }
       })
-      this.setState({ search: true, newList: queryResult, session: value })
-    } else {
-      this.setState({ search: false, session: value })
+      return queryResult
     }
+    return this.props.sessions
   }
 
   renderModalHeader = () => {
@@ -327,8 +316,8 @@ export default class CustomModal extends Component {
                   android: [newStyle, androidStyle],
                 })}
                 placeholder={t('search')}
-                value={this.state.session}
-                onChangeText={session => this.updateList(session)}
+                value={this.state.search}
+                onChangeText={search => this.setState({ search })}
                 maxLength={25}
                 placeholderTextColor="#9B9B9B"
               />
@@ -358,7 +347,7 @@ export default class CustomModal extends Component {
   }
 
   resetSearch = () => {
-    this.setState({ session: '', search: false })
+    this.setState({ search: '' })
   }
 }
 
