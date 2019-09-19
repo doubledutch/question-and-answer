@@ -45,14 +45,18 @@ const ModeratorModal = ({
           <p className="modalSessTitle">{t('session')}</p>
           <SearchBar updateList={setSearch} search={search} />
           <div className="cellAssignments" />
-          {(assignedSessions || userSessions).length === sessions.length ? (
-            <button className="removeAllButton" onClick={() => setSessions([])}>
-              {t('remove_all')}
-            </button>
-          ) : (
-            <button className="selectAllButton" onClick={() => setSessions(sessions)}>
-              {t('select_all')}
-            </button>
+          {filteredSessions.length === sessions.length && (
+            <div>
+              {(assignedSessions || userSessions).length === sessions.length ? (
+                <button className="removeAllButton" onClick={() => setSessions([])}>
+                  {t('remove_all')}
+                </button>
+              ) : (
+                <button className="selectAllButton" onClick={() => setSessions(sessions)}>
+                  {t('select_all')}
+                </button>
+              )}
+            </div>
           )}
         </div>
         <ul className="modalList">
