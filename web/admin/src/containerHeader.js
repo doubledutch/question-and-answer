@@ -51,8 +51,6 @@ const ContainerHeader = ({
     ),
   )
 
-  console.log(questions)
-
   const approveQuestions = questions.filter(item => !item.block && !item.answered && item.approve)
 
   return (
