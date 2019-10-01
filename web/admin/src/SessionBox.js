@@ -30,8 +30,7 @@ export class SessionBox extends Component {
       height: 0,
       showNewSession: false,
       newList: [],
-      search: true,
-      searchValue: '',
+      search: '',
     }
   }
 
@@ -46,9 +45,7 @@ export class SessionBox extends Component {
               {this.state.showNewSession ? t('cancel') : t('add_session')}
             </button>
           )}
-          {this.props.hideSessions ? null : (
-            <SearchBar updateList={this.updateList} search={this.state.search} />
-          )}
+          {this.props.hideSessions ? null : <SearchBar updateList={this.updateList} />}
           <div style={{ flex: 1 }} />
           <button className="hideButton" onClick={this.handleHideSection}>
             {this.props.hideSessions ? t('section_show') : t('section_hide')}
@@ -123,9 +120,8 @@ export class SessionBox extends Component {
 
   handleHideSection = () => {
     this.setState({
-      search: false,
+      search: '',
       value: '',
-      searchValue: '',
       isError: false,
       showNewSession: false,
     })
@@ -141,18 +137,17 @@ export class SessionBox extends Component {
     this.setState({
       showNewSession: !current,
       isError: false,
-      search: false,
-      searchValue: '',
+      search: '',
       value: '',
     })
   }
 
   updateList = value => {
-    this.setState({ search: value.length > 0, searchValue: value })
+    this.setState({ search: value.trim() })
   }
 
   createList = () => {
-    const queryText = this.state.searchValue.toLowerCase()
+    const queryText = this.state.search.toLowerCase()
     if (queryText.length > 0) {
       const queryResult = this.props.sessions.filter(
         s => s.sessionName && s.sessionName.toLowerCase().includes(queryText),
