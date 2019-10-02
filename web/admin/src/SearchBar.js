@@ -38,7 +38,7 @@ export default class SearchBar extends Component {
           type="text"
           id="myInput"
           disabled={this.props.disable}
-          value={this.props.search ? this.state.value : ''}
+          value={this.state.value}
           onChange={this.handleChange}
           placeholder={t('search')}
         />

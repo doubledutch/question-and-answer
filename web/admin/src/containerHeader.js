@@ -51,7 +51,7 @@ const ContainerHeader = ({
     ),
   )
 
-  const approveQuestions = questions.filter(item => !item.block && !item.answered)
+  const approveQuestions = questions.filter(item => !item.block && !item.answered && item.approve)
 
   return (
     <span className="buttonSpan">
