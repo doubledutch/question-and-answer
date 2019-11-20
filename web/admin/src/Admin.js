@@ -161,7 +161,7 @@ export default class Admin extends Component {
                   questions[q] = data.val()
                   questions[q].score = score
                   questions[q].key = data.key
-                  return { questions }
+                  break
                 }
               }
               for (const i in pinnedQuestions) {
@@ -171,22 +171,16 @@ export default class Admin extends Component {
                   pinnedQuestions[i].score = score
                   pinnedQuestions[i].key = data.key
                   pinnedQuestions.sort((a, b) => a.order - b.order)
-                  return { pinnedQuestions }
+                  break
                 }
               }
               if (data.val().pin && !isInPinned) {
-                this.setState({
-                  pinnedQuestions: [
-                    ...this.state.pinnedQuestions,
-                    { ...data.val(), key: data.key },
-                  ],
-                })
+                pinnedQuestions = [...pinnedQuestions, { ...data.val(), key: data.key }]
               }
               if (data.val().pin === false && isInPinned) {
-                return {
-                  pinnedQuestions: this.state.pinnedQuestions.filter(x => x.key !== data.key),
-                }
+                pinnedQuestions = pinnedQuestions.filter(x => x.key !== data.key)
               }
+              return { pinnedQuestions, questions }
             })
           })
       })
