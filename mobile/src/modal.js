@@ -96,11 +96,23 @@ export default class CustomModal extends Component {
 
     if (this.props.launch) {
       const sessions = this.updateList()
-      const displayTable = !!sessions.length
+      const displayHelpText = !sessions.length && !!this.state.search
       return (
         <View style={{ flex: 1 }}>
           {this.renderModalHeader()}
-          {displayTable ? (
+          {displayHelpText ? (
+            <Text
+              style={{
+                textAlign: 'center',
+                marginTop: 100,
+                fontSize: 20,
+                color: '#9B9B9B',
+                flex: 1,
+              }}
+            >
+              No Search Results
+            </Text>
+          ) : (
             <FlatList
               style={{ backgroundColor: '#EFEFEF' }}
               data={sessions}
@@ -119,18 +131,6 @@ export default class CustomModal extends Component {
                 </TouchableOpacity>
               )}
             />
-          ) : (
-            <Text
-              style={{
-                textAlign: 'center',
-                marginTop: 100,
-                fontSize: 20,
-                color: '#9B9B9B',
-                flex: 1,
-              }}
-            >
-              No Search Results
-            </Text>
           )}
           <View
             style={{ borderTopColor: '#b7b7b7', borderTopWidth: 1, backgroundColor: '#EFEFEF' }}
@@ -333,14 +333,23 @@ export default class CustomModal extends Component {
     }
 
     return (
-      <View>
-        <View style={{ borderBottomColor: '#b7b7b7', borderBottomWidth: 1, marginBottom: 150 }}>
+      <View style={{ flex: 1 }}>
+        <View style={{ borderBottomColor: '#b7b7b7', borderBottomWidth: 1 }}>
           <Text style={s.modHeader}>{t('confirm_session')}</Text>
         </View>
         {this.props.isDataLoaded && (
-          <Text style={{ textAlign: 'center', fontSize: 20, color: '#9B9B9B', marginBottom: 5 }}>
-            {t('no_sessions')}
-          </Text>
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 20,
+                color: '#9B9B9B',
+                marginBottom: 5,
+              }}
+            >
+              {t('no_sessions')}
+            </Text>
+          </View>
         )}
       </View>
     )
