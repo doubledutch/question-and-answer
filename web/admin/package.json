@@ -9,7 +9,7 @@
     "@doubledutch/react-components": "^0.2.1",
     "@doubledutch/react-csv": "^1.1.2",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.25",
+    "moment-timezone": "^0.5.35",
     "react": "^16.8.6",
     "react-beautiful-dnd": "3.0.0",
     "react-dom": "^16.8.6",
